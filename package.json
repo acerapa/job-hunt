@@ -1,0 +1,12 @@
+{
+  "private": true,
+  "license": "",
+  "scripts": {
+    "frontend": "yarn workspace frontend dev",
+    "backend": "yarn workspace backend dev"
+  },
+  "workspaces": [
+    "./backend",
+    "./frontend"
+  ]
+}
