@@ -10,6 +10,11 @@
           <RouterLink class="text-sm font-normal">Contact Us</RouterLink>
         </div>
       </div>
+      <div class="flex gap-3 items-center">
+        <RouterLink class="text-sm font-normal">Sign in</RouterLink>
+        <div class="border w-0 h-8 border-main rounded"></div>
+        <button class="btn-outline">Sign up</button>
+      </div>
     </div>
   </header>
 </template>
