@@ -1,4 +1,6 @@
 ###
+
+# [Register User]
 POST http://localhost:3000/api/users/register
 Content-Type: application/json
 
@@ -8,4 +10,27 @@ Content-Type: application/json
   "username": "harapa",
   "email": "harapa@test.com",
   "password": "password"
+}
+
+###
+
+# [Authenticate User]
+POST http://localhost:3000/api/auth/login
+Content-Type: application/json
+Accept: application/json
+
+{
+  "usercred": "harapa",
+  "password": "password"
+}
+
+###
+
+# [Refresh token] getting new refresh tokens
+POST http://localhost:3000/api/auth/refresh
+Content-Type: application/json
+Accept: application/json
+
+{
+  "refresh": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjo0LCJyZWZyZXNoIjpmYWxzZSwiaWF0IjoxNzIwMzcwMTQ0LCJleHAiOjE3MjAzNzEwNDR9.q01ENKpvNNEat4K2mZEvCU0y3l-k8nCqIZBWk9vuOQM"
 }
