@@ -34,3 +34,7 @@
 input[type=password] {
     @apply font-black tracking-widest placeholder:font-normal;
 }
+
+.social-link {
+    @apply flex gap-1 items-center border rounded px-3 py-1 border-light-green;
+}

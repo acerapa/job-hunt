@@ -1,3 +1,5 @@
+import type { ApiResponse } from "@acerapa/job-hunt-shared-types"
+
 export const enum Method {
   GET = 'GET',
   POST = 'POST',
@@ -33,12 +35,12 @@ const setHeaders = (headerValues: DynamicKeyObj, headers: Headers) => {
   })
 }
 
-export const api = async <Data>(
+export const api = async <PayloadData, ResponseData>(
   url: string,
   method: Method = Method.GET,
-  payload: Data,
+  payload: PayloadData,
   hdrs: DynamicKeyObj = {}
-) => {
+): Promise<ApiResponse<ResponseData>> => {
   const headers: Headers = new Headers()
   const requestInit: RequestInit = { method, headers }
   setHeaders(apiConfig.defaultHeaders, headers)
@@ -57,34 +59,46 @@ export const api = async <Data>(
   const response: Response = await fetch(request)
 
   const contentType: string | null = response.headers.get('Content-Type')
-  let responseData
+  let responseData: Partial<ApiResponse<ResponseData>> = {};
 
   if (contentType) {
     if (contentType.includes('application/json')) {
       responseData = await response.json()
     } else if (contentType.includes('text/')) {
-      responseData = await response.text()
+      responseData = {
+        data: await response.text() as ResponseData,
+        message: "Text response",
+        status: response.status
+      }
     } else if (
       contentType.includes('image/') ||
       contentType.includes('audio/') ||
       contentType.includes('video/') ||
       contentType.includes('application/octet-stream')
     ) {
-      responseData = await response.blob()
+      responseData = {
+        data: await response.blob() as ResponseData,
+        message: "Blob response",
+        status: response.status
+      }
     } else {
-      responseData = await response.text() // Fallback for other content types
+      responseData = {
+        data: await response.text() as ResponseData,
+        message: "Text response",
+        status: response.status
+      } // Fallback for other content types
     }
   }
 
-  return responseData
+  return responseData as ApiResponse<ResponseData>;
 }
 
-export const authenticatedApi = async <Data>(
+export const authenticatedApi = async <PayloadData, ResponseData>(
   url: string,
   method: Method = Method.GET,
-  payload: Data,
+  payload: PayloadData,
   hdrs: DynamicKeyObj
-) => {
+): Promise<ApiResponse<ResponseData>> => {
   const token: string = getAccessToken()
   const headers: DynamicKeyObj = {
     Authorization: `Bearer ${token}`,

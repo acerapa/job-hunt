@@ -7,6 +7,7 @@ import { isEmail } from "../validators";
 import { generateAccessAndRefreshToken } from "../services/auth-service";
 import { JwtPayload, verify } from "jsonwebtoken";
 import { getEnvOrDefault } from "../helpers/env-helpers";
+import { LoginResponseData } from "@acerapa/job-hunt-shared-types"
 
 export const authenticate = async (req: Request, res: Response) => {
   const { usercred, password } = req.body;
@@ -22,15 +23,26 @@ export const authenticate = async (req: Request, res: Response) => {
     where: condition,
   });
 
+
+  let responseData: LoginResponseData = {
+    authenticated: false,
+    access: "",
+    refresh: ""
+  };
   if (user) {
     const isMatched = await compare(password, user.password);
     if (isMatched) {
       // generate tokens
+      responseData = {
+        authenticated: true,
+        ...generateAccessAndRefreshToken(user)
+      };
+
       return res
         .status(200)
         .json(
           formatResponse(
-            { authenticated: true, ...generateAccessAndRefreshToken(user) },
+            responseData,
             "Successfully login",
             200
           )
@@ -40,7 +52,7 @@ export const authenticate = async (req: Request, res: Response) => {
 
   res
     .status(401)
-    .json(formatResponse({ authenticated: false }, "Invalid credentials", 401));
+    .json(formatResponse(responseData, "Invalid credentials", 401));
 };
 
 export const refresh = async (req: Request, res: Response) => {

@@ -16,7 +16,7 @@ export const generateAccessAndRefreshToken = (user: User) => {
   );
 
   return {
-    token: accessToken,
+    access: accessToken,
     refresh: refreshToken,
   };
 };

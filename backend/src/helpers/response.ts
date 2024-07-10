@@ -1,14 +1,10 @@
-export type APIResponse<Data> = {
-  data: Data;
-  message: string;
-  status: number;
-};
+import { ApiResponse } from '@acerapa/job-hunt-shared-types'
 
 export const formatResponse = <Data>(
   data: Data,
   message: string = "Success",
   status: number = 200
-): APIResponse<Data> => {
+): ApiResponse<Data> => {
   return {
     data,
     message,
