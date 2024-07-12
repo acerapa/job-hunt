@@ -7,13 +7,13 @@
           <RouterLink class="text-sm font-normal">Find Job</RouterLink>
           <RouterLink class="text-sm font-normal">Post Job</RouterLink>
           <RouterLink class="text-sm font-normal">About Us</RouterLink>
-          <RouterLink class="text-sm font-normal">Contact Us</RouterLink>
+          <!-- <RouterLink class="text-sm font-normal">Contact Us</RouterLink> -->
         </div>
       </div>
       <div class="flex gap-3 items-center">
-        <RouterLink class="text-sm font-normal">Sign in</RouterLink>
+        <RouterLink :to="{ name: 'signin' }" class="text-sm font-normal">Sign in</RouterLink>
         <div class="border w-0 h-8 border-main rounded"></div>
-        <button class="btn-outline">Sign up</button>
+        <RouterLink :to="{ name: 'signup' }" class="btn-outline">Sign up</RouterLink>
       </div>
     </div>
   </header>

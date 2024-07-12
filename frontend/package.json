@@ -14,9 +14,11 @@
     "format": "prettier --write src/"
   },
   "dependencies": {
+    "@acerapa/job-hunt-shared-types": "^1.0.3",
     "pinia": "^2.1.7",
     "vue": "^3.4.21",
-    "vue-router": "^4.3.0"
+    "vue-router": "^4.3.0",
+    "@shared/pack": "../shared"
   },
   "devDependencies": {
     "@playwright/test": "^1.43.0",
