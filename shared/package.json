@@ -1,0 +1,8 @@
+{
+  "name": "@shared/pack",
+  "version": "1.0.0",
+  "description": "Shared types, components, composables, functions, etc",
+  "main": "index.ts",
+  "author": "acerapa",
+  "license": "MIT"
+}

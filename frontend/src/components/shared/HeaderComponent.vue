@@ -7,7 +7,7 @@
           <RouterLink class="text-sm font-normal">Find Job</RouterLink>
           <RouterLink class="text-sm font-normal">Post Job</RouterLink>
           <RouterLink class="text-sm font-normal">About Us</RouterLink>
-          <RouterLink class="text-sm font-normal">Contact Us</RouterLink>
+          <!-- <RouterLink class="text-sm font-normal">Contact Us</RouterLink> -->
         </div>
       </div>
       <div class="flex gap-3 items-center">
