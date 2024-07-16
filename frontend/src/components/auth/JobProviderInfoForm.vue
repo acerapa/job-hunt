@@ -1,5 +1,5 @@
 <template>
-  <div class="w-screen h-screen flex flex-col gap-6 items-center justify-center">
+  <div class="w-full h-screen flex flex-col gap-6 items-center justify-center">
     <div class="flex flex-col gap-2">
       <img
         src="@/assets/images/hammer-and-anvil-large.png"
