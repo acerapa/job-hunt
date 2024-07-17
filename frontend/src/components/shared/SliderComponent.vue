@@ -1,13 +1,17 @@
 <template>
-  <div class="flex gap-3 items-center">
-    <button>
+  <div class="flex gap-3 items-center justify-center">
+    <button class="slider-btn">
       <img src="@/assets/images/back-to.png" alt="back-to" />
     </button>
-    <div class="slides" ref="slides">
-      <!-- just testing -->
-      <slot></slot>
+    <div class="slides">
+      <component
+        :is="props.slideComponent"
+        v-for="(item, ndx) in props.data"
+        :item="item"
+        :key="ndx"
+      ></component>
     </div>
-    <button>
+    <button class="slider-btn">
       <img src="@/assets/images/next-to.png" alt="next-to" />
     </button>
   </div>
@@ -15,32 +19,40 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
+import { onMounted } from 'vue'
 
 export type SliderProps = {
   panel: number
-  hasButtons: boolean
+  hasButtons?: boolean
+  slideComponent: object
+  data: object
 }
 
 const props = withDefaults(defineProps<SliderProps>(), {
   hasButtons: true
 })
 
-const slides = ref()
-const panels = ref<HTMLCollection>()
-onMounted(() => {
-  if ((slides.value as HTMLElement).children.length) {
-    panels.value = (slides.value as HTMLElement).children
-  }
-})
+onMounted(() => {})
 </script>
 
 <style scoped>
-.slides {
-  @apply flex-1 flex gap-3 justify-center;
+.slider-btn {
+  @apply flex-1 max-w-9 max-h-9 min-w-9 min-h-9;
 }
 
-.slides > * {
-  @apply border overflow-hidden;
+.slides {
+  @apply max-w-[90%] w-auto flex gap-3 justify-center overflow-hidden;
+}
+
+@keyframes slide-in-from-right {
+  100% {
+    margin-right: 0;
+  }
+}
+
+@-webkit-keyframes slide-in-from-right {
+  100% {
+    margin-right: 0;
+  }
 }
 </style>

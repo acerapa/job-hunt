@@ -33,12 +33,11 @@
         </button>
       </div>
     </div>
-    <div class="mx-auto flex flex-col gap-6 w-full bg-red-200">
+    <div class="mx-auto flex flex-col gap-6 w-full">
       <p class="text-xl font-bold text-main mx-auto text-center">Jobs you might like to hunt</p>
-      <SliderComponent :panel="1">
+      <SliderComponent :panel="3" :slide-component="JobComponent" :data="jobs">
         <img src="@/assets/images/already-working.png" alt="already-working" />
         <img src="@/assets/images/already-working.png" alt="already-working" />
-        <img src="@/assets/images/already-working.png" class="" alt="already-working" />
         <img src="@/assets/images/already-working.png" class="" alt="already-working" />
       </SliderComponent>
     </div>
@@ -107,6 +106,7 @@
 </template>
 <script setup lang="ts">
 import SliderComponent from '@/components/shared/SliderComponent.vue'
+import JobComponent from '@/components/shared/JobComponent.vue'
 const jobs = [
   {
     title: 'PHP Developer',
@@ -119,7 +119,6 @@ const jobs = [
     tags: ['Software Development', 'PHP', 'Web Development']
   }
 ]
-console.log(jobs)
 </script>
 
 <style scoped>
