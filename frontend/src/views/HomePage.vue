@@ -1,12 +1,16 @@
 <template>
-  <div class="max-w-7xl mx-auto py-14 flex flex-col gap-14">
+  <div class="max-w-7xl mx-auto pt-4 px-4 flex flex-col gap-14">
     <div class="search-wrapper">
       <p class="text-2xl font-bold text-main">Hunt, Check and Apply</p>
-      <input type="search" class="input search w-1/2" placeholder="Start your hunting" />
+      <input
+        type="search"
+        class="input search w-1/2 max-md:w-4/5 max-sm:w-11/12"
+        placeholder="Start your hunting"
+      />
     </div>
     <div class="mx-auto flex flex-col gap-6">
       <p class="text-xl font-bold text-main mx-auto">Popular tags now</p>
-      <div class="flex gap-2">
+      <div class="flex gap-2 flex-wrap justify-center">
         <button class="popular-tags">
           <img src="@/assets/images/tag.png" alt="tag" />
           Software Development
@@ -29,62 +33,80 @@
         </button>
       </div>
     </div>
-    <div class="mx-auto">
-      <p class="text-xl font-bold text-main mx-auto">Jobs you might like to hunt</p>
-      <code>Needs to create a slider component</code>
+    <div class="mx-auto flex flex-col gap-6 w-full bg-red-200">
+      <p class="text-xl font-bold text-main mx-auto text-center">Jobs you might like to hunt</p>
+      <SliderComponent :panel="1">
+        <img src="@/assets/images/already-working.png" alt="already-working" />
+        <img src="@/assets/images/already-working.png" alt="already-working" />
+        <img src="@/assets/images/already-working.png" class="" alt="already-working" />
+        <img src="@/assets/images/already-working.png" class="" alt="already-working" />
+      </SliderComponent>
     </div>
     <div class="mx-auto flex flex-col gap-6">
       <p class="text-xl font-bold text-main mx-auto">Beast Features</p>
-      <div class="flex gap-2">
-        <div class="flex-1 flex flex-col gap-5">
-          <div class="flex flex-col gap-1 items-center">
-            <img src="@/assets/images/business.png" class="w-10 h-10" alt="business" />
-            <p class="text-lg text-main font-semibold">Over a thousand plus Jobs</p>
+      <div class="flex gap-2 max-md:flex-col max-md:!gap-y-4 max-sm:w-11/12 mx-auto">
+        <div class="flex gap-2 max-sm:flex-col max-md:!gap-y-4">
+          <div class="flex-1 flex flex-col gap-5">
+            <div class="flex flex-col gap-1 items-center">
+              <img src="@/assets/images/business.png" class="w-10 h-10" alt="business" />
+              <p class="text-lg text-main font-semibold text-center">Over a thousand plus Jobs</p>
+            </div>
+            <p class="text-base text-center">
+              Wide diversity of Jobs to apply and it's growing each day. Feel free to find what best
+              suits you.
+            </p>
           </div>
-          <p class="text-base text-center">
-            Wide diversity of Jobs to apply and it's growing each day. Feel free to find what best
-            suits you.
-          </p>
+          <div class="flex-1 flex flex-col gap-5">
+            <div class="flex flex-col gap-1 items-center">
+              <img src="@/assets/images/cannon.png" class="w-10 h-10" alt="cannon" />
+              <p class="text-lg text-main font-semibold text-center">Fun and exciting to apply</p>
+            </div>
+            <p class="text-base text-center">
+              We intent to take some concepts from games and implement it in the platform to have a
+              fun experience. (<span class="italic">Pretty exciting right?</span>)
+            </p>
+          </div>
         </div>
-        <div class="flex-1 flex flex-col gap-5">
-          <div class="flex flex-col gap-1 items-center">
-            <img src="@/assets/images/cannon.png" class="w-10 h-10" alt="cannon" />
-            <p class="text-lg text-main font-semibold">Fun and exciting to apply</p>
+        <div class="flex gap-2 max-sm:flex-col max-md:!gap-y-4">
+          <div class="flex-1 flex flex-col gap-5">
+            <div class="flex flex-col gap-1 items-center">
+              <img src="@/assets/images/easy.png" class="w-10 h-10" alt="easy" />
+              <p class="text-lg text-main font-semibold text-center">Easy to apply</p>
+            </div>
+            <p class="text-base text-center">
+              Aside from fun to add up a really good experience we develop a way to easily apply
+              (<span class="italic">Hunt</span>) jobs for you.
+            </p>
           </div>
-          <p class="text-base text-center">
-            We intent to take some concepts from games and implement it in the platform to have a
-            fun experience. (<span class="italic">Pretty exciting right?</span>)
-          </p>
-        </div>
-        <div class="flex-1 flex flex-col gap-5">
-          <div class="flex flex-col gap-1 items-center">
-            <img src="@/assets/images/easy.png" class="w-10 h-10" alt="easy" />
-            <p class="text-lg text-main font-semibold">Easy to apply</p>
+          <div class="flex-1 flex flex-col gap-5">
+            <div class="flex flex-col gap-1 items-center">
+              <img src="@/assets/images/protected.png" class="w-10 h-10" alt="protected" />
+              <p class="text-lg text-main font-semibold text-center">Safe and Protected</p>
+            </div>
+            <p class="text-base text-center">
+              We assure you that any information you given to as will not be exposed and will only
+              stay hidden and event to us.
+            </p>
           </div>
-          <p class="text-base text-center">
-            Aside from fun to add up a really good experience we develop a way to easily apply
-            (<span class="italic">Hunt</span>) jobs for you.
-          </p>
-        </div>
-        <div class="flex-1 flex flex-col gap-5">
-          <div class="flex flex-col gap-1 items-center">
-            <img src="@/assets/images/protected.png" class="w-10 h-10" alt="protected" />
-            <p class="text-lg text-main font-semibold">Safe and Protected</p>
-          </div>
-          <p class="text-base text-center">
-            We assure you that any information you given to as will not be exposed and will only
-            stay hidden and event to us.
-          </p>
         </div>
       </div>
     </div>
-    <div class="mx-auto">
-      <p class="text-xl font-bold text-main mx-auto">Reviews and Comments</p>
-      <code>Needs to create a slider component</code>
+    <div class="mx-auto flex flex-col gap-6">
+      <p class="text-xl font-bold text-main mx-auto text-center">Reviews and Comments</p>
+      <SliderComponent :panel="1" />
     </div>
+    <div class="mx-auto flex flex-col gap-3 rounded-xl bg-main py-6 w-full">
+      <p class="text-4xl text-white mx-auto text-center px-4">
+        For Hunters: <span class="font-bold">Start the Hunt!</span> For Providers:
+        <span class="font-bold">Start Providing now!</span>
+      </p>
+      <button class="btn !bg-white !text-main border-main mx-auto w-fit">Join Now</button>
+    </div>
+    <div class="py-20 bg-main w-full"></div>
   </div>
 </template>
 <script setup lang="ts">
+import SliderComponent from '@/components/shared/SliderComponent.vue'
 const jobs = [
   {
     title: 'PHP Developer',
@@ -106,6 +128,10 @@ console.log(jobs)
 }
 
 .popular-tags {
-  @apply flex gap-1 items-center text-main border border-main rounded-lg py-2 px-3;
+  @apply flex gap-1 items-center text-main border border-main rounded-lg py-2 px-3 hover:bg-main hover:text-white;
+}
+
+.popular-tags:hover img {
+  @apply brightness-0 invert;
 }
 </style>
