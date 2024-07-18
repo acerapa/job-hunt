@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@acerapa/job-hunt-shared-types": "^1.0.3",
+    "@shared/pack": "file:../shared",
     "@types/bcryptjs": "^2.4.6",
     "@types/cors": "^2.8.17",
     "@types/jsonwebtoken": "^9.0.6",

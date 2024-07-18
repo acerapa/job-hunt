@@ -4,9 +4,9 @@
       <div class="flex gap-10 items-center">
         <p class="text-xl font-bold cursor-pointer">Job Hunt</p>
         <div class="flex gap-5">
-          <RouterLink class="text-sm font-normal">Find Job</RouterLink>
-          <RouterLink class="text-sm font-normal">Post Job</RouterLink>
-          <RouterLink class="text-sm font-normal">About Us</RouterLink>
+          <RouterLink to="#" class="text-sm font-normal">Find Job</RouterLink>
+          <RouterLink to="#" class="text-sm font-normal">Post Job</RouterLink>
+          <RouterLink to="#" class="text-sm font-normal">About Us</RouterLink>
           <!-- <RouterLink class="text-sm font-normal">Contact Us</RouterLink> -->
         </div>
       </div>

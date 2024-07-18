@@ -9,7 +9,7 @@
       />
     </div>
     <div class="mx-auto flex flex-col gap-6">
-      <p class="text-xl font-bold text-main mx-auto">Popular tags now</p>
+      <p class="heading-2">Popular tags now</p>
       <div class="flex gap-2 flex-wrap justify-center">
         <button class="popular-tags">
           <img src="@/assets/images/tag.png" alt="tag" />
@@ -33,17 +33,18 @@
         </button>
       </div>
     </div>
-    <div class="mx-auto flex flex-col gap-6 w-full bg-red-200">
-      <p class="text-xl font-bold text-main mx-auto text-center">Jobs you might like to hunt</p>
-      <SliderComponent :panel="1">
-        <img src="@/assets/images/already-working.png" alt="already-working" />
-        <img src="@/assets/images/already-working.png" alt="already-working" />
-        <img src="@/assets/images/already-working.png" class="" alt="already-working" />
-        <img src="@/assets/images/already-working.png" class="" alt="already-working" />
-      </SliderComponent>
+    <div class="mx-auto flex flex-col gap-6 w-full">
+      <p class="heading-2 text-center">Jobs you might like to hunt</p>
+      <SliderComponent
+        :panel="3"
+        :slide-component="JobComponent"
+        :data="jobs"
+        :is-infinity="true"
+        class="w-full"
+      />
     </div>
     <div class="mx-auto flex flex-col gap-6">
-      <p class="text-xl font-bold text-main mx-auto">Beast Features</p>
+      <p class="heading-2">Beast Features</p>
       <div class="flex gap-2 max-md:flex-col max-md:!gap-y-4 max-sm:w-11/12 mx-auto">
         <div class="flex gap-2 max-sm:flex-col max-md:!gap-y-4">
           <div class="flex-1 flex flex-col gap-5">
@@ -92,21 +93,31 @@
       </div>
     </div>
     <div class="mx-auto flex flex-col gap-6">
-      <p class="text-xl font-bold text-main mx-auto text-center">Reviews and Comments</p>
-      <SliderComponent :panel="1" />
+      <p class="heading-2 text-center">Reviews and Comments</p>
+      <SliderComponent
+        :panel="1"
+        :slide-component="UserReviewComponent"
+        :data="reviews"
+        :is-infinity="true"
+        class="w-full"
+      />
     </div>
     <div class="mx-auto flex flex-col gap-3 rounded-xl bg-main py-6 w-full">
       <p class="text-4xl text-white mx-auto text-center px-4">
         For Hunters: <span class="font-bold">Start the Hunt!</span> For Providers:
         <span class="font-bold">Start Providing now!</span>
       </p>
-      <button class="btn !bg-white !text-main border-main mx-auto w-fit">Join Now</button>
+      <button class="btn !text-base font-semibold !bg-white !text-main border-main mx-auto w-fit">
+        Join Now
+      </button>
     </div>
     <div class="py-20 bg-main w-full"></div>
   </div>
 </template>
 <script setup lang="ts">
 import SliderComponent from '@/components/shared/SliderComponent.vue'
+import JobComponent from '@/components/shared/JobComponent.vue'
+import UserReviewComponent from '@/components/reviews/UserReviewComponent.vue'
 const jobs = [
   {
     title: 'PHP Developer',
@@ -114,12 +125,60 @@ const jobs = [
       'Lorem ipsum dolor sit amet consectetur adipisicing elit. Repudiandae dignissimos perspiciatis, accusantium alias facilis assumenda corrupti cumque ratione fugiat quidem ipsum labore eum fuga aperiam illo natus veniam nisi quod.',
     company: {
       name: 'Job Provider',
-      rating: 4
+      ratings: 4
     },
     tags: ['Software Development', 'PHP', 'Web Development']
+  },
+  {
+    title: 'Frontend Developer 1',
+    description:
+      'Lorem, ipsum dolor sit amet consectetur adipisicing elit. Est porro, error autem adipisci exercitationem eos sed aliquam, natus rerum nisi id. Delectus, labore distinctio porro iste accusamus quo incidunt consectetur!',
+    company: {
+      name: 'Job Provider',
+      ratings: 5
+    },
+    tags: ['Software Development', 'Frontend', 'HTML', 'Javascript']
+  },
+  {
+    title: 'Frontend Developer 2',
+    description:
+      'Lorem, ipsum dolor sit amet consectetur adipisicing elit. Est porro, error autem adipisci exercitationem eos sed aliquam, natus rerum nisi id. Delectus, labore distinctio porro iste accusamus quo incidunt consectetur!',
+    company: {
+      name: 'Job Provider',
+      ratings: 5
+    },
+    tags: ['Software Development', 'Frontend', 'HTML', 'Javascript']
+  },
+  {
+    title: 'Frontend Developer 3',
+    description:
+      'Lorem, ipsum dolor sit amet consectetur adipisicing elit. Est porro, error autem adipisci exercitationem eos sed aliquam, natus rerum nisi id. Delectus, labore distinctio porro iste accusamus quo incidunt consectetur!',
+    company: {
+      name: 'Job Provider',
+      ratings: 2
+    },
+    tags: ['Software Development', 'Frontend', 'HTML', 'Javascript']
   }
 ]
-console.log(jobs)
+
+const reviews = [
+  {
+    content:
+      'Lorem ipsum dolor sit, amet consectetur adipisicing elit. Nostrum architecto doloribus quae quas recusandae voluptatem velit distinctio itaque. Corrupti similique nam et ipsam assumenda sunt porro nobis temporibus quibusdam repellendus.'
+  },
+  {
+    content:
+      'Lorem ipsum dolor sit, amet consectetur adipisicing elit. Nostrum architecto doloribus quae quas recusandae voluptatem velit distinctio itaque. Corrupti similique nam et ipsam assumenda sunt porro nobis temporibus quibusdam repellendus.'
+  },
+  {
+    content:
+      'Lorem ipsum dolor sit, amet consectetur adipisicing elit. Nostrum architecto doloribus quae quas recusandae voluptatem velit distinctio itaque. Corrupti similique nam et ipsam assumenda sunt porro nobis temporibus quibusdam repellendus.'
+  },
+  {
+    content:
+      'Lorem ipsum dolor sit, amet consectetur adipisicing elit. Nostrum architecto doloribus quae quas recusandae voluptatem velit distinctio itaque. Corrupti similique nam et ipsam assumenda sunt porro nobis temporibus quibusdam repellendus.'
+  }
+]
 </script>
 
 <style scoped>
@@ -133,5 +192,9 @@ console.log(jobs)
 
 .popular-tags:hover img {
   @apply brightness-0 invert;
+}
+
+.heading-2 {
+  @apply text-3xl font-bold text-main mx-auto;
 }
 </style>
