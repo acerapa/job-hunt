@@ -18,7 +18,6 @@ export interface Props {
 }
 
 const props = defineProps<Props>()
-console.log(props)
 </script>
 
 <style scoped>
