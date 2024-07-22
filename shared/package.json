@@ -2,7 +2,15 @@
   "name": "@shared/pack",
   "version": "1.0.0",
   "description": "Shared types, components, composables, functions, etc",
-  "main": "index.ts",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "author": "acerapa",
-  "license": "MIT"
+  "license": "MIT",
+  "private": true,
+  "dependencies": {
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "typescript": "^5.5.3"
+  }
 }

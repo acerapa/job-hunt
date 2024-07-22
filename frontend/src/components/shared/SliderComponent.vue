@@ -127,34 +127,4 @@ onMounted(() => {})
   @apply gap-3;
   animation: fade-in 2s forwards;
 }
-
-@keyframes slide-in-from-right {
-  100% {
-    margin-right: 0;
-  }
-}
-
-@-webkit-keyframes slide-in-from-right {
-  100% {
-    margin-right: 0;
-  }
-}
-
-@keyframes fade-in {
-  100% {
-    opacity: 1;
-  }
-  0% {
-    opacity: 0;
-  }
-}
-
-@-webkit-keyframes fade-in {
-  100% {
-    opacity: 1;
-  }
-  0% {
-    opacity: 0;
-  }
-}
 </style>

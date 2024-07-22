@@ -9,3 +9,9 @@ export const isEmail = (email: string): Boolean => {
 
   return error ? false : true;
 };
+
+export const UserCreationSchema = Joi.object({
+  username: Joi.string().required(),
+  email: Joi.string().email().required(),
+  password: Joi.string().required()
+})

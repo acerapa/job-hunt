@@ -97,7 +97,7 @@ export const authenticatedApi = async <PayloadData, ResponseData>(
   url: string,
   method: Method = Method.GET,
   payload: PayloadData,
-  hdrs: DynamicKeyObj
+  hdrs: DynamicKeyObj = {}
 ): Promise<ApiResponse<ResponseData>> => {
   const token: string = getAccessToken()
   const headers: DynamicKeyObj = {
