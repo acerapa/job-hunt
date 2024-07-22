@@ -1,7 +1,6 @@
 import { Router } from "express";
 import { register } from "../controllers/UserController";
 import { validateBody } from "../middlewares/request-validators";
-// import { UserCreationSchema } from "../validators";
 import { UserCreationSchema } from '@shared/pack'
 
 const router = Router();

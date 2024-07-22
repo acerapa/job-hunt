@@ -38,7 +38,7 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue'
 import { range } from '@/helpers'
-import { SlideDirection } from '@shared/pack'
+import { SlideDirection } from '@shared/pack/index'
 
 export type SliderProps = {
   panel: number

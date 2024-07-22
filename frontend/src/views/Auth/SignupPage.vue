@@ -49,18 +49,18 @@
           <p class="text-main text-[32px] font-bold">Job Hunt</p>
         </div>
         <div class="flex flex-col gap-5 mt-6">
-          <input type="text" class="input" placeholder="Email" v-model="model.email" />
-          <input type="text" class="input" placeholder="Username" v-model="model.username" />
+          <input type="text" class="input" placeholder="Email *" v-model="model.email" />
+          <input type="text" class="input" placeholder="Username *" v-model="model.username" />
           <input
             type="password"
             class="input w-full"
-            placeholder="Password"
+            placeholder="Password *"
             v-model="model.password"
           />
           <input
             type="password"
             class="input w-full"
-            placeholder="Confirm password"
+            placeholder="Confirm password *"
             v-model="confirmPassword"
           />
         </div>
@@ -95,9 +95,9 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import type { UserCreation } from '@shared/pack'
 import { useUserStore } from '@/stores/user-store'
 import LoadingComponent from '@/components/shared/LoadingComponent.vue'
+import { UserCreationSchema, type UserCreation, validate } from '@shared/pack/index'
 
 const preSet = {
   email: '',
@@ -112,6 +112,8 @@ const userStore = useUserStore()
 
 const onSubmit = async () => {
   isLoading.value = true
+  const { valid, errors } = validate(UserCreationSchema, model.value)
+  console.log(valid, errors?.errors)
   const result = await userStore.createUser(model.value)
   isLoading.value = false
 }
