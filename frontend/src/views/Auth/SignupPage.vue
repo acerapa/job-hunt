@@ -39,29 +39,32 @@
         />
       </div>
     </div>
-    <div class="min-w-[150px] w-full min-[700px]:max-w-[450px] bg-white h-full flex items-center">
+    <div
+      class="min-w-[150px] w-full min-[700px]:max-w-[450px] bg-white h-full flex items-center relative"
+    >
+      <LoadingComponent v-if="isLoading" />
       <div class="w-[70%] mx-auto">
         <div class="flex flex-col items-center">
           <p class="text-main text-base">Sign up to</p>
           <p class="text-main text-[32px] font-bold">Job Hunt</p>
         </div>
         <div class="flex flex-col gap-5 mt-6">
-          <input type="text" class="input" placeholder="Email" v-model="model.email" />
-          <input type="text" class="input" placeholder="Username" v-model="model.username" />
+          <input type="text" class="input" placeholder="Email *" v-model="model.email" />
+          <input type="text" class="input" placeholder="Username *" v-model="model.username" />
           <input
             type="password"
             class="input w-full"
-            placeholder="Password"
+            placeholder="Password *"
             v-model="model.password"
           />
           <input
             type="password"
             class="input w-full"
-            placeholder="Confirm password"
+            placeholder="Confirm password *"
             v-model="confirmPassword"
           />
         </div>
-        <button class="btn block mx-auto mt-6 !px-4 !py-2">Sign up</button>
+        <button class="btn block mx-auto mt-6 !px-4 !py-2" @click="onSubmit">Sign up</button>
         <div class="flex flex-col gap-4 mt-5">
           <p class="text-main text-base mx-auto">or Sign up with</p>
           <div class="flex gap-2 max-[820px]:flex-col">
@@ -80,9 +83,9 @@
           </div>
           <p class="text-main text-base mx-auto">
             Already have an account?
-            <RouterLink :to="{ name: 'signin' }" class="text-blue-500 underline"
-              >Sign in here!</RouterLink
-            >
+            <RouterLink :to="{ name: 'signin' }" class="text-blue-500 underline">
+              Sign in here!
+            </RouterLink>
           </p>
         </div>
       </div>
@@ -92,12 +95,26 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
+import { useUserStore } from '@/stores/user-store'
+import LoadingComponent from '@/components/shared/LoadingComponent.vue'
+import { UserCreationSchema, type UserCreation, validate } from '@shared/pack/index'
 
-const model = ref({
+const preSet = {
   email: '',
   password: '',
   username: ''
-})
+}
+const model = ref<UserCreation>(preSet)
+const isLoading = ref<boolean>(false)
 
 const confirmPassword = ref('')
+const userStore = useUserStore()
+
+const onSubmit = async () => {
+  isLoading.value = true
+  const { valid, errors } = validate(UserCreationSchema, model.value)
+  console.log(valid, errors?.errors)
+  const result = await userStore.createUser(model.value)
+  isLoading.value = false
+}
 </script>

@@ -38,7 +38,7 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue'
 import { range } from '@/helpers'
-import { SlideDirection } from '@shared/pack'
+import { SlideDirection } from '@shared/pack/index'
 
 export type SliderProps = {
   panel: number
@@ -126,35 +126,5 @@ onMounted(() => {})
 .panel {
   @apply gap-3;
   animation: fade-in 2s forwards;
-}
-
-@keyframes slide-in-from-right {
-  100% {
-    margin-right: 0;
-  }
-}
-
-@-webkit-keyframes slide-in-from-right {
-  100% {
-    margin-right: 0;
-  }
-}
-
-@keyframes fade-in {
-  100% {
-    opacity: 1;
-  }
-  0% {
-    opacity: 0;
-  }
-}
-
-@-webkit-keyframes fade-in {
-  100% {
-    opacity: 1;
-  }
-  0% {
-    opacity: 0;
-  }
 }
 </style>

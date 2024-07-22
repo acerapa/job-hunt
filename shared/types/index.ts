@@ -1,4 +1,5 @@
-export * from './enums'
+export * from './enums.js'
+export * from './frontend.js'
 
 export const enum UserType {
   HUNTER = 1,

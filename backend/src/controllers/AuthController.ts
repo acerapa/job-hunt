@@ -3,7 +3,7 @@ import { User } from "../entities/User";
 import { FindOptionsWhere } from "typeorm";
 import { compare } from "bcryptjs";
 import { formatResponse } from "../helpers/response";
-import { isEmail } from "../validators";
+import { isEmail } from "@shared/pack";
 import { generateAccessAndRefreshToken } from "../services/auth-service";
 import { JwtPayload, verify } from "jsonwebtoken";
 import { getEnvOrDefault } from "../helpers/env-helpers";

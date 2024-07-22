@@ -4,10 +4,12 @@
   "scripts": {
     "frontend": "yarn workspace frontend dev",
     "backend": "yarn workspace backend dev",
+    "build-shared": "yarn workspace @shared/pack tsc && yarn",
     "preinstall": "yarn workspace frontend add file:../shared && yarn workspace backend add file:../shared"
   },
   "workspaces": [
     "./backend",
-    "./frontend"
+    "./frontend",
+    "./shared"
   ]
 }

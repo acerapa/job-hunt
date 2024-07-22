@@ -4,13 +4,11 @@ import { hash } from "bcryptjs";
 import { formatResponse } from "../helpers/response";
 
 export const register = async (req: Request, res: Response) => {
-  const { first_name, last_name, email, username, password } = req.body;
+  const { email, username, password } = req.body;
   try {
     const hashedPassword = password ? await hash(password, 10) : "";
 
     const user = User.create({
-      first_name,
-      last_name,
       email,
       username,
       password: hashedPassword,
