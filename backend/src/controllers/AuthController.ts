@@ -21,6 +21,7 @@ export const authenticate = async (req: Request, res: Response) => {
 
   const user = await User.findOne({
     where: condition,
+    select: ['password','id']
   });
 
 
@@ -29,6 +30,7 @@ export const authenticate = async (req: Request, res: Response) => {
     access: "",
     refresh: ""
   };
+
   if (user) {
     const isMatched = await compare(password, user.password);
     if (isMatched) {

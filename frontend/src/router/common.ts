@@ -13,6 +13,11 @@ export default [
         path: '',
         name: 'landing',
         component: HomePage
+      },
+      {
+        path: '/dashboard',
+        name: 'dashboard',
+        component: () => import('@/views/DashboardPage.vue')
       }
     ]
   }

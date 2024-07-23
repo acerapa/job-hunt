@@ -1,10 +1,5 @@
 import { z, ZodError, ZodSchema } from 'zod'
-
-export const UserCreationSchema = z.object({
-  username: z.string().min(2, "Username is required"),
-  email: z.string().email(),
-  password: z.string().min(6, "Password must have aleast 6 characters")
-})
+export * from './user.js'
 
 export const isEmail = (email: string): boolean => {
   const EmailSchema = z.string().email();

@@ -9,12 +9,15 @@ export class UserRegistration extends BaseEntity {
   @Column({
     default: false
   })
-  doneType: boolean
+  done_type: boolean
 
   @Column({
     default: false
   })
-  isComplete: boolean
+  is_completed: boolean
+
+  @Column()
+  user_id: number
 
   @OneToOne(() => User)
   @JoinColumn({

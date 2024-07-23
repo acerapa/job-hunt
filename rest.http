@@ -6,13 +6,13 @@ Content-Type: application/json
 {
   "first_name": "Harvey",
   "last_name": "Aparece",
-  "username": "harapa",
+  "username": "harapa1",
   "email": "harapa@test.com",
   "password": "password"
 }
 
-# [Register User] error
 ###
+# [Register User] error
 POST http://localhost:3000/api/users/register
 Content-Type: application/json
 
@@ -20,7 +20,31 @@ Content-Type: application/json
 }
 
 ###
+# [Update User] success
+POST http://localhost:3000/api/users/update
+Content-Type: application/json
+Accept: application/json
 
+{
+  "user": {
+    "id": 11,
+    "type": 1
+  },
+  "user_registration": {
+    "done_type": "",
+    "is_completed": ""
+  }
+}
+
+###
+# [All Users] success
+GET http://localhost:3000/api/users/all
+
+###
+# [Get one User] success
+GET http://localhost:3000/api/users/10
+
+###
 # [Authenticate User]
 POST http://localhost:3000/api/auth/login
 Content-Type: application/json

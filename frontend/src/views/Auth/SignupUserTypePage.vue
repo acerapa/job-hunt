@@ -1,11 +1,16 @@
 <template>
-  <div class="w-screen h-screen flex flex-col gap-4 items-center justify-center">
+  <div class="w-screen h-screen flex flex-col gap-4 items-center justify-center relative">
+    <LoadingComponent v-if="isLoading" />
     <div class="text-center">
       <p class="text-main text-xl font-semibold">Are you a ...</p>
       <p class="text-sm font-light italic">*(Please select one)*</p>
     </div>
     <div class="flex gap-3 max-[490px]:flex-col">
-      <div class="user-types" :class="type == 1 ? 'user-type-active' : ''" @click="type = 1">
+      <div
+        class="user-types"
+        :class="type == UserType.HUNTER ? 'user-type-active' : ''"
+        @click="type = UserType.HUNTER"
+      >
         <img
           class="mx-auto"
           src="@/assets/images/jim-trollhunters-sword.png"
@@ -19,7 +24,11 @@
           <span class="text-xs font-bold">Jobs</span> they desire.
         </p>
       </div>
-      <div class="user-types" :class="type == 2 ? 'user-type-active' : ''" @click="type = 2">
+      <div
+        class="user-types"
+        :class="type == UserType.PROVIDER ? 'user-type-active' : ''"
+        @click="type = UserType.PROVIDER"
+      >
         <img class="mx-auto" src="@/assets/images/hammer-and-anvil.png" alt="hammer-and-anvil" />
         <p class="text-main text-base font-extrabold">Job Provider</p>
 
@@ -36,22 +45,61 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
-import { useRouter } from 'vue-router'
-import { UserType } from '@shared/pack'
+import { onMounted, ref } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
+import { UserType } from '@shared/pack/index'
+import type { User } from '@shared/pack'
+import { useUserStore } from '@/stores/user-store'
+import LoadingComponent from '@/components/shared/LoadingComponent.vue'
 
 // TODO: If the user is not yet finish setting up this info, well redirect them here to finish this setups.
-const type = ref<UserType>()
+const isLoading = ref<boolean>(false)
 
+const type = ref<UserType>()
+const route = useRoute()
 const router = useRouter()
-const onSubmit = () => {
-  router.push({
-    name: 'user-info',
-    params: {
-      id: 1,
-      type: type.value
+const userStore = useUserStore()
+const user = ref<User>()
+
+onMounted(async () => {
+  isLoading.value = true
+  user.value = await userStore.fetchOneUser(route.params.id as string)
+  isLoading.value = false
+
+  // for safety
+  if (user.value?.type) {
+    router.push({
+      name: 'user-info',
+      params: {
+        id: user.value.id,
+        type: user.value.type
+      }
+    })
+  }
+})
+
+const onSubmit = async () => {
+  isLoading.value = true
+  if (user.value) {
+    const data = {
+      user: {
+        id: user.value.id,
+        type: type.value
+      },
+      user_registration: {
+        done_type: true
+      }
     }
-  })
+    await userStore.updateUser(data)
+    isLoading.value = false
+    router.push({
+      name: 'user-info',
+      params: {
+        id: user.value.id,
+        type: type.value
+      }
+    })
+  }
 }
 </script>
 
