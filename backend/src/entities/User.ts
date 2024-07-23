@@ -9,6 +9,7 @@ import {
 } from "typeorm";
 import { CompanyRep } from "./CompanyRep";
 import { UserRegistration } from "./UserRegistration";
+import { UserType } from "@shared/pack";
 
 @Entity("users")
 export class User extends BaseEntity {
@@ -24,6 +25,10 @@ export class User extends BaseEntity {
     nullable: true
   })
   last_name: string;
+  @Column({
+    nullable: true
+  })
+  type: UserType
 
   @Column({
     unique: true,
@@ -32,7 +37,8 @@ export class User extends BaseEntity {
   username: string;
 
   @Column({
-    nullable: false
+    nullable: false,
+    select: false
   })
   password: string;
 
@@ -45,6 +51,9 @@ export class User extends BaseEntity {
     nullable: true,
   })
   mobile_number: string;
+
+  @Column({nullable: true})
+  personal_summary: string
 
   @OneToOne(() => CompanyRep, (comanyRep) => comanyRep.user)
   company_rep: CompanyRep;

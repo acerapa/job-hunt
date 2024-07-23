@@ -1,10 +1,13 @@
-import { Router } from "express";
-import { register } from "../controllers/UserController";
-import { validateBody } from "../middlewares/request-validators";
-import { UserCreationSchema } from '@shared/pack'
+import { Router } from "express"
+import { all, getOne, register, update } from "../controllers/UserController"
+import { validateBody } from "../middlewares/request-validators"
+import { UserCreationSchema, CombinedUserUpdateSchema } from '@shared/pack'
 
-const router = Router();
+const router = Router()
 
-router.post("/register", validateBody(UserCreationSchema), register);
+router.get("/all", all)
+router.get("/:id", getOne)
+router.post("/update", validateBody(CombinedUserUpdateSchema), update)
+router.post("/register", validateBody(UserCreationSchema), register)
 
-export default router;
+export default router

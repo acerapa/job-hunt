@@ -38,7 +38,7 @@ const setHeaders = (headerValues: DynamicKeyObj, headers: Headers) => {
 export const api = async <PayloadData, ResponseData>(
   url: string,
   method: Method = Method.GET,
-  payload: PayloadData,
+  payload: PayloadData | null = null,
   hdrs: DynamicKeyObj = {}
 ): Promise<ApiResponse<ResponseData>> => {
   const headers: Headers = new Headers()
@@ -50,7 +50,7 @@ export const api = async <PayloadData, ResponseData>(
   }
 
   // if method is GET no need for body
-  if (method != Method.GET) {
+  if (method != Method.GET && payload) {
     requestInit.body = JSON.stringify(payload)
   }
 
@@ -96,7 +96,7 @@ export const api = async <PayloadData, ResponseData>(
 export const authenticatedApi = async <PayloadData, ResponseData>(
   url: string,
   method: Method = Method.GET,
-  payload: PayloadData,
+  payload: PayloadData | null = null,
   hdrs: DynamicKeyObj = {}
 ): Promise<ApiResponse<ResponseData>> => {
   const token: string = getAccessToken()
