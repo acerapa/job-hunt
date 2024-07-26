@@ -8,24 +8,38 @@ import {
   OneToOne,
 } from "typeorm";
 import { CompanyRep } from "./CompanyRep";
+import { UserRegistration } from "./UserRegistration";
+import { UserType } from "@shared/pack";
 
 @Entity("users")
 export class User extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
+  @Column({
+    nullable: true
+  })
   first_name: string;
 
-  @Column()
+  @Column({
+    nullable: true
+  })
   last_name: string;
+  @Column({
+    nullable: true
+  })
+  type: UserType
 
   @Column({
     unique: true,
+    nullable: false
   })
   username: string;
 
-  @Column()
+  @Column({
+    nullable: false,
+    select: false
+  })
   password: string;
 
   @Column({
@@ -38,8 +52,14 @@ export class User extends BaseEntity {
   })
   mobile_number: string;
 
+  @Column({nullable: true})
+  personal_summary: string
+
   @OneToOne(() => CompanyRep, (comanyRep) => comanyRep.user)
   company_rep: CompanyRep;
+
+  @OneToOne(() => UserRegistration, (userRegistration) => userRegistration.user)
+  user_registration: UserRegistration
 
   @CreateDateColumn()
   created_at: Date;

@@ -22,3 +22,51 @@
 .btn-outline {
     @apply px-2 rounded border border-main text-main py-1 hover:bg-main hover:text-sub text-sm;
 }
+
+.btn {
+    @apply px-2 rounded border bg-main text-sub py-1 hover:bg-white hover:text-main hover:border-main text-sm;
+}
+
+.input {
+    @apply outline-none border border-light-green rounded px-3 py-2 focus:border-main text-main placeholder:text-more-light-green;
+}
+
+input[type=password] {
+    @apply font-black tracking-widest placeholder:font-normal;
+}
+
+.social-link {
+    @apply flex gap-1 items-center border rounded px-3 py-1 border-light-green;
+}
+
+
+
+@keyframes slide-in-from-right {
+100% {
+    margin-right: 0;
+}
+}
+
+@-webkit-keyframes slide-in-from-right {
+100% {
+    margin-right: 0;
+}
+}
+
+@keyframes fade-in {
+100% {
+    opacity: 1;
+}
+0% {
+    opacity: 0;
+}
+}
+
+@-webkit-keyframes fade-in {
+100% {
+    opacity: 1;
+}
+0% {
+    opacity: 0;
+}
+}

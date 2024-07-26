@@ -9,14 +9,17 @@
     "dev": "nodemon app.ts"
   },
   "dependencies": {
+    "@shared/pack": "file:../shared",
     "@types/bcryptjs": "^2.4.6",
     "@types/cors": "^2.8.17",
+    "@types/jsonwebtoken": "^9.0.6",
     "@types/node": "^20.14.9",
     "bcryptjs": "^2.4.3",
+    "class-transformer": "^0.5.1",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
-    "joi": "^17.13.3",
+    "jsonwebtoken": "^9.0.2",
     "mysql2": "^3.10.2",
     "typeorm": "^0.3.20"
   },
