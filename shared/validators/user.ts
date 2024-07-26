@@ -24,3 +24,8 @@ export const CombinedUserUpdateSchema = z.object({
   user: UserCreationSchema,
   user_registration: UserRegistrationUpdateSchema
 })
+
+export const UserAuthSchema = z.object({
+  usercred: z.string().min(1, "Username or email is required"),
+  password: z.string().min(6, "Password must have atleast 6 characters")
+})

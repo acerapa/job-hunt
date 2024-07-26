@@ -1,4 +1,5 @@
-import { z, ZodError, ZodSchema } from 'zod'
+import { z, ZodError, ZodSchema, typeToFlattenedError } from 'zod'
+import { isEmptyObject } from '../helpers/index.js';
 export * from './user.js'
 
 export const isEmail = (email: string): boolean => {
@@ -16,13 +17,12 @@ export const isEmail = (email: string): boolean => {
 export type ValidateReturnType<Data> = {
   valid: boolean,
   data: Data | null,
-  errors: ZodError | null
+  errors: Record<string, any> | string | null
 }
 
 export const validate = <Data>(
   schema: ZodSchema,
-  data: Data,
-  showError: boolean = false
+  data: Data
 ): ValidateReturnType<Data> => {
   const rtn: Partial<ValidateReturnType<Data>> = {}
 
@@ -31,7 +31,20 @@ export const validate = <Data>(
     rtn.data = result
     rtn.valid = true
   } catch (e) {
-    rtn.errors = (e as ZodError)
+    const err = (e as ZodError)
+    const flattenedError = err.flatten()
+    if (flattenedError.formErrors.length) {      
+      rtn.errors = flattenedError.formErrors[0]
+    } else {
+      const setupError: Record<string, any> = {}
+      Object.keys(flattenedError.fieldErrors)
+        .forEach(key => {
+          setupError[key] = Array.isArray(flattenedError.fieldErrors[key]) &&
+                            flattenedError.fieldErrors[key].length ?
+                            flattenedError.fieldErrors[key][0] : ''
+        })
+      rtn.errors = setupError
+    }
     rtn.valid = false
   }
 

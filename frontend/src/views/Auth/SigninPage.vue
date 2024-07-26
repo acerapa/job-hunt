@@ -91,8 +91,9 @@
 
 <script setup lang="ts">
 import { useAuthStore } from '@/stores/auth-store'
-import { type UserCred } from '@shared/pack'
+import { validate, UserAuthSchema, type UserCred } from '@shared/pack'
 import { ref } from 'vue'
+import InputComponent from '@/components/shared/InputComponent.vue'
 
 const showPassword = ref(false)
 const model = ref<Partial<UserCred>>({})
@@ -100,10 +101,13 @@ const model = ref<Partial<UserCred>>({})
 const authStore = useAuthStore()
 
 const onSignin = async () => {
-  const isAuth = await authStore.signIn(model.value as UserCred)
+  const { valid, errors } = validate(UserAuthSchema, model.value)
+  console.log(valid, errors)
+  // return
+  // const isAuth = await authStore.signIn(model.value as UserCred)
 
-  if (isAuth) {
-    model.value = {}
-  }
+  // if (isAuth) {
+  //   model.value = {}
+  // }
 }
 </script>

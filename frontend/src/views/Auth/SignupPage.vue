@@ -143,7 +143,7 @@ const preSet = {
 
 const showAlert = ref<boolean>(false)
 
-const modelErrors = ref<UserCreation>(preSet)
+const modelErrors = ref<UserCreation>({ ...preSet })
 const model = ref<UserCreation>(preSet)
 const isLoading = ref<boolean>(false)
 
@@ -154,12 +154,7 @@ const router = useRouter()
 const onSubmit = async () => {
   const { valid, errors } = validate(UserCreationSchema, model.value)
   if (!valid && errors) {
-    const setUpErrors: Record<string, string> = {}
-    Object.keys(errors.flatten().fieldErrors).forEach((key) => {
-      const flattenedData = errors.flatten().fieldErrors as Record<string, string[]>
-      setUpErrors[key] = flattenedData[key][0]
-    })
-    modelErrors.value = setUpErrors as UserCreation
+    modelErrors.value = errors as UserCreation
     return
   }
 
@@ -181,13 +176,9 @@ const onSubmit = async () => {
 }
 
 const setupErrors = (field: string, schema: ZodSchema, value: any) => {
-  let fieldErrors: Record<string, string> = {}
+  let fieldErrors: Record<string, string> = modelErrors.value
   const { errors } = validate(schema, value)
-  if (errors) {
-    const flattenedErrors = errors.flatten()
-    fieldErrors[field] = flattenedErrors.formErrors[0]
-  }
-
+  fieldErrors[field] = errors ? (errors as string) : ''
   modelErrors.value = fieldErrors as UserCreation
 }
 </script>
