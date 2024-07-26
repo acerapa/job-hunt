@@ -1,4 +1,4 @@
-import type { ApiResponse } from "@acerapa/job-hunt-shared-types"
+import type { ApiResponse } from "@shared/pack"
 
 export const enum Method {
   GET = 'GET',

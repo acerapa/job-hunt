@@ -1,21 +1,25 @@
 import { Request, Response } from "express";
-import { User } from "../entities/User";
 import { hash } from "bcryptjs";
 import { formatResponse } from "../helpers/response";
+import { User } from "../entities/User";
+import { User as UserTyping } from "@shared/pack";
+import { instanceToInstance } from 'class-transformer'
 import { UserRegistration } from "../entities/UserRegistration";
-import { User as TypeUser } from "@shared/pack";
 
 export const all = async (req: Request, res: Response) => {
   try {
-    const users = await User.find({
-      order: {
-        created_at: 'DESC'
-      },
-      relations: {
-        user_registration: true,
-        company_rep: true,
-      }
-    });
+    const users = instanceToInstance(
+        await User.find({
+        order: {
+          created_at: 'DESC'
+        },
+        relations: {
+          user_registration: true,
+          company_rep: true,
+        }
+      })
+    );
+
     res
       .status(200)
       .json(
@@ -83,12 +87,16 @@ export const update = async (req: Request, res: Response) => {
 
 export const getOne = async (req: Request, res: Response) => {
   try {
-    const user = await User.findOne({
-        where: { id: Number.parseInt(req.params.id) },
-        relations: {
-        user_registration: true
-      }
-    })
+    const user: UserTyping | null = instanceToInstance(
+        await User.findOne({
+          where: { id: Number.parseInt(req.params.id) },
+          relations: {
+            user_registration: true,
+            company_rep: true
+          }
+      })
+    )
+
     res
       .status(200)
       .json(

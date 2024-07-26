@@ -91,7 +91,7 @@
 
 <script setup lang="ts">
 import { useAuthStore } from '@/stores/auth-store'
-import { type UserCred } from '@acerapa/job-hunt-shared-types'
+import { type UserCred } from '@shared/pack'
 import { ref } from 'vue'
 
 const showPassword = ref(false)

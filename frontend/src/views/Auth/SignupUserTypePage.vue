@@ -48,7 +48,6 @@
 import { onMounted, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { UserType } from '@shared/pack/index'
-import type { User } from '@shared/pack'
 import { useUserStore } from '@/stores/user-store'
 import LoadingComponent from '@/components/shared/LoadingComponent.vue'
 
@@ -59,7 +58,7 @@ const type = ref<UserType>()
 const route = useRoute()
 const router = useRouter()
 const userStore = useUserStore()
-const user = ref<User>()
+const user = ref()
 
 onMounted(async () => {
   isLoading.value = true

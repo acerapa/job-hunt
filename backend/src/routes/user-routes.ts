@@ -1,7 +1,7 @@
 import { Router } from "express"
 import { all, getOne, register, update } from "../controllers/UserController"
 import { validateBody } from "../middlewares/request-validators"
-import { UserCreationSchema, CombinedUserUpdateSchema } from '@shared/pack'
+import { UserCreationSchema, CombinedUserUpdateSchema } from '@shared/pack/dist'
 
 const router = Router()
 

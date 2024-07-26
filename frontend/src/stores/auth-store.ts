@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 import { ref } from "vue";
-import type { ApiResponse, UserCred, LoginResponseData } from '@acerapa/job-hunt-shared-types'
+import type { ApiResponse, LoginResponseData, UserCred } from '@shared/pack'
 import { api, Method } from "@/api";
 
 export const useAuthStore = defineStore('auth', function () {

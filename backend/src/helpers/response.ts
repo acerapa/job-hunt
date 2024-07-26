@@ -1,4 +1,4 @@
-import { ApiResponse } from '@acerapa/job-hunt-shared-types'
+import { ApiResponse } from '@shared/pack'
 
 export const formatResponse = <Data>(
   data: Data,

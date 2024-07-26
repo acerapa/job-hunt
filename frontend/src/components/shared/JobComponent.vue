@@ -7,11 +7,12 @@
       <img src="@/assets/images/sample-company-logo.png" class="logo" alt="sample-company-logo" />
       <p class="text-sm font-semibold">{{ props.item.company.name }}</p>
       <div class="ratings">
-        <img 
-          :src="rating <= props.item.company.ratings ? StartFilled : StarOutlined" 
+        <img
+          :src="rating <= props.item.company.ratings ? StartFilled : StarOutlined"
           :alt="rating.toString()"
-          v-for="rating in 5" 
-          :key="rating" />
+          v-for="rating in 5"
+          :key="rating"
+        />
       </div>
     </div>
     <div class="tags">
@@ -21,15 +22,30 @@
 </template>
 
 <script setup lang="ts">
-import type { Job } from '@shared/pack'
 import StartFilled from '@/assets/images/star-filled.png'
 import StarOutlined from '@/assets/images/star-outlined.png'
+
+export type Tag = {
+  name: string
+}
+
+export type Company = {
+  name: string
+  logo: string
+  ratings: number
+}
+
+export type Job = {
+  title: string
+  description: string
+  tags: Tag[]
+  company: Company
+}
 
 interface Props {
   item: Job
 }
 const props = defineProps<Props>()
-
 </script>
 
 <style scoped>

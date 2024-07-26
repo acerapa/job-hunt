@@ -1,13 +1,13 @@
 import { Request, Response } from "express";
-import { User } from "../entities/User";
 import { FindOptionsWhere } from "typeorm";
 import { compare } from "bcryptjs";
 import { formatResponse } from "../helpers/response";
-import { isEmail } from "@shared/pack";
+import { isEmail } from "@shared/pack/dist";
+import { User } from './../entities/User';
 import { generateAccessAndRefreshToken } from "../services/auth-service";
 import { JwtPayload, verify } from "jsonwebtoken";
 import { getEnvOrDefault } from "../helpers/env-helpers";
-import { LoginResponseData } from "@acerapa/job-hunt-shared-types"
+import { LoginResponseData } from "@shared/pack"
 
 export const authenticate = async (req: Request, res: Response) => {
   const { usercred, password } = req.body;
