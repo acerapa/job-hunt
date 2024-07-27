@@ -1,9 +1,12 @@
+import { UserType } from "."
+
 export interface User {
   id: number
   first_name: string
   last_name: string
   email: string
   password: string
+  type: UserType
   mobile_number: string
   personal_summary: string
   company_rep: CompanyRep | null

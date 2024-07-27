@@ -7,7 +7,7 @@ import { User } from './../entities/User';
 import { generateAccessAndRefreshToken } from "../services/auth-service";
 import { JwtPayload, verify } from "jsonwebtoken";
 import { getEnvOrDefault } from "../helpers/env-helpers";
-import { LoginResponseData } from "@shared/pack"
+import { LoginResponseData } from "@shared/pack/dist"
 
 export const authenticate = async (req: Request, res: Response) => {
   const { usercred, password } = req.body;
@@ -28,7 +28,8 @@ export const authenticate = async (req: Request, res: Response) => {
   let responseData: LoginResponseData = {
     authenticated: false,
     access: "",
-    refresh: ""
+    refresh: "",
+    user_id: ""
   };
 
   if (user) {
@@ -37,6 +38,7 @@ export const authenticate = async (req: Request, res: Response) => {
       // generate tokens
       responseData = {
         authenticated: true,
+        user_id: user.id.toString(),
         ...generateAccessAndRefreshToken(user)
       };
 

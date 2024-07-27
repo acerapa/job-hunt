@@ -41,18 +41,25 @@
           <p class="text-main text-[32px] font-bold">Job Hunt</p>
         </div>
         <div class="flex flex-col gap-5 mt-6">
-          <input
+          <InputComponent
             type="text"
-            class="input"
-            placeholder="Username or Email"
+            name="usercred"
+            input-class="w-full"
             v-model="model.usercred"
+            placeholder="Username or Email"
+            :error-message="modelErrors.usercred"
+            @input="setupErrors('usercred', UserAuthSchema.shape.usercred, model.usercred)"
           />
-          <div class="flex flex-col items-end gap-2">
-            <input
-              :type="showPassword ? 'text' : 'password'"
-              class="input w-full"
+          <div class="flex flex-col items-end gap-4">
+            <InputComponent
+              class="w-full"
+              name="password"
+              input-class="w-full"
               placeholder="Password"
               v-model="model.password"
+              :error-message="modelErrors.password"
+              :type="showPassword ? 'text' : 'password'"
+              @input="setupErrors('password', UserAuthSchema.shape.password, model.password)"
             />
             <div class="flex gap-1 items-center">
               <input type="checkbox" class="input w-4 h-4" v-model="showPassword" />
@@ -91,19 +98,36 @@
 
 <script setup lang="ts">
 import { useAuthStore } from '@/stores/auth-store'
-import { type UserCred } from '@shared/pack'
+import { validate, UserAuthSchema, type UserCred, ZodSchema } from '@shared/pack'
 import { ref } from 'vue'
+import InputComponent from '@/components/shared/InputComponent.vue'
+import { useRouter } from 'vue-router'
 
 const showPassword = ref(false)
 const model = ref<Partial<UserCred>>({})
+const modelErrors = ref<Partial<UserCred>>({})
+const router = useRouter()
 
 const authStore = useAuthStore()
 
 const onSignin = async () => {
-  const isAuth = await authStore.signIn(model.value as UserCred)
-
-  if (isAuth) {
-    model.value = {}
+  const { valid, errors } = validate(UserAuthSchema, model.value)
+  if (!valid && errors) {
+    modelErrors.value = errors as Partial<UserCred>
+    return
   }
+  const authenticated = await authStore.signIn(model.value as UserCred)
+  if (authenticated) {
+    router.push({
+      name: 'dashboard'
+    })
+  }
+}
+
+const setupErrors = (field: string, schema: ZodSchema, value: any) => {
+  let fieldErrors: Record<string, string> = modelErrors.value
+  const { errors } = validate(schema, value)
+  fieldErrors[field] = errors ? (errors as string) : ''
+  modelErrors.value = fieldErrors as Partial<UserCred>
 }
 </script>

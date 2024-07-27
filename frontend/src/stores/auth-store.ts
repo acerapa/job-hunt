@@ -13,6 +13,11 @@ export const useAuthStore = defineStore('auth', function () {
     if (res.data.authenticated) {
       access.value = res.data.access;
       refresh.value = res.data.refresh;
+
+      // persist tokens to localstorage
+      localStorage.setItem('access', access.value)
+      localStorage.setItem('refresh', refresh.value)
+      localStorage.setItem('current_user', res.data.user_id)
     }
 
     return res.data.authenticated;

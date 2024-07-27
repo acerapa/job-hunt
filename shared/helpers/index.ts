@@ -13,3 +13,7 @@ export const range = (n: number, start:number = 0): Array<number> => {
 
   return rangedNumbers
 }
+
+export const isEmptyObject = (data: object) => {
+  return !Object.keys(data).length
+}
