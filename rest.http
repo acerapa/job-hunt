@@ -27,12 +27,8 @@ Accept: application/json
 
 {
   "user": {
-    "id": 11,
-    "type": 1
-  },
-  "user_registration": {
-    "done_type": "",
-    "is_completed": ""
+    "id": 1,
+    "type": 0
   }
 }
 

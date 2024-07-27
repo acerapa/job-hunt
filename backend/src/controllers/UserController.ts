@@ -65,13 +65,17 @@ export const register = async (req: Request, res: Response) => {
 };
 
 export const update = async (req: Request, res: Response) => {
-  const userData = {...req.body.user};
-  delete userData.user_registration;
-  const userRegistrationData = req.body.user.user_registration;
-
   try {
-    await User.update({ id: req.body.user.id }, userData);
-    await UserRegistration.update({ user_id: req.body.user }, userRegistrationData);
+    const validated = req.body.validated;
+    if (validated && validated.user) {
+      await User.update({ id: req.body.user.id }, validated.user);
+      if (validated.user_registration) {
+        await UserRegistration.update({ user_id: req.body.user }, validated.user_registration);
+      }
+    } else {
+      throw Error('No data pass to update!')
+    }
+
     res
       .status(200)
       .json(
@@ -88,12 +92,12 @@ export const update = async (req: Request, res: Response) => {
 export const getOne = async (req: Request, res: Response) => {
   try {
     const user: UserTyping | null = instanceToInstance(
-        await User.findOne({
-          where: { id: Number.parseInt(req.params.id) },
-          relations: {
-            user_registration: true,
-            company_rep: true
-          }
+      await User.findOne({
+        where: { id: Number.parseInt(req.params.id) },
+        relations: {
+          user_registration: true,
+          company_rep: true
+        }
       })
     )
 

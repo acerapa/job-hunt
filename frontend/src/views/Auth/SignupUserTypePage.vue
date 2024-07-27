@@ -89,15 +89,17 @@ const onSubmit = async () => {
         done_type: true
       }
     }
-    await userStore.updateUser(data)
+    const res = await userStore.updateUser(data)
     isLoading.value = false
-    router.push({
-      name: 'user-info',
-      params: {
-        id: user.value.id,
-        type: type.value
-      }
-    })
+    if (res.status == 200) {
+      router.push({
+        name: 'user-info',
+        params: {
+          id: user.value.id,
+          type: type.value
+        }
+      })
+    }
   }
 }
 </script>

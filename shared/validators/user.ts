@@ -26,6 +26,12 @@ export const CombinedUserUpdateSchema = z.object({
 })
 
 export const UserAuthSchema = z.object({
-  usercred: z.string().min(1, "Username or email is required"),
+  usercred: z.string().min(2, {message: "Username or email must have atleast 2 characters"}),
   password: z.string().min(6, "Password must have atleast 6 characters")
 })
+
+// partials
+export const PartialCombinedUserUpdateSchema = z.object({
+  user: UserUpdateSchema,
+  user_registration: UserRegistrationUpdateSchema
+}).partial()
