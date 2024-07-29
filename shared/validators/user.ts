@@ -9,10 +9,11 @@ export const UserCreationSchema = z.object({
 export const UserUpdateSchema = z.object({
   username: z.string().optional(),
   email: z.string().optional(),
-  first_name: z.string().optional(),
-  last_name: z.string().optional(),
+  first_name: z.string().min(1, "First name is required").optional(),
+  last_name: z.string().min(1, "Last name is required").optional(),
   type: z.number().optional(),
-  mobile_number: z.string().optional()
+  mobile_number: z.string().min(1, "Contact number name is required").optional(),
+  professional_summary: z.string().min(1, " Professional summary is required").optional()
 })
 
 export const UserRegistrationUpdateSchema = z.object({

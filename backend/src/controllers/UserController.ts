@@ -68,9 +68,9 @@ export const update = async (req: Request, res: Response) => {
   try {
     const validated = req.body.validated;
     if (validated && validated.user) {
-      await User.update({ id: req.body.user.id }, validated.user);
+      await User.update({ id: req.body.id }, validated.user);
       if (validated.user_registration) {
-        await UserRegistration.update({ user_id: req.body.user }, validated.user_registration);
+        await UserRegistration.update({ user_id: req.body.id }, validated.user_registration);
       }
     } else {
       throw Error('No data pass to update!')

@@ -8,7 +8,7 @@ export interface User {
   password: string
   type: UserType
   mobile_number: string
-  personal_summary: string
+  professional_summary: string
   company_rep: CompanyRep | null
   user_registration: UserRegistration
   created_at: Date
