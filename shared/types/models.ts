@@ -18,8 +18,8 @@ export interface User {
 export interface CompanyRep {
   id: number
   position: string
-  jobs: Job[]
-  user: User
+  jobs?: Job[]
+  user?: User
   company: Company
   user_id?: number
   company_id?: number
@@ -41,7 +41,7 @@ export interface Company {
   description: string
   employee_population_range: string
   site_url: string
-  reps: CompanyRep[]
+  rep: CompanyRep
   jobs: Job[]
   created_at: Date
   updated_at: Date
@@ -59,4 +59,12 @@ export interface Job {
   rep: CompanyRep
   company_id?: number
   company: Company
+}
+
+export interface Address {
+  id: number
+  address1: string
+  address2: string
+  city: string
+  postal: string
 }

@@ -27,7 +27,7 @@ export class CompanyRep extends BaseEntity {
   })
   user: User;
 
-  @ManyToOne(() => Company, (company) => company.reps)
+  @ManyToOne(() => Company, (company) => company.rep)
   @JoinColumn({ name: "company_id" })
   company: Company;
 

@@ -6,6 +6,7 @@ import {
   OneToMany,
   CreateDateColumn,
   UpdateDateColumn,
+  OneToOne,
 } from "typeorm";
 import { CompanyRep } from "./CompanyRep";
 import { Job } from "./Job";
@@ -31,8 +32,8 @@ export class Company extends BaseEntity {
   @Column()
   site_url: string;
 
-  @OneToMany(() => CompanyRep, (companyRep) => companyRep.company)
-  reps: CompanyRep[];
+  @OneToOne(() => CompanyRep, (companyRep) => companyRep.company)
+  rep: CompanyRep;
 
   @OneToMany(() => Job, (job) => job.company)
   jobs: Job[];

@@ -31,8 +31,16 @@ export const UserAuthSchema = z.object({
   password: z.string().min(6, "Password must have atleast 6 characters")
 })
 
+export const CompanyRepSchema = z.object({
+  position: z.string(),
+  user_id: z.string().or(z.string()),
+  company_id: z.string().or(z.number())
+})
+
 // partials
 export const PartialCombinedUserUpdateSchema = z.object({
   user: UserUpdateSchema,
   user_registration: UserRegistrationUpdateSchema
 }).partial()
+
+export const UpdateCompanyRepSchema = CompanyRepSchema.optional()

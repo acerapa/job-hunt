@@ -12,7 +12,7 @@ export const all = async (req: Request, res: Response) => {
           created_at: 'DESC'
         },
         relations: {
-          reps: true,
+          rep: true,
           jobs: true
         }
       })
