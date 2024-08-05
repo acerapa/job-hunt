@@ -1,4 +1,4 @@
-import { User, UserRegistration } from "./models"
+import { Address, User, UserRegistration } from "./models"
 
 export type UserCreation = {
   email: string,
@@ -17,5 +17,6 @@ export type UserInfoCreation = {
 export type UserUpdate = {
   id: number,
   user: Partial<User>,
-  user_registration: Partial<UserRegistration>
+  user_registration: Partial<UserRegistration>,
+  address: Partial<Address>
 }

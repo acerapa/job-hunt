@@ -18,6 +18,13 @@
           id="first_name"
           input-class="w-full"
           class="flex-1"
+          @input="
+            setupErrors(
+              'first_name',
+              RequiredUserInfoSchema.shape.first_name,
+              model.user.first_name
+            )
+          "
           v-model="model.user.first_name"
           :error-message="modelErrors?.first_name"
         />
@@ -28,6 +35,9 @@
           id="last_name"
           input-class="w-full"
           class="flex-1"
+          @input="
+            setupErrors('last_name', RequiredUserInfoSchema.shape.last_name, model.user.last_name)
+          "
           v-model="model.user.last_name"
           :error-message="modelErrors?.last_name"
         />
@@ -40,6 +50,13 @@
           id="mobile_number"
           input-class="w-full"
           class="flex-1"
+          @input="
+            setupErrors(
+              'mobile_number',
+              RequiredUserInfoSchema.shape.mobile_number,
+              model.user.mobile_number
+            )
+          "
           v-model="model.user.mobile_number"
           :error-message="modelErrors?.mobile_number"
         />
@@ -50,10 +67,16 @@
           id="email"
           input-class="w-full"
           class="flex-1"
+          @input="setupErrors('email', RequiredUserInfoSchema.shape.email, model.user.email)"
           v-model="model.user.email"
           :error-message="modelErrors?.email"
         />
       </div>
+      <AddressComponent
+        :model-errors="modelErrors"
+        @on-change="setupErrors"
+        class="[&>div]:gap-6 flex flex-col gap-5"
+      />
       <InputComponent
         name="prof_summary"
         placeholder="Professional Summary or Objectives *"
@@ -61,6 +84,13 @@
         id="prof_summary"
         input-class="w-full"
         class="flex-1"
+        @input="
+          setupErrors(
+            'professional_summary',
+            RequiredUserInfoSchema.shape.professional_summary,
+            model.user.professional_summary
+          )
+        "
         v-model="model.user.professional_summary"
         :error-message="modelErrors?.professional_summary"
         :rows="4"
@@ -72,14 +102,15 @@
 
 <script setup lang="ts">
 import {
-  type UserCreation,
-  type UserInfoCreation,
   type UserUpdate,
   UserUpdateSchema,
+  AddressSchema,
   validate,
-  z
+  z,
+  ZodSchema
 } from '@shared/pack'
 import InputComponent from '../shared/InputComponent.vue'
+import AddressComponent from '../shared/AddressComponent.vue'
 import { onMounted, ref } from 'vue'
 import { useUserStore } from '@/stores/user-store'
 
@@ -94,12 +125,18 @@ const userUpdate: UserUpdate = {
   },
   user_registration: {
     is_completed: true
+  },
+  address: {
+    address1: '',
+    address2: '',
+    city: '',
+    postal: ''
   }
 }
 
 const userStore = useUserStore()
 const isLoading = defineModel<boolean>()
-const modelErrors = ref<Partial<UserInfoCreation>>()
+const modelErrors = ref()
 const model = ref<UserUpdate>(userUpdate)
 
 onMounted(() => {
@@ -117,13 +154,35 @@ const RequiredUserInfoSchema = UserUpdateSchema.extend({
 })
 
 const onSubmit = async () => {
-  const { errors, valid } = validate(RequiredUserInfoSchema, model.value.user)
-  if (!valid) {
-    modelErrors.value = errors as UserCreation
+  let hasError = false
+  modelErrors.value = modelErrors.value ? modelErrors.value : {}
+  const userValRes = validate(RequiredUserInfoSchema, model.value.user)
+  const addressValRes = validate(AddressSchema, model.value.address)
+  if (!userValRes.valid) {
+    modelErrors.value = Object.assign(modelErrors.value, userValRes.errors)
+    hasError = true
+  }
+
+  if (!addressValRes.valid) {
+    modelErrors.value = Object.assign(modelErrors.value, addressValRes.errors)
+    hasError = true
+  }
+
+  if (hasError) {
     return
   }
+
   isLoading.value = true
   await userStore.updateUser(model.value)
   isLoading.value = false
+}
+
+const setupErrors = (field: string, schema: ZodSchema, value: any) => {
+  modelErrors.value = modelErrors.value ? modelErrors.value : {}
+  const { valid, errors } = validate(schema, value)
+  const fieldError: Record<string, string> = {}
+  fieldError[field] = !valid ? (errors as string) : ''
+  modelErrors.value = Object.assign(modelErrors.value, fieldError)
+  return valid
 }
 </script>

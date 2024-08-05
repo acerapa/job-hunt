@@ -150,7 +150,8 @@ const userUpdateModel: UserUpdate = {
   },
   user_registration: {
     is_completed: false
-  }
+  },
+  address: {}
 }
 
 const companyRepModel: Pick<CompanyRep, 'position'> = {

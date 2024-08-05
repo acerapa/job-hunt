@@ -1,5 +1,12 @@
 import { z } from 'zod'
 
+export const AddressSchema = z.object({
+  address1: z.string().min(1, "Address 1 is required"),
+  address2: z.string().optional(),
+  city: z.string().min(1, "City is required"),
+  postal: z.string().min(1, "Postal/Zip code is required")
+})
+
 export const UserCreationSchema = z.object({
   username: z.string().min(2, "Username is required"),
   email: z.string().email(),
@@ -13,7 +20,7 @@ export const UserUpdateSchema = z.object({
   last_name: z.string().min(1, "Last name is required").optional(),
   type: z.number().optional(),
   mobile_number: z.string().min(1, "Contact number name is required").optional(),
-  professional_summary: z.string().min(1, " Professional summary is required").optional()
+  professional_summary: z.string().min(1, " Professional summary is required").optional(),
 })
 
 export const UserRegistrationUpdateSchema = z.object({
@@ -40,7 +47,8 @@ export const CompanyRepSchema = z.object({
 // partials
 export const PartialCombinedUserUpdateSchema = z.object({
   user: UserUpdateSchema,
-  user_registration: UserRegistrationUpdateSchema
+  user_registration: UserRegistrationUpdateSchema,
+  address: AddressSchema.partial()
 }).partial()
 
 export const UpdateCompanyRepSchema = CompanyRepSchema.optional()
