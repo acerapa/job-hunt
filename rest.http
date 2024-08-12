@@ -66,3 +66,13 @@ Accept: application/json
 # [ All Company ]
 ###
 GET http://localhost:3000/api/company/all
+
+# [ Register Company ]
+###
+POST http://localhost:3000/api/company/register
+Accept: application/json
+Content-Type: application/json
+
+{
+  "company": {}
+}

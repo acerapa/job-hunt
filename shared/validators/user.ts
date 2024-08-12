@@ -39,9 +39,9 @@ export const UserAuthSchema = z.object({
 })
 
 export const CompanyRepSchema = z.object({
-  position: z.string(),
-  user_id: z.string().or(z.string()),
-  company_id: z.string().or(z.number())
+  position: z.string().min(1, 'Position is required'),
+  user_id: z.string().or(z.number()),
+  company_id: z.string().or(z.number()).optional()
 })
 
 // partials
@@ -50,5 +50,3 @@ export const PartialCombinedUserUpdateSchema = z.object({
   user_registration: UserRegistrationUpdateSchema,
   address: AddressSchema.partial()
 }).partial()
-
-export const UpdateCompanyRepSchema = CompanyRepSchema.optional()

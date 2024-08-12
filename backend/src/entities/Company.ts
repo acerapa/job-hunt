@@ -7,9 +7,12 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   OneToOne,
+  ManyToMany,
+  JoinColumn,
 } from "typeorm";
 import { CompanyRep } from "./CompanyRep";
 import { Job } from "./Job";
+import { Address } from "./Address";
 
 @Entity("companies")
 export class Company extends BaseEntity {
@@ -27,16 +30,23 @@ export class Company extends BaseEntity {
   description: string;
 
   @Column()
-  employee_population_range: string;
+  employee_range: string;
 
   @Column()
   site_url: string;
+
+  @Column()
+  address_id: number;
 
   @OneToOne(() => CompanyRep, (companyRep) => companyRep.company)
   rep: CompanyRep;
 
   @OneToMany(() => Job, (job) => job.company)
   jobs: Job[];
+
+  @ManyToMany(() => Address)
+  @JoinColumn({ name: 'address_id' })
+  address: Address;
 
   @CreateDateColumn()
   created_at: Date;

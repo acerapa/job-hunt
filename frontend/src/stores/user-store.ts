@@ -21,7 +21,7 @@ export const useUserStore = defineStore('user', () => {
   }
 
   const updateUser = async (data: UserUpdate) => {
-    const res = await authenticatedApi('users/update', Method.POST, data)
+    const res = await authenticatedApi(`users/${data.id}/update`, Method.POST, data)
     return res
   }
 

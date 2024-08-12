@@ -87,7 +87,8 @@ const onSubmit = async () => {
       },
       user_registration: {
         done_type: true
-      }
+      },
+      address: {}
     }
     const res = await userStore.updateUser(data)
     isLoading.value = false

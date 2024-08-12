@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="address">
     <div class="flex flex-col gap-3">
       <InputComponent
         name="address1"
@@ -8,9 +8,11 @@
         class="w-full"
         input-class="w-full"
         placeholder="Address 1 *"
-        @input="emit('on-change', 'address1', AddressSchema.shape.address1, address.address1)"
+        @input="
+          emit('on-change', getPrefix('address1'), AddressSchema.shape.address1, address.address1)
+        "
         v-model="address.address1"
-        :error-message="props.modelErrors?.address1 ? props.modelErrors?.address1 : ''"
+        :error-message="getModelErrs(getPrefix('address1'))"
       />
       <InputComponent
         name="address2"
@@ -19,9 +21,11 @@
         class="w-full"
         input-class="w-full"
         placeholder="Address 2"
-        @input="emit('on-change', 'address2', AddressSchema.shape.address2, address.address2)"
+        @input="
+          emit('on-change', getPrefix('address2'), AddressSchema.shape.address2, address.address2)
+        "
         v-model="address.address2"
-        :error-message="props.modelErrors?.address2 ? props.modelErrors?.address2 : ''"
+        :error-message="getModelErrs(getPrefix('address2'))"
       />
     </div>
     <div class="flex gap-3">
@@ -32,8 +36,8 @@
         class="w-full"
         placeholder="City *"
         v-model="address.city"
-        @input="emit('on-change', 'city', AddressSchema.shape.city, address.city)"
-        :error-message="props.modelErrors?.city ? props.modelErrors?.city : ''"
+        @input="emit('on-change', getPrefix('city'), AddressSchema.shape.city, address.city)"
+        :error-message="getModelErrs(getPrefix('city'))"
       />
       <InputComponent
         name="postal"
@@ -42,15 +46,14 @@
         class="w-full"
         placeholder="Postal *"
         v-model="address.postal"
-        @input="emit('on-change', 'postal', AddressSchema.shape.postal, address.postal)"
-        :error-message="props.modelErrors?.postal ? props.modelErrors?.postal : ''"
+        @input="emit('on-change', getPrefix('postal'), AddressSchema.shape.postal, address.postal)"
+        :error-message="getModelErrs(getPrefix('postal'))"
       />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
 import InputComponent from './InputComponent.vue'
 import { type Address } from '@shared/pack'
 import { AddressSchema } from '@shared/pack'
@@ -58,16 +61,28 @@ import { AddressSchema } from '@shared/pack'
 const emit = defineEmits(['on-change'])
 
 export interface Props {
-  modelErrors: Partial<Address> | undefined
+  modelErrors: Record<string, any> | undefined
+  prefix?: string
 }
 
 const props = defineProps<Props>()
 
-const address = ref<Partial<Address>>({
-  id: 0,
-  address1: '',
-  address2: '',
-  city: '',
-  postal: ''
-})
+const address = defineModel<Partial<Address>>()
+
+const getPrefix = (field: string) => {
+  return props.prefix ? `${props.prefix}_${field}` : field
+}
+
+const getModelErrs = (key: string) => {
+  let err = ''
+  if (props.modelErrors) {
+    if (props.modelErrors[key]) {
+      err = props.modelErrors[key]
+    } else {
+      err = ''
+    }
+  }
+
+  return err
+}
 </script>

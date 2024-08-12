@@ -39,7 +39,7 @@ export interface Company {
   id: number
   name: string
   description: string
-  employee_population_range: string
+  employee_range: string
   site_url: string
   rep: CompanyRep
   jobs: Job[]

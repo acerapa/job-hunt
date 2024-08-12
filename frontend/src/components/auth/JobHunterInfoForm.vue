@@ -75,6 +75,7 @@
       <AddressComponent
         :model-errors="modelErrors"
         @on-change="setupErrors"
+        v-model="model.address"
         class="[&>div]:gap-6 flex flex-col gap-5"
       />
       <InputComponent
@@ -113,6 +114,7 @@ import InputComponent from '../shared/InputComponent.vue'
 import AddressComponent from '../shared/AddressComponent.vue'
 import { onMounted, ref } from 'vue'
 import { useUserStore } from '@/stores/user-store'
+import { useRouter } from 'vue-router'
 
 const userUpdate: UserUpdate = {
   id: 0,
@@ -134,6 +136,7 @@ const userUpdate: UserUpdate = {
   }
 }
 
+const router = useRouter()
 const userStore = useUserStore()
 const isLoading = defineModel<boolean>()
 const modelErrors = ref()
@@ -173,8 +176,14 @@ const onSubmit = async () => {
   }
 
   isLoading.value = true
-  await userStore.updateUser(model.value)
+  const res = await userStore.updateUser(model.value)
   isLoading.value = false
+
+  if (res.status == 200) {
+    router.push({
+      name: 'dashboard'
+    })
+  }
 }
 
 const setupErrors = (field: string, schema: ZodSchema, value: any) => {

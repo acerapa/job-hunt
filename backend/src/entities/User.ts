@@ -12,8 +12,6 @@ import {
 import { CompanyRep } from "./CompanyRep";
 import { UserRegistration } from "./UserRegistration";
 import { UserType } from "@shared/pack";
-import { markAsUntransferable } from "worker_threads";
-import { machine } from "os";
 import { Address } from "./Address";
 
 @Entity("users")
