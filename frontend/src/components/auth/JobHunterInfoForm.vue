@@ -115,6 +115,7 @@ import AddressComponent from '../shared/AddressComponent.vue'
 import { onMounted, ref } from 'vue'
 import { useUserStore } from '@/stores/user-store'
 import { useRouter } from 'vue-router'
+import { useAuthStore } from '@/stores/auth-store'
 
 const userUpdate: UserUpdate = {
   id: 0,
@@ -137,6 +138,7 @@ const userUpdate: UserUpdate = {
 }
 
 const router = useRouter()
+const authStore = useAuthStore()
 const userStore = useUserStore()
 const isLoading = defineModel<boolean>()
 const modelErrors = ref()
@@ -177,6 +179,7 @@ const onSubmit = async () => {
 
   isLoading.value = true
   const res = await userStore.updateUser(model.value)
+  await authStore.fetchAuthUser(true)
   isLoading.value = false
 
   if (res.status == 200) {

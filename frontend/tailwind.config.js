@@ -10,6 +10,9 @@ export default {
         'sub-light-green': '#9FD9B7',
         'more-light-green': '#9DB0A5',
         'light-blue': 'rgba(228,236,252,0.5)'
+      },
+      fontSize: {
+        xxs: '0.5rem'
       }
     }
   },

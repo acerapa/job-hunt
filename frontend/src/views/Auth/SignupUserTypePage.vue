@@ -50,6 +50,7 @@ import { useRoute, useRouter } from 'vue-router'
 import { UserType } from '@shared/pack/index'
 import { useUserStore } from '@/stores/user-store'
 import LoadingComponent from '@/components/shared/LoadingComponent.vue'
+import { useAuthStore } from '@/stores/auth-store'
 
 // TODO: If the user is not yet finish setting up this info, well redirect them here to finish this setups.
 const isLoading = ref<boolean>(false)
@@ -57,6 +58,7 @@ const isLoading = ref<boolean>(false)
 const type = ref<UserType>()
 const route = useRoute()
 const router = useRouter()
+const authStore = useAuthStore()
 const userStore = useUserStore()
 const user = ref()
 
@@ -91,6 +93,7 @@ const onSubmit = async () => {
       address: {}
     }
     const res = await userStore.updateUser(data)
+    await authStore.fetchAuthUser(true)
     isLoading.value = false
     if (res.status == 200) {
       router.push({

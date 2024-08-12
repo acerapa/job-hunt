@@ -1,3 +1,5 @@
+import { User } from "../types";
+
 export interface ApiResponse<Data> {
   data: Data;
   message: string;
@@ -9,4 +11,5 @@ export interface LoginResponseData {
   access: string;
   refresh: string;
   user_id: string;
+  user: User;
 }

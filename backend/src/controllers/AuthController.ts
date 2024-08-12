@@ -3,11 +3,12 @@ import { FindOptionsWhere } from "typeorm";
 import { compare } from "bcryptjs";
 import { formatResponse } from "../helpers/response";
 import { isEmail } from "@shared/pack/dist";
-import { User } from './../entities/User';
+import { User } from "./../entities/User";
 import { generateAccessAndRefreshToken } from "../services/auth-service";
 import { JwtPayload, verify } from "jsonwebtoken";
 import { getEnvOrDefault } from "../helpers/env-helpers";
-import { LoginResponseData } from "@shared/pack/dist"
+import { LoginResponseData, User as UserTyping } from "@shared/pack/dist";
+import { instanceToPlain } from "class-transformer";
 
 export const authenticate = async (req: Request, res: Response) => {
   const { usercred, password } = req.body;
@@ -21,15 +22,17 @@ export const authenticate = async (req: Request, res: Response) => {
 
   const user = await User.findOne({
     where: condition,
-    select: ['password','id']
+    relations: {
+      company_rep: true,
+      user_registration: true,
+    },
   });
 
-
-  let responseData: LoginResponseData = {
+  let responseData: Partial<LoginResponseData> = {
     authenticated: false,
     access: "",
     refresh: "",
-    user_id: ""
+    user_id: "",
   };
 
   if (user) {
@@ -39,18 +42,13 @@ export const authenticate = async (req: Request, res: Response) => {
       responseData = {
         authenticated: true,
         user_id: user.id.toString(),
-        ...generateAccessAndRefreshToken(user)
+        ...generateAccessAndRefreshToken(user),
+        user: instanceToPlain(user) as UserTyping,
       };
 
       return res
         .status(200)
-        .json(
-          formatResponse(
-            responseData,
-            "Successfully login",
-            200
-          )
-        );
+        .json(formatResponse(responseData, "Successfully login", 200));
     }
   }
 

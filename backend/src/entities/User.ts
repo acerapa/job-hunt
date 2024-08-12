@@ -13,6 +13,7 @@ import { CompanyRep } from "./CompanyRep";
 import { UserRegistration } from "./UserRegistration";
 import { UserType } from "@shared/pack";
 import { Address } from "./Address";
+import { Exclude } from "class-transformer";
 
 @Entity("users")
 export class User extends BaseEntity {
@@ -20,29 +21,29 @@ export class User extends BaseEntity {
   id: number;
 
   @Column({
-    nullable: true
+    nullable: true,
   })
   first_name: string;
 
   @Column({
-    nullable: true
+    nullable: true,
   })
   last_name: string;
   @Column({
-    nullable: true
+    nullable: true,
   })
-  type: UserType
+  type: UserType;
 
   @Column({
     unique: true,
-    nullable: false
+    nullable: false,
   })
   username: string;
 
   @Column({
     nullable: false,
-    select: false
   })
+  @Exclude({ toPlainOnly: true })
   password: string;
 
   @Column({
@@ -55,18 +56,18 @@ export class User extends BaseEntity {
   })
   mobile_number: string;
 
-  @Column({nullable: true})
-  professional_summary: string
+  @Column({ nullable: true })
+  professional_summary: string;
 
   @OneToOne(() => CompanyRep, (comanyRep) => comanyRep.user)
   company_rep: CompanyRep;
 
   @OneToOne(() => UserRegistration, (userRegistration) => userRegistration.user)
-  user_registration: UserRegistration
+  user_registration: UserRegistration;
 
   @ManyToOne(() => Address)
-  @JoinColumn({ name: 'address_id' })
-  address: Address
+  @JoinColumn({ name: "address_id" })
+  address: Address;
 
   @CreateDateColumn()
   created_at: Date;

@@ -166,7 +166,7 @@ const onSubmit = async () => {
       router.push({
         name: 'user-type',
         params: {
-          id: data.id
+          id: data.user_id
         }
       })
     }, 2000)
