@@ -8,7 +8,7 @@ export interface User {
   password: string
   type: UserType
   mobile_number: string
-  personal_summary: string
+  professional_summary: string
   company_rep: CompanyRep | null
   user_registration: UserRegistration
   created_at: Date
@@ -18,8 +18,8 @@ export interface User {
 export interface CompanyRep {
   id: number
   position: string
-  jobs: Job[]
-  user: User
+  jobs?: Job[]
+  user?: User
   company: Company
   user_id?: number
   company_id?: number
@@ -39,9 +39,9 @@ export interface Company {
   id: number
   name: string
   description: string
-  employee_population_range: string
+  employee_range: string
   site_url: string
-  reps: CompanyRep[]
+  rep: CompanyRep
   jobs: Job[]
   created_at: Date
   updated_at: Date
@@ -59,4 +59,12 @@ export interface Job {
   rep: CompanyRep
   company_id?: number
   company: Company
+}
+
+export interface Address {
+  id: number
+  address1: string
+  address2: string
+  city: string
+  postal: string
 }

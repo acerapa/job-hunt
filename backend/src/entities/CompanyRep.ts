@@ -21,13 +21,19 @@ export class CompanyRep extends BaseEntity {
   @Column()
   position: string;
 
+  @Column()
+  user_id: number
+
   @OneToOne(() => User)
   @JoinColumn({
     name: "user_id",
   })
   user: User;
 
-  @ManyToOne(() => Company, (company) => company.reps)
+  @Column()
+  company_id: number
+
+  @ManyToOne(() => Company, (company) => company.rep)
   @JoinColumn({ name: "company_id" })
   company: Company;
 

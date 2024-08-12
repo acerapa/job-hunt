@@ -81,13 +81,14 @@ const onSubmit = async () => {
   isLoading.value = true
   if (user.value) {
     const data = {
+      id: user.value.id,
       user: {
-        id: user.value.id,
         type: type.value
       },
       user_registration: {
         done_type: true
-      }
+      },
+      address: {}
     }
     const res = await userStore.updateUser(data)
     isLoading.value = false

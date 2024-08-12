@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
-import type { UserCreation, User, ApiResponse } from '@shared/pack'
+import type { UserCreation, User, ApiResponse, UserUpdate } from '@shared/pack'
 import { authenticatedApi, Method } from '@/api'
 
 export const useUserStore = defineStore('user', () => {
@@ -20,8 +20,8 @@ export const useUserStore = defineStore('user', () => {
     return user.value
   }
 
-  const updateUser = async (data: any) => {
-    const res = await authenticatedApi('users/update', Method.POST, data)
+  const updateUser = async (data: UserUpdate) => {
+    const res = await authenticatedApi(`users/${data.id}/update`, Method.POST, data)
     return res
   }
 

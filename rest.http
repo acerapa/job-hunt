@@ -26,8 +26,8 @@ Content-Type: application/json
 Accept: application/json
 
 {
+  "id": 1,
   "user": {
-    "id": 1,
     "type": 0
   }
 }
@@ -60,4 +60,19 @@ Accept: application/json
 
 {
   "refresh": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjo0LCJyZWZyZXNoIjpmYWxzZSwiaWF0IjoxNzIwMzcwMTQ0LCJleHAiOjE3MjAzNzEwNDR9.q01ENKpvNNEat4K2mZEvCU0y3l-k8nCqIZBWk9vuOQM"
+}
+
+
+# [ All Company ]
+###
+GET http://localhost:3000/api/company/all
+
+# [ Register Company ]
+###
+POST http://localhost:3000/api/company/register
+Accept: application/json
+Content-Type: application/json
+
+{
+  "company": {}
 }

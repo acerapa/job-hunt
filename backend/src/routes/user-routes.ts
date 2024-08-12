@@ -8,6 +8,6 @@ const router = Router()
 router.get("/all", all)
 router.get("/:id", getOne)
 router.post("/register", validateBody(UserCreationSchema), register)
-router.post("/update", validateBody(PartialCombinedUserUpdateSchema), update)
+router.post("/:id/update", validateBody(PartialCombinedUserUpdateSchema), update)
 
 export default router

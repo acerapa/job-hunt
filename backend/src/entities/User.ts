@@ -6,10 +6,13 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   OneToOne,
+  ManyToOne,
+  JoinColumn,
 } from "typeorm";
 import { CompanyRep } from "./CompanyRep";
 import { UserRegistration } from "./UserRegistration";
 import { UserType } from "@shared/pack";
+import { Address } from "./Address";
 
 @Entity("users")
 export class User extends BaseEntity {
@@ -53,13 +56,17 @@ export class User extends BaseEntity {
   mobile_number: string;
 
   @Column({nullable: true})
-  personal_summary: string
+  professional_summary: string
 
   @OneToOne(() => CompanyRep, (comanyRep) => comanyRep.user)
   company_rep: CompanyRep;
 
   @OneToOne(() => UserRegistration, (userRegistration) => userRegistration.user)
   user_registration: UserRegistration
+
+  @ManyToOne(() => Address)
+  @JoinColumn({ name: 'address_id' })
+  address: Address
 
   @CreateDateColumn()
   created_at: Date;

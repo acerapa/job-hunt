@@ -5,6 +5,7 @@ import { User } from "../entities/User";
 import { User as UserTyping } from "@shared/pack";
 import { instanceToInstance } from 'class-transformer'
 import { UserRegistration } from "../entities/UserRegistration";
+import { Address } from "../entities/Address";
 
 export const all = async (req: Request, res: Response) => {
   try {
@@ -66,11 +67,37 @@ export const register = async (req: Request, res: Response) => {
 
 export const update = async (req: Request, res: Response) => {
   try {
-    const validated = req.body.validated;
+    const validated = req.body.validated
     if (validated && validated.user) {
-      await User.update({ id: req.body.user.id }, validated.user);
+      const user = await User.findOne({
+        where: { id: Number.parseInt(req.params.id) },
+        relations: {
+          address: true,
+          user_registration: true
+        }
+      })
+
+      if (!user) {
+        throw Error('No user found!')
+      }
+
+      if (validated.address) {
+        if (user.address) {
+          Object.assign(user.address, validated.address)
+          await user.address.save()
+        } else {
+          const address = await Address.create(validated.address)
+          await address.save()
+          validated.user.address = address
+        }
+      }
+
+      Object.assign(user, validated.user)
+      await user.save()
+
       if (validated.user_registration) {
-        await UserRegistration.update({ user_id: req.body.user }, validated.user_registration);
+        Object.assign(user.user_registration, validated.user_registration)
+        await user.user_registration.save()
       }
     } else {
       throw Error('No data pass to update!')
