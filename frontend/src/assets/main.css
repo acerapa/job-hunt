@@ -39,6 +39,10 @@ input[type=password] {
     @apply flex gap-1 items-center border rounded px-3 py-1 border-light-green;
 }
 
+.wrapper {
+    @apply shadow p-4 rounded-[10px] bg-white;
+}
+
 
 
 @keyframes slide-in-from-right {

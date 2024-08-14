@@ -60,6 +60,7 @@ export interface Job {
   rep: CompanyRep;
   company_id?: number;
   company: Company;
+  openings: number;
 }
 
 export interface Address {

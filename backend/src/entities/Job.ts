@@ -32,6 +32,9 @@ export class Job extends BaseEntity {
   @Column()
   location: string;
 
+  @Column()
+  openings: number;
+
   @ManyToOne(() => CompanyRep, (companyRep) => companyRep.jobs)
   @JoinColumn({ name: "posted_by" })
   rep: CompanyRep;
