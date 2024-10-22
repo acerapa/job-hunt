@@ -1,21 +1,28 @@
 <template>
   <div class="relative">
+    <label :class="props.labelCss" :for="props.id ? props.id : props.name" v-if="props.label">{{
+      props.label
+    }}</label>
+
     <input
       ref="input"
-      v-if="props.type != 'textarea' && props.type != 'select'"
       :type="props.type"
       :name="props.name"
+      v-if="props.type != 'textarea' && props.type != 'select'"
       :id="props.id ? props.id : props.name"
       :placeholder="props.placeholder"
-      class="input"
+      :min="props.min"
+      :max="props.max"
+      class="input w-full"
       @input="emit('input')"
       :class="[props.inputClass, props.errorMessage ? '!border-red-400' : '']"
       v-model="value"
     />
+
     <textarea
       ref="input"
+      class="input w-full"
       v-if="props.type == 'textarea'"
-      class="input"
       :class="[props.inputClass, props.errorMessage ? '!border-red-400' : '']"
       :name="props.name"
       :id="props.id ? props.id : props.name"
@@ -27,11 +34,11 @@
 
     <select
       ref="input"
-      v-if="props.type == 'select'"
       :name="props.name"
+      v-if="props.type == 'select'"
       :id="props.id ? props.id : props.name"
       :placeholder="props.placeholder"
-      class="input"
+      class="input w-full"
       :class="[props.inputClass, props.errorMessage ? '!border-red-400' : '']"
       @change="emit('input')"
       v-model="value"
@@ -63,10 +70,14 @@ export interface Props {
   type: string
   rows?: number
   cols?: number
+  min?: number
+  max?: number
   options?: {
     text: string
     value: string | number | boolean
   }[]
+  label?: string
+  labelCss?: string
 }
 
 const emit = defineEmits(['input'])

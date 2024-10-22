@@ -1,12 +1,29 @@
 <template>
-  <header class="h-[60px] w-full bg-sub flex justify-center">
-    <div class="max-w-7xl h-full w-full text-main flex items-center justify-between px-4">
+  <header class="h-[70px] w-full bg-white flex justify-center">
+    <div class="max-w-7xl h-full w-full text-main flex items-center justify-between px-8">
       <div class="flex gap-10 items-center">
-        <p class="text-xl font-bold cursor-pointer">Job Hunt</p>
+        <p class="text-[32px] font-bold cursor-pointer">Job Hunt</p>
         <div class="flex gap-5">
-          <RouterLink to="#" class="text-sm font-normal">Find Job</RouterLink>
-          <RouterLink to="#" class="text-sm font-normal">Post Job</RouterLink>
-          <RouterLink to="#" class="text-sm font-normal">About Us</RouterLink>
+          <RouterLink
+            :to="{ name: 'job-list' }"
+            class="text-base font-semibold"
+            exact-active-class="!font-bold text-green-bright underline"
+            >Jobs</RouterLink
+          >
+          <RouterLink
+            :to="{ name: 'messages' }"
+            exact-active-class="!font-bold text-green-bright underline"
+            class="text-base font-semibold"
+          >
+            Messages
+          </RouterLink>
+          <RouterLink
+            :to="{ name: 'applications' }"
+            exact-active-class="!font-bold text-green-bright underline"
+            class="text-base font-semibold"
+          >
+            Applications
+          </RouterLink>
         </div>
       </div>
       <div class="flex gap-3 items-center" v-if="!authStore.authUser">
@@ -15,7 +32,24 @@
         <RouterLink :to="{ name: 'signup' }" class="btn-outline">Sign up</RouterLink>
       </div>
 
-      <p class="sign-out" v-if="authStore.authUser" @click="onSignOut">Sign out</p>
+      <div v-if="authStore.authUser">
+        <div class="flex gap-12 items-center">
+          <button type="button">
+            <img src="@/assets/icons/doorbell.svg" alt="doorbell.svg" />
+          </button>
+          <div class="flex gap-2 items-center">
+            <img
+              src="@/assets/images/default.png"
+              class="aspect-square w-9 rounded-full"
+              alt="default.png"
+            />
+            <div class="flex flex-col">
+              <span class="text-sm font-bold">Harvey Aparece</span>
+              <span class="text-[10px] font-semibold leading-tight">Job Hunter</span>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </header>
 </template>
