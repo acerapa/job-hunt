@@ -19,6 +19,14 @@
     font-weight: normal;
 }
 
+body {
+    @apply bg-green-theme;
+}
+
+.wrap {
+    @apply bg-white rounded-[10px] p-4;
+}
+
 .btn-outline {
     @apply px-2 rounded border border-main text-main py-1 hover:bg-main hover:text-sub text-sm;
 }
@@ -40,7 +48,28 @@ input[type=password] {
 }
 
 
+/* Scrollbars styling */
+.thin-scrollbar::-webkit-scrollbar {
+    width: 4px;
+}
 
+.thin-scrollbar::-webkit-scrollbar-track {
+    border-radius: 10px;
+    background-color: rgb(210, 210, 214);
+}
+
+.thin-scrollbar::-webkit-scrollbar-thumb {
+    background-color: gray;
+    border-radius: 5px;
+}
+
+.thin-scrollbar::-webkit-scrollbar-button {
+    background-color: rgb(186, 184, 190);
+    border-radius: 5px;
+}
+
+
+/* Keyframes */
 @keyframes slide-in-from-right {
 100% {
     margin-right: 0;
