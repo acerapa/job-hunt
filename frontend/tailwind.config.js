@@ -15,7 +15,10 @@ export default {
         'green-theme': '#F4F8F6',
         'green-bright': '#299254',
         'blue-bright': '#3884F6',
-        'green-weak': '#7AD48E'
+        'green-weak': '#7AD48E',
+        'pail-blue': '#E2F2F8',
+        'pail-green': '#EBFFF0',
+        'pail-gray': '#BAB5B5'
       },
       fontSize: {
         xxs: '0.5rem'
