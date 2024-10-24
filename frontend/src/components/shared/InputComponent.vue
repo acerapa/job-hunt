@@ -17,6 +17,7 @@
       @input="emit('input')"
       :class="[props.inputClass, props.errorMessage ? '!border-red-400' : '']"
       v-model="value"
+      :disabled="props.disabled"
     />
 
     <textarea
@@ -30,6 +31,7 @@
       :rows="props.rows"
       :cols="props.cols"
       @input="onTextAreaInput"
+      :disabled="props.disabled"
     ></textarea>
 
     <select
@@ -42,6 +44,7 @@
       :class="[props.inputClass, props.errorMessage ? '!border-red-400' : '']"
       @change="emit('input')"
       v-model="value"
+      :disabled="props.disabled"
     >
       <option v-if="props.placeholder" value="" hidden>{{ props.placeholder }}</option>
       <option v-for="(opt, ndx) in props.options" :value="opt.value" :key="ndx">
@@ -78,12 +81,14 @@ export interface Props {
   }[]
   label?: string
   labelCss?: string
+  disabled?: boolean
 }
 
 const emit = defineEmits(['input'])
 const props = withDefaults(defineProps<Props>(), {
   rows: 4,
-  cols: 0
+  cols: 0,
+  disabled: false
 })
 
 const value = defineModel()
