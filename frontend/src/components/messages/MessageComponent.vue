@@ -3,7 +3,7 @@
     <img :src="sendBy.image" alt="sender_profile_pic" class="w-7 h-7 rounded-full object-cover" />
     <div
       class="wrap !pb-8 min-w-[100px] max-w-[70%] relative"
-      :class="isCurrent ? '!bg-pail-green' : '!bg-pail-blue'"
+      :class="isCurrent ? '!bg-pale-green' : '!bg-pale-blue'"
     >
       <p class="tracking-wide">{{ props.message.text }}</p>
       <small class="text-[10px] font-semibold absolute bottom-2 right-2 text-gray-strong">

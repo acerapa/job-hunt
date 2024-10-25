@@ -47,6 +47,31 @@ input[type=password] {
     @apply flex gap-1 items-center border rounded px-3 py-1 border-light-green;
 }
 
+/* Tags styling */
+.pending {
+    color: #3884F6;
+    border: #3884F6 solid 1px;
+}
+
+.reviewed {
+    color: #D87D13;
+    border: #D87D13 solid 1px;
+}
+
+.interviewing {
+    color: #31C0B8;
+    border: #31C0B8 solid 1px;
+}
+
+.declined {
+    color: #C03931;
+    border: #C03931 solid 1px;
+}
+
+.offered {
+    color: #088C3E;
+    border: #088C3E solid 1px;
+}
 
 /* Scrollbars styling */
 .thin-scrollbar::-webkit-scrollbar {

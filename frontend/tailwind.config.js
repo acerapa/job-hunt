@@ -16,9 +16,10 @@ export default {
         'green-bright': '#299254',
         'blue-bright': '#3884F6',
         'green-weak': '#7AD48E',
-        'pail-blue': '#E2F2F8',
-        'pail-green': '#EBFFF0',
-        'pail-gray': '#BAB5B5'
+        'pale-blue': '#E2F2F8',
+        'pale-green': '#EBFFF0',
+        'pale-gray': '#BAB5B5',
+        'pastel-gray': '#878383'
       },
       fontSize: {
         xxs: '0.5rem'
