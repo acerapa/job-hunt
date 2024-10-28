@@ -23,6 +23,11 @@ export default [
         path: 'application-form/:job_id',
         name: 'application-form',
         component: () => import('@/views/job-hunter/ApplicationForm.vue')
+      },
+      {
+        path: 'profile',
+        name: 'profile',
+        component: () => import('@/views/job-hunter/ProfilePage.vue')
       }
     ]
   }

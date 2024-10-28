@@ -1,5 +1,7 @@
 <template>
-  <button class="tag">{{ props.text }}</button>
+  <button class="tag">
+    <p>{{ props.text }}</p>
+  </button>
 </template>
 
 <script setup lang="ts">
@@ -12,6 +14,14 @@ const props = defineProps<Props>()
 
 <style scoped>
 .tag {
-  @apply text-xxs font-bold text-main border border-main rounded-md px-2 py-0.5;
+  @apply w-fit text-main border border-main rounded-md px-3 py-1.5;
+}
+
+.tag p {
+  @apply text-xs font-bold;
+}
+
+.tag:hover {
+  @apply bg-main text-white;
 }
 </style>
