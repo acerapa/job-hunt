@@ -1,3 +1,20 @@
 import { type RouteRecordRaw } from 'vue-router'
+import NavLayout from '@/layouts/NavLayout.vue'
 
-export default <RouteRecordRaw[]>[{}]
+export default <RouteRecordRaw[]>[
+  {
+    path: '/provider',
+    name: 'provider',
+    redirect: {
+      name: 'provider-dashboard'
+    },
+    component: NavLayout,
+    children: [
+      {
+        path: 'dashboard',
+        name: 'provider-dashboard',
+        component: () => import('@/views/job-provider/DashboardPage.vue')
+      }
+    ]
+  }
+]

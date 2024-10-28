@@ -15,3 +15,9 @@ export interface Job {
 }
 
 export interface Company {}
+
+export interface Activity {
+  type: string
+  status: string
+  description: string
+}

@@ -3,124 +3,141 @@
 @tailwind utilities;
 
 @font-face {
-    font-family: 'urbanist';
-    font-style: normal;
-    src: url('./fonts/Urbanist.woff');
+  font-family: 'urbanist';
+  font-style: normal;
+  src: url('./fonts/Urbanist.woff');
 }
 
 @font-face {
-    font-family: 'urbanist';
-    font-style: italic;
-    src: url('./fonts/Urbanist-Italic.woff');
+  font-family: 'urbanist';
+  font-style: italic;
+  src: url('./fonts/Urbanist-Italic.woff');
 }
 
 * {
-    font-family: 'urbanist';
-    font-weight: normal;
+  font-family: 'urbanist';
+  font-weight: normal;
 }
 
 body {
-    @apply bg-green-theme;
+  @apply bg-green-theme;
 }
 
 .wrap {
-    @apply bg-white rounded-[10px] p-4;
+  @apply bg-white rounded-[10px] p-4;
 }
 
+/* Button stlyes */
 .btn-outline {
-    @apply px-2 rounded border border-main text-main py-1 hover:bg-main hover:text-sub text-sm;
+  @apply px-2 rounded border border-main text-main py-1 hover:bg-main hover:text-sub text-sm;
 }
 
 .btn {
-    @apply px-2 rounded border bg-main text-sub py-1 hover:bg-white hover:text-main hover:border-main text-sm;
+  @apply px-2 rounded border bg-main text-sub py-1 hover:bg-white hover:text-main hover:border-main text-sm;
 }
 
+.btn-white {
+  @apply px-2 rounded border bg-white text-main py-1 hover:bg-main hover:text-sub hover:border-main text-sm;
+}
+
+.btn-white-outline {
+  @apply px-2 rounded border border-white text-white py-1 hover:bg-white hover:text-main hover:border-none text-sm;
+}
+
+.btn-success {
+  @apply px-2 rounded border border-green-bright bg-green-bright text-white py-1 hover:bg-white hover:text-green-bright hover:border-green-bright text-sm;
+}
+/* Input styles */
 .input {
-    @apply outline-none border border-light-green rounded px-3 py-2 focus:border-main text-main placeholder:text-more-light-green;
+  @apply outline-none border border-light-green rounded px-3 py-2 focus:border-main text-main placeholder:text-more-light-green;
 }
 
-input[type=password] {
-    @apply font-black tracking-widest placeholder:font-normal;
+input[type='password'] {
+  @apply font-black tracking-widest placeholder:font-normal;
 }
 
 .social-link {
-    @apply flex gap-1 items-center border rounded px-3 py-1 border-light-green;
+  @apply flex gap-1 items-center border rounded px-3 py-1 border-light-green;
 }
 
 /* Tags styling */
 .pending {
-    color: #3884F6;
-    border: #3884F6 solid 1px;
+  color: #3884f6;
+  border: #3884f6 solid 1px;
 }
 
 .reviewed {
-    color: #D87D13;
-    border: #D87D13 solid 1px;
+  color: #d87d13;
+  border: #d87d13 solid 1px;
 }
 
 .interviewing {
-    color: #31C0B8;
-    border: #31C0B8 solid 1px;
+  color: #31c0b8;
+  border: #31c0b8 solid 1px;
 }
 
 .declined {
-    color: #C03931;
-    border: #C03931 solid 1px;
+  color: #c03931;
+  border: #c03931 solid 1px;
 }
 
 .offered {
-    color: #088C3E;
-    border: #088C3E solid 1px;
+  color: #088c3e;
+  border: #088c3e solid 1px;
 }
 
 /* Scrollbars styling */
 .thin-scrollbar::-webkit-scrollbar {
-    width: 4px;
+  width: 4px;
 }
 
 .thin-scrollbar::-webkit-scrollbar-track {
-    border-radius: 10px;
-    background-color: rgb(210, 210, 214);
+  border-radius: 10px;
+  background-color: rgb(210, 210, 214);
 }
 
 .thin-scrollbar::-webkit-scrollbar-thumb {
-    background-color: gray;
-    border-radius: 5px;
+  background-color: gray;
+  border-radius: 5px;
 }
 
 .thin-scrollbar::-webkit-scrollbar-button {
-    background-color: rgb(186, 184, 190);
-    border-radius: 5px;
+  background-color: rgb(186, 184, 190);
+  border-radius: 5px;
 }
 
+/* Misc */
+.glow {
+  box-shadow: 0 0 10px #000;
+}
 
 /* Keyframes */
 @keyframes slide-in-from-right {
-100% {
+  100% {
     margin-right: 0;
-}
+  }
 }
 
 @-webkit-keyframes slide-in-from-right {
-100% {
+  100% {
     margin-right: 0;
-}
+  }
 }
 
 @keyframes fade-in {
-100% {
+  100% {
     opacity: 1;
-}
-0% {
+  }
+  0% {
     opacity: 0;
-}
+  }
 }
 
 @-webkit-keyframes fade-in {
-100% {
+  100% {
     opacity: 1;
-}
-0% {
+  }
+  0% {
     opacity: 0;
-}
+  }
 }
