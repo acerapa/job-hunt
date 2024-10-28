@@ -1,6 +1,6 @@
 <template>
   <div
-    class="wrap max-w-[200px] w-full px-4 h-fit sticky max-h-[calc(100vh_-_134px)] overflow-y-auto thin-scrollbar"
+    class="wrap max-w-[300px] w-full px-4 h-fit sticky max-h-[calc(100vh_-_134px)] overflow-y-auto thin-scrollbar"
   >
     <div class="sticky -top-4 z-20 bg-white -mx-4 -mt-4 px-4 pt-4">
       <div class="flex justify-between items-center">

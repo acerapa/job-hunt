@@ -55,7 +55,7 @@
             <p class="text-sm">harvey.aparece.work@gmail.com</p>
           </div>
         </div>
-        <button class="btn-outline">Update</button>
+        <RouterLink :to="{ name: 'profile' }" class="btn-outline">Update</RouterLink>
       </div>
       <hr class="mt-3 border-green-theme border -mx-4" />
       <p class="text-base font-bold mt-3">Employer Specific Questions</p>
@@ -96,6 +96,7 @@ import ApplicationJob from '@/components/application/ApplicationJob.vue'
 import JobDescription from '@/components/shared/JobDescription.vue'
 import { ref } from 'vue'
 import { useJobStore } from '@/stores/job-store'
+import { RouterLink } from 'vue-router'
 
 const view = ref<'applied' | 'liked'>()
 
