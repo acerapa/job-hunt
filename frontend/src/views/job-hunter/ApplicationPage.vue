@@ -1,6 +1,6 @@
 <template>
-  <div class="flex gap-4 h-[100vh_-_134px]">
-    <div class="flex max-w-[500px] w-full flex-col">
+  <div class="flex gap-4">
+    <div class="flex max-w-[500px] w-full flex-col h-[calc(100vh_-_134px)] sticky top-0">
       <div class="wrap text-white !bg-green-bright !px-6 !py-2">
         <p class="font-bold">Applied and Liked jobs</p>
         <p class="text-sm leading-tight mt-1">
@@ -41,52 +41,58 @@
         <ApplicationJob :has-status="view == 'applied'" />
       </div>
     </div>
-    <div class="wrap flex-1 w-full" v-if="view == 'applied'">
-      <div class="flex items-start justify-between h-fit w-full">
-        <div class="flex gap-3 items-center flex-1">
-          <img src="@/assets/images/default.png" alt="default.png" class="w-24 h-24 rounded-full" />
-          <div>
-            <div class="flex flex-col mb-2">
-              <p class="text-base font-bold">Harvey Aparece</p>
-              <p class="text-pastel-gray text-xs font-semibold">Web Developer</p>
+    <div class="h-[calc(100vh_-_134px)] sticky top-0 flex-1 overflow-y-auto thin-scrollbar">
+      <div class="wrap flex-1 w-full" v-if="view == 'applied'">
+        <div class="flex items-start justify-between h-fit w-full">
+          <div class="flex gap-3 items-center flex-1">
+            <img
+              src="@/assets/images/default.png"
+              alt="default.png"
+              class="w-24 h-24 rounded-full"
+            />
+            <div>
+              <div class="flex flex-col mb-2">
+                <p class="text-base font-bold">Harvey Aparece</p>
+                <p class="text-pastel-gray text-xs font-semibold">Web Developer</p>
+              </div>
+              <p class="text-sm">Nasipit Rd, Talamban Cebu City, Philippines</p>
+              <p class="text-sm">09508605332</p>
+              <p class="text-sm">harvey.aparece.work@gmail.com</p>
             </div>
-            <p class="text-sm">Nasipit Rd, Talamban Cebu City, Philippines</p>
-            <p class="text-sm">09508605332</p>
-            <p class="text-sm">harvey.aparece.work@gmail.com</p>
           </div>
+          <RouterLink :to="{ name: 'profile' }" class="btn-outline">Update</RouterLink>
         </div>
-        <RouterLink :to="{ name: 'profile' }" class="btn-outline">Update</RouterLink>
+        <hr class="mt-3 border-green-theme border -mx-4" />
+        <p class="text-base font-bold mt-3">Employer Specific Questions</p>
+        <div class="flex flex-col gap-4 w-5/6 mt-4">
+          <InputComponent
+            type="text"
+            name="q1"
+            label-css="text-sm"
+            label="How many years you have experience in Python only in working professionally? *"
+          />
+          <InputComponent
+            type="textarea"
+            name="q1"
+            label-css="text-sm"
+            label="How will you manage stress?"
+          />
+          <InputComponent
+            type="textarea"
+            name="q1"
+            label-css="text-sm"
+            label="Describe a challenging situation you faced at work and how you handled it."
+          />
+          <InputComponent
+            type="textarea"
+            name="q1"
+            label-css="text-sm"
+            label="Can you describe a project you worked on that is relevant to this position?"
+          />
+        </div>
       </div>
-      <hr class="mt-3 border-green-theme border -mx-4" />
-      <p class="text-base font-bold mt-3">Employer Specific Questions</p>
-      <div class="flex flex-col gap-4 w-5/6 mt-4">
-        <InputComponent
-          type="text"
-          name="q1"
-          label-css="text-sm"
-          label="How many years you have experience in Python only in working professionally? *"
-        />
-        <InputComponent
-          type="textarea"
-          name="q1"
-          label-css="text-sm"
-          label="How will you manage stress?"
-        />
-        <InputComponent
-          type="textarea"
-          name="q1"
-          label-css="text-sm"
-          label="Describe a challenging situation you faced at work and how you handled it."
-        />
-        <InputComponent
-          type="textarea"
-          name="q1"
-          label-css="text-sm"
-          label="Can you describe a project you worked on that is relevant to this position?"
-        />
-      </div>
+      <JobDescription :job="jobStore.jobs[0]" v-if="view == 'liked'" />
     </div>
-    <JobDescription :job="jobStore.jobs[0]" v-if="view == 'liked'" />
   </div>
 </template>
 

@@ -1,4 +1,6 @@
-export default [
+import { type RouteRecordRaw } from 'vue-router'
+
+export default <RouteRecordRaw[]>[
   {
     path: '/signin',
     name: 'signin',
@@ -11,20 +13,20 @@ export default [
     },
     children: [
       {
-        path: "",
+        path: '',
         name: 'signup',
-        component: () => import('@/views/Auth/SignupPage.vue'),
+        component: () => import('@/views/Auth/SignupPage.vue')
       },
       {
-        path: ":id/type",
-        name: "user-type",
+        path: ':id/type',
+        name: 'user-type',
         component: () => import('@/views/Auth/SignupUserTypePage.vue')
       },
       {
-        path: ":id/:type/info",
-        name: "user-info",
+        path: ':id/:type/info',
+        name: 'user-info',
         component: () => import('@/views/Auth/SignupUserInforPage.vue')
-      },
-    ],
+      }
+    ]
   }
 ]
