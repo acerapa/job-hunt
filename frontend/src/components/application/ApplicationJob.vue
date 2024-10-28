@@ -11,8 +11,9 @@
           <span
             class="pending text-xs rounded px-2 pb-0.5 font-bold !border-2"
             v-if="props.hasStatus"
-            >pending</span
           >
+            pending
+          </span>
         </div>
       </div>
       <p class="text-sm font-semibold text-pale-gray">Applied 10 days ago</p>
@@ -20,7 +21,7 @@
     <div>
       <p class="font-bold text-xs">Full-Time - Entry Level</p>
       <div class="flex gap-3 items-start">
-        <p class="line-clamp-3 text-pastel-gray">
+        <p class="line-clamp-3 text-pastel-gray text-sm">
           Lorem ipsum dolor sit amet consectetur. Ut enim lacus felis nullam. Diam vel elit
           consectetur egestas tincidunt bibendum nulla. Risus praesent eget convallis dui non.
           Habitasse euismod pellentesque dui sed a lectus aliquam.

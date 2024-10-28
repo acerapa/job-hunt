@@ -1,6 +1,7 @@
+import { type RouteRecordRaw } from 'vue-router'
 import NavLayout from '@/layouts/NavLayout.vue'
 
-export default [
+export default <RouteRecordRaw[]>[
   {
     path: '/hunter',
     name: 'hunter',
