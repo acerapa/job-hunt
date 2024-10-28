@@ -16,11 +16,6 @@ export default <RouteRecordRaw[]>[
         component: HomePage
       },
       {
-        path: '/dashboard',
-        name: 'dashboard',
-        component: () => import('@/views/DashboardPage.vue')
-      },
-      {
         path: '/messages',
         name: 'messages',
         component: () => import('@/views/MessagesPage.vue')

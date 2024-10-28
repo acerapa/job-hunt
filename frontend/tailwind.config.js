@@ -19,7 +19,9 @@ export default {
         'pale-blue': '#E2F2F8',
         'pale-green': '#EBFFF0',
         'pale-gray': '#BAB5B5',
-        'pastel-gray': '#878383'
+        'pastel-gray': '#878383',
+        'tint-gray': '#F8F9F8',
+        'tint-green': '#F6FFFA'
       },
       fontSize: {
         xxs: '0.5rem'
