@@ -1,6 +1,12 @@
 <template>
   <div>
-    <TableComponent title="List of Jobs" :has-pagination="true" :data="data" :row="PJobListRow">
+    <TableComponent
+      title="List of Jobs"
+      :has-pagination="true"
+      :data="data"
+      :row="PJobListRow"
+      @on-new="onNew"
+    >
       <template v-slot:table-header>
         <div class="grid grid-cols-8 gap-3 text-sm">
           <p class="col-span-4 font-bold text-main">TITLE</p>
@@ -18,7 +24,9 @@
 import TableComponent from '@/components/shared/TableComponent.vue'
 import PJobListRow from '@/components/job-list/PJobListRow.vue'
 import { JobViewStatus, type JobView } from '@/types'
+import { useRouter } from 'vue-router'
 
+const router = useRouter()
 const data: JobView[] = [
   {
     title: 'PHP Developer',
@@ -39,4 +47,10 @@ const data: JobView[] = [
     status: JobViewStatus.CLOSE
   }
 ]
+
+const onNew = () => {
+  router.push({
+    name: 'provider-jobs-create'
+  })
+}
 </script>

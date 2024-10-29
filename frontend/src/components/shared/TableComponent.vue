@@ -2,7 +2,7 @@
   <div class="wrap flex flex-col gap-3">
     <div class="flex justify-between">
       <p class="font-semibold text-lg">{{ props.title }}</p>
-      <button v-if="props.hasAddNew" class="btn-success">Add new</button>
+      <button v-if="props.hasAddNew" class="btn-success" @click="emit('onNew')">Add new</button>
     </div>
     <div class="flex justify-between py-3">
       <InputComponent
@@ -69,6 +69,8 @@
 import { ref, type Component } from 'vue'
 import InputComponent from './InputComponent.vue'
 import PaginationComponent from './PaginationComponent.vue'
+
+const emit = defineEmits(['onNew'])
 
 interface Tools {
   sort_by: string
