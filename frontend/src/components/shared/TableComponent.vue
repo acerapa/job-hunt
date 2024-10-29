@@ -82,7 +82,7 @@ interface Props<T> {
   row?: Component
   pagination?: Component
   hasPagination?: boolean
-  data: T[]
+  data?: T[]
 }
 
 const tools = ref<Tools>({ filter_by: '', sort_by: '' })

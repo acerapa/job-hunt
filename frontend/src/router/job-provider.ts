@@ -14,6 +14,11 @@ export default <RouteRecordRaw[]>[
         path: 'dashboard',
         name: 'provider-dashboard',
         component: () => import('@/views/job-provider/DashboardPage.vue')
+      },
+      {
+        path: 'jobs',
+        name: 'provider-jobs',
+        component: () => import('@/views/job-provider/JobListPage.vue')
       }
     ]
   }

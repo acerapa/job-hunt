@@ -14,6 +14,18 @@ export interface Job {
   tags: string[]
 }
 
+export enum JobViewStatus {
+  ACTIVE = 'active',
+  CLOSE = 'close'
+}
+
+export interface JobView {
+  title: string
+  hunters: number
+  status: JobViewStatus
+  added_on: Date
+}
+
 export interface Company {}
 
 export interface Activity {
