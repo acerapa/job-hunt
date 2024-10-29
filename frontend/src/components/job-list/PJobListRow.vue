@@ -1,8 +1,9 @@
 <template>
   <div
     class="grid grid-cols-8 gap-3 items-center odd:bg-tint-green px-4 py-3"
+    @mouseenter="isRowFocused = true"
+    @mouseleave="updateRowState"
     ref="parentRow"
-    tabindex="0"
   >
     <div class="col-span-4">
       <p class="">{{ props.row.title }}</p>
@@ -21,10 +22,15 @@
     </div>
     <div class="col-span-1">{{ props.row.added_on.toLocaleDateString() }}</div>
     <div class="relative">
-      <button class="col-span-1 w-fit ml-4" ref="menu">
+      <button @click="isShowMenu = true" class="col-span-1 w-fit ml-4" ref="menu">
         <img src="@/assets/icons/menu.png" alt="menu.png" />
       </button>
-      <div class="wrap hidden shadow-lg w-fit absolute top-1/2 -left-16 z-20">Testing</div>
+      <div
+        class="wrap shadow-lg w-fit absolute top-1/2 -left-16 z-20"
+        v-if="isRowFocused && isShowMenu"
+      >
+        Testing
+      </div>
     </div>
   </div>
 </template>
@@ -37,8 +43,15 @@ interface Props {
   row: JobView
 }
 
+const isShowMenu = ref<boolean>(false)
+const isRowFocused = ref<boolean>(false)
 const parentRow = ref<HTMLElement>()
 const menu = ref<HTMLElement>()
+
+const updateRowState = () => {
+  isShowMenu.value = false
+  isRowFocused.value = false
+}
 
 // MAP
 const StatusMap = {
