@@ -62,28 +62,23 @@ input[type='password'] {
 
 /* Tags styling */
 .pending {
-  color: #3884f6;
-  border: #3884f6 solid 1px;
+  @apply text-vivid-blue border border-vivid-blue;
 }
 
 .reviewed {
-  color: #d87d13;
-  border: #d87d13 solid 1px;
+  @apply text-warm-orange border border-warm-orange;
 }
 
 .interviewing {
-  color: #31c0b8;
-  border: #31c0b8 solid 1px;
+  @apply text-vibrant-teal border border-vibrant-teal;
 }
 
 .declined {
-  color: #c03931;
-  border: #c03931 solid 1px;
+  @apply text-red-strong border border-red-strong;
 }
 
 .offered {
-  color: #088c3e;
-  border: #088c3e solid 1px;
+  @apply text-vibrant-green border border-vibrant-green;
 }
 
 /* Scrollbars styling */
