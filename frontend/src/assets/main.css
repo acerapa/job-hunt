@@ -96,10 +96,10 @@ input[type='password'] {
   border-radius: 5px;
 }
 
-.thin-scrollbar::-webkit-scrollbar-button {
+/* .thin-scrollbar::-webkit-scrollbar-button {
   background-color: rgb(186, 184, 190);
   border-radius: 5px;
-}
+} */
 
 /* Misc */
 .glow {
