@@ -24,6 +24,11 @@ export default <RouteRecordRaw[]>[
         path: 'jobs/create',
         name: 'provider-jobs-create',
         component: () => import('@/views/job-provider/CreateJobPage.vue')
+      },
+      {
+        path: 'jobs/:id/applicants',
+        name: 'provider-jobs-applicants',
+        component: () => import('@/views/job-provider/ApplicantListPage.vue')
       }
     ]
   }

@@ -1,4 +1,4 @@
-import type { Job } from '@/types'
+import { type Applicant, ApplicantStatus, type Job } from '@/types'
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 
@@ -57,7 +57,41 @@ export const useJobStore = defineStore('job', function () {
     }
   ])
 
+  const applicants = ref<Applicant[]>([
+    {
+      name: 'John Doe',
+      job: 'PHP Developer',
+      status: ApplicantStatus.PENDING,
+      applied_on: new Date()
+    },
+    {
+      name: 'Jane Doe',
+      job: 'Frontend Developer',
+      status: ApplicantStatus.REVIEWED,
+      applied_on: new Date()
+    },
+    {
+      name: 'Tim Scott',
+      job: 'Backend Developer',
+      status: ApplicantStatus.INTERVIEWING,
+      applied_on: new Date()
+    },
+    {
+      name: 'Bob Smith',
+      job: 'Backend Developer',
+      status: ApplicantStatus.DECLINED,
+      applied_on: new Date()
+    },
+    {
+      name: 'Jack  Smith',
+      job: 'Fullstack Developer',
+      status: ApplicantStatus.OFFERED,
+      applied_on: new Date()
+    }
+  ])
+
   return {
-    jobs
+    jobs,
+    applicants
   }
 })
