@@ -1,6 +1,7 @@
 node_modules
 *.lock
 .env
+notes.txt
 
 # Logs
 logs

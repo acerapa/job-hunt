@@ -1,5 +1,14 @@
 <template>
-  <header class="h-[70px] w-full bg-white flex justify-center">
+  <header
+    class="h-[70px] w-full bg-white flex justify-center"
+    @mouseenter="overHeader = true"
+    @mouseleave="
+      () => {
+        showDroppdown = false
+        overHeader = false
+      }
+    "
+  >
     <div class="max-w-7xl h-full w-full text-main flex items-center justify-between px-8">
       <div class="flex gap-10 items-center">
         <p class="text-[32px] font-bold cursor-pointer">Job Hunt</p>
@@ -32,12 +41,12 @@
         <RouterLink :to="{ name: 'signup' }" class="btn-outline">Sign up</RouterLink>
       </div>
 
-      <div v-if="authStore.authUser">
+      <div v-if="authStore.authUser" class="cursor-pointer">
         <div class="flex gap-12 items-center">
           <button type="button">
             <img src="@/assets/icons/doorbell.svg" alt="doorbell.svg" />
           </button>
-          <div class="flex gap-2 items-center">
+          <div class="flex gap-2 items-center relative" @click="showDroppdown = true">
             <img
               src="@/assets/images/default.png"
               class="aspect-square w-9 rounded-full"
@@ -46,6 +55,21 @@
             <div class="flex flex-col">
               <span class="text-sm font-bold">Harvey Aparece</span>
               <span class="text-[10px] font-semibold leading-tight">Job Hunter</span>
+            </div>
+
+            <!-- dropdown of the menu -->
+            <div
+              class="wrap shadow dropdown absolute -bottom-24 right-0 !px-0 flex flex-col"
+              v-if="showDroppdown && overHeader"
+            >
+              <RouterLink
+                :to="{ name: 'profile' }"
+                exact-active-class="!bg-pale-blue font-bold"
+                class="px-4 text-left hover:bg-pale-blue py-0.5"
+              >
+                Profile
+              </RouterLink>
+              <button class="px-4 text-left hover:bg-pale-blue py-0.5">Sign out</button>
             </div>
           </div>
         </div>
@@ -64,6 +88,8 @@ const router = useRouter()
 const userType = ref<string>()
 const authStore = useAuthStore()
 const isLoading = ref<boolean>(false)
+const overHeader = ref<boolean>(false)
+const showDroppdown = ref<boolean>(false)
 onMounted(async () => {
   await authStore.fetchAuthUser()
   if (authStore.authUser) {
