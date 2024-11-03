@@ -183,6 +183,7 @@
           />
         </div>
       </div>
+      <!-- TODO: Need to add education and work experience -->
       <div class="wrap flex flex-col gap-3">
         <div class="flex justify-between items-center">
           <p class="font-semibold text-main">Social and Community Links</p>
