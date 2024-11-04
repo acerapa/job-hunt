@@ -23,6 +23,7 @@ export class User extends BaseEntity implements UserTyping {
     nullable: true
   })
   last_name: string
+
   @Column({
     nullable: true
   })

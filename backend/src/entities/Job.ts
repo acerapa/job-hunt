@@ -5,38 +5,63 @@ import {
   Column,
   ManyToOne,
   JoinColumn,
-} from "typeorm";
-import { CompanyRep } from "./CompanyRep";
-import { Company } from "./Company";
+  CreateDateColumn,
+  UpdateDateColumn
+} from 'typeorm'
 
-@Entity("jobs")
-export class Job extends BaseEntity {
+import type { Job as JobTyping, WorkSetup, WorkType, Shift, Application, Tag } from '@shared/pack'
+@Entity('jobs')
+export class Job extends BaseEntity implements JobTyping {
+  available_shifts: Shift[]
+  applications?: Application[] | undefined
   @PrimaryGeneratedColumn()
-  id: number;
+  id: number
 
   @Column()
-  title: string;
+  company_id: number
 
   @Column()
-  description: string;
+  title: string
 
   @Column()
-  posted_on: Date;
+  description: string
 
   @Column()
-  closing_date: Date;
+  salary_range: string
 
   @Column()
-  application_url: string;
+  posted_on: Date
 
   @Column()
-  location: string;
+  closing_date: Date
 
-  @ManyToOne(() => CompanyRep, (companyRep) => companyRep.jobs)
-  @JoinColumn({ name: "posted_by" })
-  rep: CompanyRep;
+  @Column()
+  work_setup: WorkSetup
 
-  @ManyToOne(() => Company, (company) => company.jobs)
-  @JoinColumn({ name: "company_id" })
-  company: Company;
+  @Column()
+  work_type: WorkType
+
+  @Column()
+  is_flex: boolean
+
+  @Column()
+  responsibilities: string
+
+  @Column()
+  qualifications: string
+
+  @Column()
+  what_we_offer: string
+
+  @Column()
+  application_url: string
+
+  @Column()
+  others: string
+
+  @CreateDateColumn()
+  created_at: Date
+
+  @UpdateDateColumn()
+  updated_at: Date
 }
