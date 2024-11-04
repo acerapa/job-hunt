@@ -38,16 +38,6 @@ export interface Skill {
   type: SkillType
 }
 
-export interface CompanyRep {
-  id: number
-  position: string
-  jobs?: Job[]
-  user?: User
-  company: Company
-  user_id?: number
-  company_id?: number
-}
-
 export interface Company {
   id: number
   name: string
@@ -117,4 +107,14 @@ export interface Application {
 export interface Tag {
   id: number
   name: string
+  created_at: Date
+  updated_at: Date
+}
+
+export interface Like {
+  id: number
+  user_id: number
+  job_id: number
+  created_at: Date
+  updated_at: Date
 }

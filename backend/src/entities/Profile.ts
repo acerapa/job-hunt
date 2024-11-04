@@ -1,4 +1,10 @@
-import { BaseEntity, Column, PrimaryGeneratedColumn } from 'typeorm'
+import {
+  BaseEntity,
+  Column,
+  CreateDateColumn,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn
+} from 'typeorm'
 import { type Profile as ProfileTyping } from '@shared/pack'
 
 export class Profile extends BaseEntity implements ProfileTyping {
@@ -47,4 +53,10 @@ export class Profile extends BaseEntity implements ProfileTyping {
     nullable: true
   })
   address_id: number
+
+  @CreateDateColumn()
+  created_at: Date
+
+  @UpdateDateColumn()
+  updated_at: Date
 }
