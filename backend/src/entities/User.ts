@@ -4,74 +4,59 @@ import {
   Column,
   PrimaryGeneratedColumn,
   CreateDateColumn,
-  UpdateDateColumn,
-  OneToOne,
-  ManyToOne,
-  JoinColumn,
-} from "typeorm";
-import { CompanyRep } from "./CompanyRep";
-import { UserRegistration } from "./UserRegistration";
-import { UserType } from "@shared/pack";
-import { Address } from "./Address";
-import { Exclude } from "class-transformer";
+  UpdateDateColumn
+} from 'typeorm'
+import { Gender, UserType, User as UserTyping } from '@shared/pack'
+import { Exclude } from 'class-transformer'
 
-@Entity("users")
-export class User extends BaseEntity {
+@Entity('users')
+export class User extends BaseEntity implements UserTyping {
   @PrimaryGeneratedColumn()
-  id: number;
+  id: number
 
   @Column({
-    nullable: true,
+    nullable: true
   })
-  first_name: string;
+  first_name: string
 
   @Column({
-    nullable: true,
+    nullable: true
   })
-  last_name: string;
+  last_name: string
+
   @Column({
-    nullable: true,
+    nullable: true
   })
-  type: UserType;
+  type: UserType
+
+  @Column()
+  gender: Gender
 
   @Column({
     unique: true,
-    nullable: false,
+    nullable: false
   })
-  username: string;
+  username: string
 
   @Column({
-    nullable: false,
+    nullable: false
   })
   @Exclude({ toPlainOnly: true })
-  password: string;
+  password: string
 
   @Column({
-    nullable: false,
+    nullable: false
   })
-  email: string;
+  email: string
 
   @Column({
-    nullable: true,
+    nullable: true
   })
-  mobile_number: string;
-
-  @Column({ nullable: true })
-  professional_summary: string;
-
-  @OneToOne(() => CompanyRep, (comanyRep) => comanyRep.user)
-  company_rep: CompanyRep;
-
-  @OneToOne(() => UserRegistration, (userRegistration) => userRegistration.user)
-  user_registration: UserRegistration;
-
-  @ManyToOne(() => Address)
-  @JoinColumn({ name: "address_id" })
-  address: Address;
+  phone: string
 
   @CreateDateColumn()
-  created_at: Date;
+  created_at: Date
 
   @UpdateDateColumn()
-  updated_at: Date;
+  updated_at: Date
 }

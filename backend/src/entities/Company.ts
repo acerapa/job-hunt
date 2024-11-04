@@ -8,49 +8,53 @@ import {
   UpdateDateColumn,
   OneToOne,
   ManyToMany,
-  JoinColumn,
-} from "typeorm";
-import { CompanyRep } from "./CompanyRep";
-import { Job } from "./Job";
-import { Address } from "./Address";
+  JoinColumn
+} from 'typeorm'
+import { User } from './User'
+import { Address, Job, type Company as CompanyTyping } from '@shared/pack'
 
-@Entity("companies")
-export class Company extends BaseEntity {
+@Entity('companies')
+export class Company extends BaseEntity implements CompanyTyping {
   @PrimaryGeneratedColumn()
-  id: number;
+  id: number
 
   @Column({
-    comment: "Refers to the name of the comany",
+    comment: 'Refers to the user id of the company'
   })
-  name: string;
+  @OneToOne(() => User, (user) => user)
+  user_id: number
+
+  @Column()
+  logo: string
+
+  @Column({ nullable: true })
+  website: string
+
+  @Column()
+  industry: string
 
   @Column({
-    comment: "Company descriptions",
+    comment: 'Refers to the name of the comany'
   })
-  description: string;
+  name: string
+
+  @Column({
+    comment: 'Company descriptions'
+  })
+  description: string
 
   @Column()
-  employee_range: string;
+  employee_range: string
 
   @Column()
-  site_url: string;
+  site_url: string
 
   @Column()
-  address_id: number;
-
-  @OneToOne(() => CompanyRep, (companyRep) => companyRep.company)
-  rep: CompanyRep;
-
-  @OneToMany(() => Job, (job) => job.company)
-  jobs: Job[];
-
-  @ManyToMany(() => Address)
-  @JoinColumn({ name: 'address_id' })
-  address: Address;
+  address_id: number
 
   @CreateDateColumn()
-  created_at: Date;
+  created_at: Date
 
   @UpdateDateColumn()
-  updated_at: Date;
+  updated_at: Date
 }
