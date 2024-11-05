@@ -32,7 +32,9 @@ export class User extends BaseEntity implements IUser<Profile, Company> {
   })
   type: UserType
 
-  @Column()
+  @Column({
+    nullable: true
+  })
   gender: Gender
 
   @Column({

@@ -21,8 +21,6 @@ export const useAuthStore = defineStore('auth', function () {
       // persist tokens to localstorage
       localStorage.setItem(LocalStorageKeys.ACCESS, access.value)
       localStorage.setItem(LocalStorageKeys.REFRESH, refresh.value)
-      localStorage.setItem(LocalStorageKeys.CURRENT_USER, res.data.user_id)
-      localStorage.setItem(LocalStorageKeys.CURRENT_USER_OBJECT, JSON.stringify(res.data.user))
     }
 
     return res.data.authenticated
@@ -58,12 +56,20 @@ export const useAuthStore = defineStore('auth', function () {
     }
   }
 
+  const getAuthUser = async () => {
+    if (!authUser.value) {
+      await fetchAuthUser(true)
+    }
+
+    return authUser.value
+  }
+
   return {
     access,
     refresh,
-    authUser,
     signIn,
     signOut,
+    getAuthUser,
     fetchAuthUser
   }
 })

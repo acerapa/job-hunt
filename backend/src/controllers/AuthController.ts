@@ -7,7 +7,7 @@ import { User } from './../entities/User'
 import { generateAccessAndRefreshToken } from '../services/auth-service'
 import { JwtPayload, verify } from 'jsonwebtoken'
 import { getEnvOrDefault } from '../helpers/env-helpers'
-import { LoginResponseData, User as UserTyping } from '@shared/pack/dist'
+import { LoginResponseData, type User as IUser } from '@shared/pack/dist'
 import { instanceToPlain } from 'class-transformer'
 
 export const authenticate = async (req: Request, res: Response) => {
@@ -26,7 +26,7 @@ export const authenticate = async (req: Request, res: Response) => {
     authenticated: false,
     access: '',
     refresh: '',
-    user_id: ''
+    user: null
   }
 
   if (user) {
@@ -35,9 +35,8 @@ export const authenticate = async (req: Request, res: Response) => {
       // generate tokens
       responseData = {
         authenticated: true,
-        user_id: user.id.toString(),
         ...generateAccessAndRefreshToken(user),
-        user: instanceToPlain(user) as UserTyping
+        user: instanceToPlain(user) as IUser
       }
 
       return res.status(200).json(formatResponse(responseData, 'Successfully login', 200))
@@ -72,4 +71,16 @@ export const refresh = async (req: Request, res: Response) => {
   } catch (error) {
     res.status(401).json(formatResponse(error, 'Invalid token!', 401))
   }
+}
+
+export const authenticateSetCookies = (req: Request, res: Response) => {
+  res.cookie('access', 'this is a sample access token', {
+    httpOnly: true,
+    secure: false,
+    sameSite: 'strict',
+    maxAge: 15 + 60 * 1000, // 15 minutes
+    path: '/'
+  })
+
+  res.send('ok')
 }

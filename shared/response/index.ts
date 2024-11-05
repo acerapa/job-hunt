@@ -10,6 +10,5 @@ export interface LoginResponseData {
   authenticated: boolean
   access: string
   refresh: string
-  user_id: string
-  user: User
+  user: User | null
 }

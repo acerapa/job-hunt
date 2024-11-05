@@ -1,9 +1,10 @@
-import { Router } from "express";
+import { Router } from 'express'
 
-const router = Router();
-import { authenticate, refresh } from "../controllers/AuthController";
+const router = Router()
+import { authenticate, authenticateSetCookies, refresh } from '../controllers/AuthController'
 
-router.post("/login", authenticate);
-router.post("/refresh", refresh);
+router.post('/login', authenticate)
+router.post('/refresh', refresh)
+router.get('/test-cookie', authenticateSetCookies)
 
-export default router;
+export default router

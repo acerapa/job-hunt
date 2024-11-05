@@ -76,3 +76,7 @@ Content-Type: application/json
 {
   "company": {}
 }
+
+# test set cookies
+###
+GET http://localhost:3000/api/auth/test-cookie

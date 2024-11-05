@@ -35,13 +35,13 @@
           </RouterLink>
         </div>
       </div>
-      <div class="flex gap-3 items-center" v-if="!authStore.authUser">
+      <div class="flex gap-3 items-center" v-if="!authUser">
         <RouterLink :to="{ name: 'signin' }" class="text-sm font-normal">Sign in</RouterLink>
         <div class="border w-0 h-8 border-main rounded"></div>
         <RouterLink :to="{ name: 'signup' }" class="btn-outline">Sign up</RouterLink>
       </div>
 
-      <div v-if="authStore.authUser" class="cursor-pointer">
+      <div v-if="authUser" class="cursor-pointer">
         <div class="flex gap-12 items-center">
           <button type="button">
             <img src="@/assets/icons/doorbell.svg" alt="doorbell.svg" />
@@ -69,7 +69,9 @@
               >
                 Profile
               </RouterLink>
-              <button class="px-4 text-left hover:bg-pale-blue py-0.5">Sign out</button>
+              <button class="px-4 text-left hover:bg-pale-blue py-0.5" @click="onSignOut">
+                Sign out
+              </button>
             </div>
           </div>
         </div>
@@ -80,20 +82,21 @@
 
 <script setup lang="ts">
 import { useAuthStore } from '@/stores/auth-store'
-import { UserTypeMap } from '@shared/pack'
+import { UserTypeMap, type User } from '@shared/pack'
 import { onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
 
 const router = useRouter()
 const userType = ref<string>()
 const authStore = useAuthStore()
+const authUser = ref<User | null>()
 const isLoading = ref<boolean>(false)
 const overHeader = ref<boolean>(false)
 const showDroppdown = ref<boolean>(false)
 onMounted(async () => {
-  await authStore.fetchAuthUser()
-  if (authStore.authUser) {
-    userType.value = UserTypeMap[authStore.authUser.type].text
+  authUser.value = await authStore.getAuthUser()
+  if (authUser.value) {
+    userType.value = UserTypeMap[authUser.value.type].text
   }
 })
 
