@@ -4,13 +4,16 @@ import {
   Column,
   PrimaryGeneratedColumn,
   CreateDateColumn,
-  UpdateDateColumn
+  UpdateDateColumn,
+  OneToOne
 } from 'typeorm'
-import { Gender, UserType, User as UserTyping } from '@shared/pack'
+import { Gender, UserType, User as IUser } from '@shared/pack'
 import { Exclude } from 'class-transformer'
+import { Profile } from './Profile'
+import { Company } from './Company'
 
 @Entity('users')
-export class User extends BaseEntity implements UserTyping {
+export class User extends BaseEntity implements IUser<Profile, Company> {
   @PrimaryGeneratedColumn()
   id: number
 
@@ -38,14 +41,13 @@ export class User extends BaseEntity implements UserTyping {
   })
   username: string
 
-  @Column({
-    nullable: false
-  })
+  @Column()
   @Exclude({ toPlainOnly: true })
   password: string
 
   @Column({
-    nullable: false
+    nullable: false,
+    unique: true
   })
   email: string
 
@@ -53,6 +55,12 @@ export class User extends BaseEntity implements UserTyping {
     nullable: true
   })
   phone: string
+
+  @OneToOne(() => Profile, (profile) => profile.user, { cascade: ['remove'] })
+  profile: Profile
+
+  @OneToOne(() => Company, (company) => company.user, { cascade: ['remove'] })
+  company: Company
 
   @CreateDateColumn()
   created_at: Date

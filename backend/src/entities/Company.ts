@@ -7,22 +7,22 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   OneToOne,
-  ManyToMany,
-  JoinColumn
+  JoinColumn,
+  ManyToOne
 } from 'typeorm'
+import { type Company as ICompany } from '@shared/pack'
+import { Job } from './Job'
 import { User } from './User'
-import { Address, Job, type Company as CompanyTyping } from '@shared/pack'
+import { Address } from './Address'
 
 @Entity('companies')
-export class Company extends BaseEntity implements CompanyTyping {
+export class Company extends BaseEntity implements ICompany<User, Job> {
   @PrimaryGeneratedColumn()
   id: number
 
-  @Column({
-    comment: 'Refers to the user id of the company'
-  })
-  @OneToOne(() => User, (user) => user)
-  user_id: number
+  @OneToOne(() => User, (user) => user.company)
+  @JoinColumn({ name: 'user_id' })
+  user: User
 
   @Column()
   logo: string
@@ -49,8 +49,11 @@ export class Company extends BaseEntity implements CompanyTyping {
   @Column()
   site_url: string
 
-  @Column()
-  address_id: number
+  @ManyToOne(() => Address)
+  address: Address
+
+  @OneToMany(() => Job, (job) => job.company)
+  jobs: Job[]
 
   @CreateDateColumn()
   created_at: Date

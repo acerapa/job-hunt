@@ -76,7 +76,7 @@ export const update = async (req: Request, res: Response) => {
 
 export const getOne = async (req: Request, res: Response) => {
   try {
-    const user: UserTyping | null = null
+    const user: Object | null = null
 
     res.status(200).json(formatResponse({ user }, 'Successfully fetched!', 200))
   } catch (e) {

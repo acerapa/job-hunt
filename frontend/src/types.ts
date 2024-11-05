@@ -36,7 +36,6 @@ export interface Activity {
 
 export enum ApplicantStatus {
   PENDING = 1,
-  UNREVIEWED = 1,
   REVIEWED = 2,
   INTERVIEWING = 3,
   OFFERED = 4,
