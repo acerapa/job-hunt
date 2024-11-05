@@ -3,21 +3,39 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinColumn,
+  ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn
 } from 'typeorm'
-import type { Application as ApplicationTyping } from '@shared/pack'
+import { ApplicationStatus, Application as IApplication } from '@shared/pack'
+import { Job } from './Job'
+import { Profile } from './Profile'
 
 @Entity('applications')
-export class Application extends BaseEntity implements ApplicationTyping {
+export class Application extends BaseEntity implements IApplication<Job, Profile> {
   @PrimaryGeneratedColumn()
   id: number
 
-  @Column()
-  user_id: number
+  @Column({
+    type: 'enum',
+    enum: [
+      ApplicationStatus.UNREVIEWED,
+      ApplicationStatus.DECLINED,
+      ApplicationStatus.INTERVIEWING,
+      ApplicationStatus.OFFERED,
+      ApplicationStatus.REVIEWED
+    ]
+  })
+  status: ApplicationStatus
 
-  @Column()
-  job_id: number
+  @ManyToOne(() => Profile)
+  @JoinColumn({ name: 'profile_id' })
+  profile: Profile
+
+  @ManyToOne(() => Job, (job) => job.applications)
+  @JoinColumn({ name: 'job_id' })
+  job: Job
 
   @CreateDateColumn()
   created_at: Date

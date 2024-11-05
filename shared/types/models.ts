@@ -1,7 +1,7 @@
-import { Gender, UserType, WorkSetup, WorkType } from '.'
+import { ApplicationStatus, Gender, UserType, WorkSetup, WorkType } from '.'
 import { SkillType } from '.'
 
-export interface User {
+export interface User<Profile = Object, Company = Object> {
   id?: number
   phone: string
   email: string
@@ -11,52 +11,62 @@ export interface User {
   password: string
   created_at: Date
   updated_at: Date
-  profile?: object
+  profile?: Profile
+  company?: Company
   last_name: string
   first_name: string
 }
 
-export interface Profile {
+export interface Profile<User = Object, Skill = Object, Application = Object> {
   id?: number
-  user?: User
-  user_id: number
+  user: User
+  user_id?: number
   cover_letter: string
   resume: string
   profile_pic: string
   expected_salary_range: string
+  applications: Application[]
   website: string
   linkedin: string
   github: string
   address?: Address
-  address_id: number
+  address_id?: number
   skills?: Skill[]
 }
 
-export interface Skill {
+export interface Skill<Profile = Object> {
   id?: number
   name: string
   type: SkillType
+  profiles?: Profile[]
 }
 
-export interface Company {
+export interface Company<User = Object, Job = Object> {
   id: number
   name: string
-  user_id: number
+  user_id?: number
+  user: User
   description: string
   employee_range: string
   website: string
   logo: string
   address?: Address
-  address_id: number
+  address_id?: number
   jobs?: Job[]
   industry: string
   created_at: Date
   updated_at: Date
 }
 
-export interface Job {
+export interface Job<
+  Skill = Object,
+  Company = Object,
+  Shift = Object,
+  Application = Object,
+  Tag = Object
+> {
   id: number
-  company_id: number
+  company_id?: number
   title: string
   description: string
   salary_range: string
@@ -74,6 +84,7 @@ export interface Job {
   application_url: string
   others: string
   tags?: Tag[]
+  company: Company
   created_at?: Date
   updated_at?: Date
 }
@@ -87,26 +98,31 @@ export interface Address {
   postal: string
 }
 
-export interface Shift {
+export interface Shift<Job = Object> {
   id: number
   name: string
   start_time: string
+  jobs: Job[]
   end_time: string
   created_at?: Date
   updated_at?: Date
 }
 
-export interface Application {
+export interface Application<Job = Object, Profile = Object> {
   id: number
-  user_id: number
-  job_id: number
+  profile_id?: number
+  profile: Profile
+  job_id?: number
+  job: Job
+  status: ApplicationStatus
   created_at?: Date
   updated_at?: Date
 }
 
-export interface Tag {
+export interface Tag<Job = Object> {
   id: number
   name: string
+  jobs: Job[]
   created_at: Date
   updated_at: Date
 }

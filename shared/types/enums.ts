@@ -34,3 +34,11 @@ export const enum WorkType {
   PARTTIME = 'parttime',
   INTERNSHIP = 'internship'
 }
+
+export const enum ApplicationStatus {
+  UNREVIEWED = 'unreviewed',
+  REVIEWED = 'reviewed',
+  INTERVIEWING = 'interviewing',
+  OFFERED = 'offered',
+  DECLINED = 'declined'
+}

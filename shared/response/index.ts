@@ -1,15 +1,15 @@
-import { User } from "../types";
+import { User } from '../types'
 
 export interface ApiResponse<Data> {
-  data: Data;
-  message: string;
-  status: number;
+  data: Data
+  message: string
+  status: number
 }
 
 export interface LoginResponseData {
-  authenticated: boolean;
-  access: string;
-  refresh: string;
-  user_id: string;
-  user: User;
+  authenticated: boolean
+  access: string
+  refresh: string
+  user_id: string
+  user: User
 }
