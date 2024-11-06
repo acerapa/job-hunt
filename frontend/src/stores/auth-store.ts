@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
-import type { ApiResponse, LoginResponseData, User, UserCred } from '@shared/pack'
+import type { ApiResponse, User, UserCred } from '@shared/pack'
 import { api, Method } from '@/api'
 import { useUserStore } from './user-store'
 import { getAuthUserLocalSt, LocalStorageKeys } from '@/const'
@@ -12,18 +12,11 @@ export const useAuthStore = defineStore('auth', function () {
   const refresh = ref('')
 
   const signIn = async (credential: UserCred) => {
-    const res: ApiResponse<LoginResponseData> = await api('/auth/login', Method.POST, credential)
+    const res: ApiResponse = await api('/auth/login', Method.POST, credential)
 
-    if (res.data.authenticated) {
-      access.value = res.data.access
-      refresh.value = res.data.refresh
-
-      // persist tokens to localstorage
-      localStorage.setItem(LocalStorageKeys.ACCESS, access.value)
-      localStorage.setItem(LocalStorageKeys.REFRESH, refresh.value)
+    if (res.status == 200) {
+      // TODO: Get the current authenticated user
     }
-
-    return res.data.authenticated
   }
 
   const signOut = async () => {

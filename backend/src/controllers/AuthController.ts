@@ -7,8 +7,6 @@ import { User } from './../entities/User'
 import { generateAccessAndRefreshToken } from '../services/auth-service'
 import { JwtPayload, verify } from 'jsonwebtoken'
 import { getEnvOrDefault } from '../helpers/env-helpers'
-import { LoginResponseData, type User as IUser } from '@shared/pack/dist'
-import { instanceToPlain } from 'class-transformer'
 
 export const authenticate = async (req: Request, res: Response) => {
   const { usercred, password } = req.body
@@ -22,28 +20,36 @@ export const authenticate = async (req: Request, res: Response) => {
     where: condition
   })
 
-  let responseData: Partial<LoginResponseData> = {
-    authenticated: false,
-    access: '',
-    refresh: '',
-    user: null
-  }
-
   if (user) {
     const isMatched = await compare(password, user.password)
     if (isMatched) {
-      // generate tokens
-      responseData = {
-        authenticated: true,
-        ...generateAccessAndRefreshToken(user),
-        user: instanceToPlain(user) as IUser
-      }
+      const { refresh, access } = generateAccessAndRefreshToken(user)
 
-      return res.status(200).json(formatResponse(responseData, 'Successfully login', 200))
+      // set cookies and token
+      res.cookie('access', access, {
+        httpOnly: true,
+        sameSite: 'strict',
+        secure: process.env.NODE_ENV == 'production',
+        maxAge: 5 * 60 * 1000,
+        priority: 'high',
+        signed: true,
+        path: '/api'
+      })
+
+      res.cookie('refresh', refresh, {
+        httpOnly: true,
+        sameSite: 'strict',
+        secure: process.env.NODE_ENV == 'production',
+        maxAge: 2 * 60 * 60 * 1000,
+        signed: true,
+        path: '/api'
+      })
+
+      return res.status(200).json(formatResponse({}, 'Successfully login', 200))
     }
   }
 
-  res.status(401).json(formatResponse(responseData, 'Invalid credentials', 401))
+  res.status(401).json(formatResponse({}, 'Invalid credentials', 401))
 }
 
 export const refresh = async (req: Request, res: Response) => {
@@ -71,16 +77,4 @@ export const refresh = async (req: Request, res: Response) => {
   } catch (error) {
     res.status(401).json(formatResponse(error, 'Invalid token!', 401))
   }
-}
-
-export const authenticateSetCookies = (req: Request, res: Response) => {
-  res.cookie('access', 'this is a sample access token', {
-    httpOnly: true,
-    secure: false,
-    sameSite: 'strict',
-    maxAge: 15 + 60 * 1000, // 15 minutes
-    path: '/'
-  })
-
-  res.send('ok')
 }
