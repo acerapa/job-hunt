@@ -2,64 +2,39 @@ import { defineStore } from 'pinia'
 import { ref } from 'vue'
 import type { ApiResponse, User, UserCred } from '@shared/pack'
 import { api, Method } from '@/api'
-import { useUserStore } from './user-store'
-import { getAuthUserLocalSt, LocalStorageKeys } from '@/const'
 
 export const useAuthStore = defineStore('auth', function () {
-  const userStore = useUserStore()
   const authUser = ref<User | null>()
-  const access = ref('')
-  const refresh = ref('')
 
   const signIn = async (credential: UserCred) => {
-    const res: ApiResponse = await api('/auth/login', Method.POST, credential)
+    const loginResponse: ApiResponse<User> = await api('auth/login', Method.POST, credential)
 
-    if (res.status == 200) {
-      // TODO: Get the current authenticated user
+    if (loginResponse.status == 200) {
+      await fetchAuthUser()
     }
   }
 
   const signOut = async () => {
-    localStorage.removeItem(LocalStorageKeys.ACCESS)
-    localStorage.removeItem(LocalStorageKeys.REFRESH)
-    localStorage.removeItem(LocalStorageKeys.CURRENT_USER)
-    localStorage.removeItem(LocalStorageKeys.CURRENT_USER_OBJECT)
-
-    // TODO: call api to revoke the tokes (access & refresh)
+    return await api(`/auth/sign-out`)
   }
 
-  const fetchAuthUser = async (isForce: boolean = false) => {
-    if (!localStorage.getItem(LocalStorageKeys.CURRENT_USER)) return
-    try {
-      if (!isForce) {
-        authUser.value = getAuthUserLocalSt()
-          ? getAuthUserLocalSt()
-          : await userStore.fetchOneUser(
-              localStorage.getItem(LocalStorageKeys.CURRENT_USER) as string
-            )
-      }
+  const fetchAuthUser = async () => {
+    const res: ApiResponse<User> = await api(`auth/authenticated`)
 
-      authUser.value = await userStore.fetchOneUser(
-        localStorage.getItem(LocalStorageKeys.CURRENT_USER) as string
-      )
-
-      localStorage.setItem(LocalStorageKeys.CURRENT_USER_OBJECT, JSON.stringify(authUser.value))
-    } catch (error) {
-      console.error(error)
+    if (res.status == 200) {
+      authUser.value = res.data
     }
   }
 
   const getAuthUser = async () => {
     if (!authUser.value) {
-      await fetchAuthUser(true)
+      await fetchAuthUser()
     }
 
     return authUser.value
   }
 
   return {
-    access,
-    refresh,
     signIn,
     signOut,
     getAuthUser,

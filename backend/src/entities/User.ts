@@ -5,10 +5,10 @@ import {
   PrimaryGeneratedColumn,
   CreateDateColumn,
   UpdateDateColumn,
-  OneToOne
+  OneToOne,
+  AfterLoad
 } from 'typeorm'
 import { Gender, UserType, User as IUser } from '@shared/pack'
-import { Exclude } from 'class-transformer'
 import { Profile } from './Profile'
 import { Company } from './Company'
 
@@ -44,7 +44,6 @@ export class User extends BaseEntity implements IUser<Profile, Company> {
   username: string
 
   @Column()
-  @Exclude({ toPlainOnly: true })
   password: string
 
   @Column({
@@ -57,6 +56,17 @@ export class User extends BaseEntity implements IUser<Profile, Company> {
     nullable: true
   })
   phone: string
+
+  private passwordClone: string
+  @AfterLoad()
+  hidePassword() {
+    this.passwordClone = this.password
+    this.password = ''
+  }
+
+  getPassword() {
+    return this.passwordClone
+  }
 
   @OneToOne(() => Profile, (profile) => profile.user, { cascade: ['remove'] })
   profile: Profile

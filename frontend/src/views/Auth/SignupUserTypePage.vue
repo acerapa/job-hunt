@@ -93,7 +93,7 @@ const onSubmit = async () => {
       address: {}
     }
     const res = await userStore.updateUser(data)
-    await authStore.fetchAuthUser(true)
+    // await authStore.fetchAuthUser(true)
     isLoading.value = false
     if (res.status == 200) {
       router.push({

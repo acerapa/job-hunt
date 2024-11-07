@@ -8,7 +8,7 @@ export interface User<Profile = Object, Company = Object> {
   type: UserType
   gender: Gender
   username: string
-  password: string
+  password?: string
   created_at: Date
   updated_at: Date
   profile?: Profile

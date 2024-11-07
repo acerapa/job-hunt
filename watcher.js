@@ -44,12 +44,6 @@ fs.watch(indexPath, handler)
 
 console.log(
   `Watching this paths:
-  ${blue}
-    \n${helpersPath},
-    \n${responsePath},
-    \n${typesPath},
-    \n${validatorsPath},
-    \n${indexPath}
-    ${blue}
+  ${blue}\n${helpersPath},\n${responsePath},\n${typesPath},\n${validatorsPath},\n${indexPath}${blue}
   `
 )
