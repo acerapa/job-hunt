@@ -2,13 +2,13 @@ import { ApplicationStatus, Gender, UserType, WorkSetup, WorkType } from '.'
 import { SkillType } from '.'
 
 export interface User<Profile = Object, Company = Object> {
-  id?: number
+  id: number
   phone: string
   email: string
   type: UserType
   gender: Gender
   username: string
-  password: string
+  password?: string
   created_at: Date
   updated_at: Date
   profile?: Profile
@@ -18,7 +18,7 @@ export interface User<Profile = Object, Company = Object> {
 }
 
 export interface Profile<User = Object, Skill = Object, Application = Object> {
-  id?: number
+  id: number
   user: User
   user_id?: number
   cover_letter: string
@@ -35,7 +35,7 @@ export interface Profile<User = Object, Skill = Object, Application = Object> {
 }
 
 export interface Skill<Profile = Object> {
-  id?: number
+  id: number
   name: string
   type: SkillType
   profiles?: Profile[]

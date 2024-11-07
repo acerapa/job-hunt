@@ -1,9 +1,13 @@
-import { Router } from "express";
+import { Router } from 'express'
 
-const router = Router();
-import { authenticate, refresh } from "../controllers/AuthController";
+// middlewares
+import { validateAccessRefreshToken } from '../middlewares/validate-access-refresh-token'
 
-router.post("/login", authenticate);
-router.post("/refresh", refresh);
+const router = Router()
+import { authenticate, authUser, signOut } from '../controllers/AuthController'
 
-export default router;
+router.post('/login', authenticate)
+router.get('/sign-out', validateAccessRefreshToken, signOut)
+router.get('/authenticated', validateAccessRefreshToken, authUser)
+
+export default router

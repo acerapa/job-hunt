@@ -2,11 +2,9 @@ import { defineStore } from 'pinia'
 import { ref } from 'vue'
 import type { UserCreation, User, ApiResponse, UserUpdate } from '@shared/pack'
 import { authenticatedApi, Method } from '@/api'
-import { useAuthStore } from './auth-store'
 import { LocalStorageKeys } from '@/const'
 
 export const useUserStore = defineStore('user', () => {
-  const authStore = useAuthStore()
   const users = ref<User[]>()
   const user = ref<User>()
 
@@ -19,11 +17,9 @@ export const useUserStore = defineStore('user', () => {
 
     if (res.status == 200) {
       // set tokens
-      localStorage.setItem(LocalStorageKeys.ACCESS, res.data.acces as string)
+      localStorage.setItem(LocalStorageKeys.ACCESS, res.data.access as string)
       localStorage.setItem(LocalStorageKeys.REFRESH, res.data.refresh as string)
       localStorage.setItem(LocalStorageKeys.CURRENT_USER, res.data.user_id as string)
-
-      await authStore.fetchAuthUser()
     }
 
     return res

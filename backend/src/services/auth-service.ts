@@ -1,22 +1,26 @@
-import { sign } from "jsonwebtoken";
-import { User } from "../entities/User";
-import { getEnvOrDefault } from "../helpers/env-helpers";
+import { sign } from 'jsonwebtoken'
+import { User } from '../entities/User'
+import { getEnv } from '../helpers/env-helpers'
 
-export const generateAccessAndRefreshToken = (user: User) => {
+type Param = {
+  id: number
+}
+
+export const generateAccessAndRefreshToken = (user: User | Param) => {
   const accessToken = sign(
     { user_id: user.id, refresh: false },
-    getEnvOrDefault("SECRET_KEY", "thisisasecret"),
-    { expiresIn: getEnvOrDefault("TOKEN_EXP", "15m") }
-  );
+    getEnv('SECRET_KEY', 'thisisasecret'),
+    { expiresIn: getEnv('TOKEN_EXP', '15m') }
+  )
 
   const refreshToken = sign(
     { user_id: user.id, refresh: true },
-    getEnvOrDefault("REFRESH_TOKEN_KEY", "thisisasecretforrefresh"),
-    { expiresIn: getEnvOrDefault("REFRESH_TOKEN_EXP", "1d") }
-  );
+    getEnv('REFRESH_TOKEN_KEY', 'thisisasecretforrefresh'),
+    { expiresIn: getEnv('REFRESH_TOKEN_EXP', '1d') }
+  )
 
   return {
     access: accessToken,
-    refresh: refreshToken,
-  };
-};
+    refresh: refreshToken
+  }
+}

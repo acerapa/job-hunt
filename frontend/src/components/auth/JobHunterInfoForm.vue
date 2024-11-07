@@ -179,7 +179,7 @@ const onSubmit = async () => {
 
   isLoading.value = true
   const res = await userStore.updateUser(model.value)
-  await authStore.fetchAuthUser(true)
+  // await authStore.fetchAuthUser(true)
   isLoading.value = false
 
   if (res.status == 200) {

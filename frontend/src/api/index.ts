@@ -1,4 +1,4 @@
-import type { ApiResponse } from "@shared/pack"
+import type { ApiResponse } from '@shared/pack'
 
 export const enum Method {
   GET = 'GET',
@@ -27,8 +27,6 @@ const apiConfig: ApiConfig = {
   }
 }
 
-const BASE_PATH = apiConfig.serverUrls[import.meta.env.MODE]
-
 const setHeaders = (headerValues: DynamicKeyObj, headers: Headers) => {
   Object.keys(headerValues).forEach((header) => {
     headers.set(header, headerValues[header])
@@ -54,20 +52,20 @@ export const api = async <PayloadData, ResponseData>(
     requestInit.body = JSON.stringify(payload)
   }
 
-  const request: Request = new Request(`${BASE_PATH}${url}`, requestInit)
+  const request: Request = new Request(`api/${url}`, requestInit)
 
   const response: Response = await fetch(request)
 
   const contentType: string | null = response.headers.get('Content-Type')
-  let responseData: Partial<ApiResponse<ResponseData>> = {};
+  let responseData: Partial<ApiResponse<ResponseData>> = {}
 
   if (contentType) {
     if (contentType.includes('application/json')) {
       responseData = await response.json()
     } else if (contentType.includes('text/')) {
       responseData = {
-        data: await response.text() as ResponseData,
-        message: "Text response",
+        data: (await response.text()) as ResponseData,
+        message: 'Text response',
         status: response.status
       }
     } else if (
@@ -77,20 +75,20 @@ export const api = async <PayloadData, ResponseData>(
       contentType.includes('application/octet-stream')
     ) {
       responseData = {
-        data: await response.blob() as ResponseData,
-        message: "Blob response",
+        data: (await response.blob()) as ResponseData,
+        message: 'Blob response',
         status: response.status
       }
     } else {
       responseData = {
-        data: await response.text() as ResponseData,
-        message: "Text response",
+        data: (await response.text()) as ResponseData,
+        message: 'Text response',
         status: response.status
       } // Fallback for other content types
     }
   }
 
-  return responseData as ApiResponse<ResponseData>;
+  return responseData as ApiResponse<ResponseData>
 }
 
 export const authenticatedApi = async <PayloadData, ResponseData>(

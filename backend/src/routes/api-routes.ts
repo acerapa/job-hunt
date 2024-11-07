@@ -1,12 +1,15 @@
-import { Router } from "express";
-const router = Router();
+import { Router } from 'express'
+const router = Router()
 
-import companyRoutes from "./company-routes";
-import userRoutes from "./user-routes";
-import authRoute from "./auth-routes";
+// middlewares
+import { validateAccessRefreshToken } from '../middlewares/validate-access-refresh-token'
 
-router.use("/users", userRoutes);
-router.use("/auth", authRoute);
-router.use("/company", companyRoutes)
+import companyRoutes from './company-routes'
+import userRoutes from './user-routes'
+import authRoute from './auth-routes'
 
-export default router;
+router.use('/auth', authRoute)
+router.use('/users', validateAccessRefreshToken, userRoutes)
+router.use('/company', validateAccessRefreshToken, companyRoutes)
+
+export default router
