@@ -4,6 +4,7 @@ import dotenv from 'dotenv'
 import { checkConnection } from './src/database'
 import cookieParser from 'cookie-parser'
 import { getEnv } from './src/helpers/env-helpers'
+import { shorthandResponse } from './src/middlewares/response'
 
 dotenv.config()
 
@@ -11,6 +12,9 @@ dotenv.config()
 checkConnection()
 
 const app: Application = express()
+
+// implement shorthand response
+app.use(shorthandResponse())
 
 app.use(
   cors({

@@ -10,7 +10,7 @@ export const useUserStore = defineStore('user', () => {
 
   const createUser = async (user: UserCreation): Promise<ApiResponse<Record<string, string>>> => {
     const res: ApiResponse<Record<string, string>> = await authenticatedApi(
-      'users/register',
+      'auth/sign-up',
       Method.POST,
       user
     )

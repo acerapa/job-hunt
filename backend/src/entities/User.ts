@@ -6,11 +6,13 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   OneToOne,
-  AfterLoad
+  BeforeInsert
 } from 'typeorm'
 import { Gender, UserType, User as IUser } from '@shared/pack'
 import { Profile } from './Profile'
 import { Company } from './Company'
+import { hash } from 'bcryptjs'
+import { Exclude } from 'class-transformer'
 
 @Entity('users')
 export class User extends BaseEntity implements IUser<Profile, Company> {
@@ -44,6 +46,7 @@ export class User extends BaseEntity implements IUser<Profile, Company> {
   username: string
 
   @Column()
+  @Exclude({ toClassOnly: true })
   password: string
 
   @Column({
@@ -57,15 +60,9 @@ export class User extends BaseEntity implements IUser<Profile, Company> {
   })
   phone: string
 
-  private passwordClone: string
-  @AfterLoad()
-  hidePassword() {
-    this.passwordClone = this.password
-    this.password = ''
-  }
-
-  getPassword() {
-    return this.passwordClone
+  @BeforeInsert()
+  async hashPassword() {
+    this.password = await hash(this.password, 10)
   }
 
   @OneToOne(() => Profile, (profile) => profile.user, { cascade: ['remove'] })
