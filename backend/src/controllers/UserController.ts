@@ -1,6 +1,6 @@
 import { Request, Response } from 'express'
 import { hash } from 'bcryptjs'
-import { formatResponse } from '../helpers/response'
+import { formatResponse } from '../middlewares/response'
 import { User } from '../entities/User'
 import { User as UserTyping } from '@shared/pack'
 import { instanceToInstance } from 'class-transformer'
@@ -26,12 +26,10 @@ export const all = async (req: Request, res: Response) => {
 export const register = async (req: Request, res: Response) => {
   const { email, username, password } = req.body
   try {
-    const hashedPassword = password ? await hash(password, 10) : ''
-
     const user = User.create({
       email,
       username,
-      password: hashedPassword
+      password
     })
 
     await user.save()

@@ -1,39 +1,42 @@
 import { Request, Response } from 'express'
 import { FindOptionsWhere } from 'typeorm'
 import { compare } from 'bcryptjs'
-import { formatResponse } from '../helpers/response'
+import { formatResponse } from '../middlewares/response'
 import { isEmail } from '@shared/pack/dist'
 import { User } from './../entities/User'
 import { type User as IUser } from '@shared/pack'
 import { generateAccessAndRefreshToken } from '../services/auth-service'
 import { setCookie } from '../helpers/set-cookies'
+import { instanceToInstance } from 'class-transformer'
 
 export const authenticate = async (req: Request, res: Response) => {
-  const { usercred, password } = req.body
+  try {
+    const { usercred, password } = req.body
+    const condition: Partial<FindOptionsWhere<User>> = {}
 
-  const condition: Partial<FindOptionsWhere<User>> = {}
+    // verify if the parameter is an email or not
+    isEmail(usercred) ? (condition.email = usercred) : (condition.username = usercred)
+    const user = await User.findOne({
+      where: condition
+    })
 
-  // verify if the parameter is an email or not
-  isEmail(usercred) ? (condition.email = usercred) : (condition.username = usercred)
+    if (user) {
+      const isMatched = await compare(password, user.password)
+      if (isMatched) {
+        const { refresh, access } = generateAccessAndRefreshToken(user)
 
-  const user = await User.findOne({
-    where: condition
-  })
+        // set cookies and token
+        setCookie(res, 'access', access)
+        setCookie(res, 'refresh', refresh, { maxAge: 2 * 24 * 60 * 60 * 1000 })
 
-  if (user) {
-    const isMatched = await compare(password, user.getPassword())
-    if (isMatched) {
-      const { refresh, access } = generateAccessAndRefreshToken(user)
-
-      // set cookies and token
-      setCookie(res, 'access', access)
-      setCookie(res, 'refresh', refresh, { maxAge: 2 * 24 * 60 * 60 * 1000 })
-
-      return res.status(200).json(formatResponse({}, 'Successfully login', 200))
+        return res.sendSuccess({ message: 'Successfully login' })
+      }
     }
-  }
 
-  res.status(401).json(formatResponse({}, 'Invalid credentials', 401))
+    res.sendError({ message: 'Invalid credentials', status: 401 })
+  } catch (error) {
+    res.sendError()
+  }
 }
 
 export const signOut = async (req: Request, res: Response) => {
@@ -44,11 +47,17 @@ export const signOut = async (req: Request, res: Response) => {
 }
 
 export const authUser = async (req: Request, res: Response) => {
-  const user: IUser | null = await User.findOne({
-    where: {
-      id: req.body.auth_user
-    }
-  })
+  try {
+    const user: IUser | null = instanceToInstance(
+      await User.findOne({
+        where: {
+          id: req.body.auth_user
+        }
+      })
+    )
 
-  res.status(200).json(formatResponse(user))
+    res.sendSuccess({ data: user, message: 'Successfully retrieved' })
+  } catch (error) {
+    res.sendError()
+  }
 }

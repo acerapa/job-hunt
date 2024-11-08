@@ -2,7 +2,7 @@ import { Request, Response } from 'express'
 import { Company } from '../entities/Company'
 import { Company as CompanyTyping } from '@shared/pack/dist'
 import { instanceToPlain } from 'class-transformer'
-import { formatResponse } from '../helpers/response'
+import { formatResponse } from '../middlewares/response'
 import { Address } from '../entities/Address'
 
 export const all = async (req: Request, res: Response) => {

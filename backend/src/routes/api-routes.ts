@@ -7,9 +7,11 @@ import { validateAccessRefreshToken } from '../middlewares/validate-access-refre
 import companyRoutes from './company-routes'
 import userRoutes from './user-routes'
 import authRoute from './auth-routes'
+import profileRoutes from './profile-routes'
 
 router.use('/auth', authRoute)
 router.use('/users', validateAccessRefreshToken, userRoutes)
 router.use('/company', validateAccessRefreshToken, companyRoutes)
+router.use('/user/:user_id/profile', validateAccessRefreshToken, profileRoutes)
 
 export default router
