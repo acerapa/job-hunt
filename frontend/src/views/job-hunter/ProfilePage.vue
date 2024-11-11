@@ -73,7 +73,7 @@
             placeholder="First Name"
             label-css="text-sm"
             input-class="text-sm"
-            v-model="model.first_name"
+            v-model="userModel.first_name"
           />
           <InputComponent
             label="Last Name"
@@ -82,7 +82,7 @@
             placeholder="Last Name"
             label-css="text-sm"
             input-class="text-sm"
-            v-model="model.last_name"
+            v-model="userModel.last_name"
           />
         </div>
         <div class="flex gap-3">
@@ -93,7 +93,7 @@
             placeholder="Email"
             label-css="text-sm"
             input-class="text-sm"
-            v-model="model.email"
+            v-model="userModel.email"
           />
           <InputComponent
             type="text"
@@ -102,7 +102,7 @@
             label="Phone number"
             input-class="text-sm"
             placeholder="Phone number"
-            v-model="model.phone_number"
+            v-model="userModel.phone"
           />
           <InputComponent
             type="select"
@@ -114,14 +114,14 @@
             :options="[
               {
                 text: 'Male',
-                value: 'male'
+                value: Gender.MALE
               },
               {
                 text: 'Female',
-                value: 'female'
+                value: Gender.FEMALE
               }
             ]"
-            v-model="model.gender"
+            v-model="userModel.gender"
           />
         </div>
       </div>
@@ -197,6 +197,7 @@
             placeholder="Website/Portfolio"
             label-css="text-sm"
             input-class="text-sm"
+            v-model="profileModel.website"
           />
           <InputComponent
             label="LinkedIn"
@@ -205,6 +206,7 @@
             placeholder="LinkedIn"
             label-css="text-sm"
             input-class="text-sm"
+            v-model="profileModel.linkedin"
           />
         </div>
         <InputComponent
@@ -215,6 +217,7 @@
           placeholder="GitHub"
           label-css="text-sm"
           input-class="text-sm"
+          v-model="profileModel.github"
         />
       </div>
       <div class="wrap flex flex-col gap-3">
@@ -230,6 +233,7 @@
           placeholder="Cover Letter"
           label-css="text-sm"
           input-class="text-sm"
+          v-model="profileModel.cover_letter"
         />
         <!-- TODO: Need to add a file uploader type of InputComponent -->
       </div>
@@ -240,13 +244,14 @@
 <script setup lang="ts">
 import TagComponent from '@/components/shared/TagComponent.vue'
 import InputComponent from '@/components/shared/InputComponent.vue'
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
+import { useAuthStore } from '@/stores/auth-store'
+import { Gender, type Profile, type User } from '@shared/pack'
 
-const model = ref({
-  first_name: '',
-  last_name: '',
-  email: '',
-  phone_number: '',
-  gender: ''
-})
+const authStore = useAuthStore()
+
+const userModel = ref<Partial<User>>({})
+const profileModel = ref<Partial<Profile>>({})
+
+onMounted(() => {})
 </script>

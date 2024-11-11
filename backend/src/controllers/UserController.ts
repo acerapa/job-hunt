@@ -47,28 +47,17 @@ export const register = async (req: Request, res: Response) => {
 
 export const update = async (req: Request, res: Response) => {
   try {
-    const validated = req.body.validated
-    if (validated && validated.user) {
-      const user = await User.findOne({
-        where: { id: Number.parseInt(req.params.id) }
-      })
-
-      if (!user) {
-        throw Error('No user found!')
-      }
-
-      Object.assign(user, validated.user)
-      await user.save()
+    const validated = req.validated
+    if (validated) {
+      await User.update(req.params.id, validated)
     } else {
       throw Error('No data pass to update!')
     }
 
-    res.status(200).json(formatResponse({}, 'Successfully updated!', 200))
+    res.sendSuccess({ message: 'Successfully updated!' })
   } catch (e) {
     const { message, stack, name } = e as Error
-    res
-      .status(400)
-      .json(formatResponse({ name, message, stack }, "Something wen't wrong => " + message, 400))
+    res.sendError({ message: `${name} ${message} ${stack}` })
   }
 }
 

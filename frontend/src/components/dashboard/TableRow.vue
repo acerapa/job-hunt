@@ -3,7 +3,7 @@
     <p class="col-span-1 text-sm font-medium">{{ props.row.type }}</p>
     <p class="col-span-1 text-sm font-medium">{{ props.row.status }}</p>
     <p class="col-span-5 text-sm font-medium">{{ props.row.description }}</p>
-    <p class="col-span-1 text-sm font-medium">{{'<comming soon>'}}</p>
+    <p class="col-span-1 text-sm font-medium">{{ 'comming soon' }}</p>
   </div>
 </template>
 

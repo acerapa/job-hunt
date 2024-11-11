@@ -30,6 +30,14 @@ export default <RouteRecordRaw[]>[
         name: 'profile',
         component: () => import('@/views/job-hunter/ProfilePage.vue')
       }
-    ]
+    ] as RouteRecordRaw[]
   }
-]
+].map((route) => {
+  route.children = route.children.map((childRoute: RouteRecordRaw) => {
+    childRoute.meta = {
+      requiresAuth: true
+    }
+    return childRoute
+  })
+  return route
+})

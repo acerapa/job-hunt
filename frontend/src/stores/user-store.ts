@@ -33,8 +33,8 @@ export const useUserStore = defineStore('user', () => {
     return user.value
   }
 
-  const updateUser = async (data: UserUpdate) => {
-    const res = await authenticatedApi(`users/${data.id}/update`, Method.POST, data)
+  const updateUser = async (data: Partial<User>, user_id: number): Promise<ApiResponse> => {
+    const res: ApiResponse = await authenticatedApi(`users/${user_id}/update`, Method.POST, data)
     return res
   }
 

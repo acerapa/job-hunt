@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from 'express'
-import { verify, JwtPayload, TokenExpiredError } from 'jsonwebtoken'
+import { verify, JwtPayload, TokenExpiredError, JsonWebTokenError } from 'jsonwebtoken'
 import { getEnv } from '../helpers/env-helpers'
 import { generateAccessAndRefreshToken } from '../services/auth-service'
 import { setCookie } from '../helpers/set-cookies'
@@ -15,7 +15,7 @@ export const validateAccessRefreshToken = (req: Request, res: Response, next: Ne
     payload = verify(access, secret) as JwtPayload
     req.authUser = payload?.user_id
   } catch (error) {
-    if (error instanceof TokenExpiredError) {
+    if (error instanceof TokenExpiredError || error instanceof JsonWebTokenError) {
       try {
         payload = verify(refresh, refreshSecret) as JwtPayload
         const tokens = generateAccessAndRefreshToken({ id: payload?.user_id })

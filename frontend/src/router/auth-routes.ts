@@ -18,12 +18,12 @@ export default <RouteRecordRaw[]>[
         component: () => import('@/views/Auth/SignupPage.vue')
       },
       {
-        path: ':id/type',
+        path: 'type',
         name: 'user-type',
         component: () => import('@/views/Auth/SignupUserTypePage.vue')
       },
       {
-        path: ':id/:type/info',
+        path: '/info',
         name: 'user-info',
         component: () => import('@/views/Auth/SignupUserInforPage.vue')
       }

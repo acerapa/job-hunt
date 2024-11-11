@@ -52,7 +52,7 @@ export const api = async <PayloadData, ResponseData>(
     requestInit.body = JSON.stringify(payload)
   }
 
-  const request: Request = new Request(`api/${url}`, requestInit)
+  const request: Request = new Request(`${window.location.origin}/api/${url}`, requestInit)
 
   const response: Response = await fetch(request)
 
