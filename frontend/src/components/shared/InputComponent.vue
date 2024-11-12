@@ -30,6 +30,7 @@
       :placeholder="props.placeholder"
       :rows="props.rows"
       :cols="props.cols"
+      v-model="value as string"
       @input="onTextAreaInput"
       :disabled="props.disabled"
     ></textarea>

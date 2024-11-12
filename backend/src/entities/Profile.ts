@@ -76,9 +76,11 @@ export class Profile extends BaseEntity implements IProfile<User, Skill, Applica
 
   @AfterLoad()
   populateSkills() {
-    this.skills = this.profile_skills.map((profileToSkill) => {
-      return profileToSkill.skill
-    })
+    if (this.profile_skills) {
+      this.skills = this.profile_skills.map((profileToSkill) => {
+        return profileToSkill.skill
+      })
+    }
   }
 
   @CreateDateColumn()

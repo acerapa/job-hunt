@@ -54,13 +54,16 @@ export const authUser = async (req: Request, res: Response) => {
           id: req.body.auth_user
         },
         relations: {
-          profile: true
+          profile: {
+            address: true
+          }
         }
       })
     )
 
     res.sendSuccess({ data: user, message: 'Successfully retrieved' })
   } catch (error) {
-    res.sendError()
+    const { name, message, stack } = error as Error
+    res.sendError({ message: `${name} ${message} ${stack}` })
   }
 }

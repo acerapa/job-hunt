@@ -26,7 +26,7 @@ export const useAuthStore = defineStore('auth', function () {
     }
   }
 
-  const getAuthUser = async (): Promise<User | null> => {
+  const getAuthUser = async (): Promise<User<Profile> | null> => {
     if (!authUser.value) {
       await fetchAuthUser()
     }

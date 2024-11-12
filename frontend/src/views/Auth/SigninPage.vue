@@ -40,8 +40,13 @@
           <p class="text-main text-base">Sign in to</p>
           <p class="text-main text-[32px] font-bold">Job Hunt</p>
         </div>
-
-        <form class="flex flex-col gap-5 mt-6" @submit.prevent="onSignin" method="post">
+        <form
+          class="flex flex-col gap-5 mt-6"
+          @submit.prevent="onSignin"
+          method="post"
+          @click="invalidCredential = false"
+        >
+          <p v-if="invalidCredential" class="text-red-500 text-center">Invalid Credentials</p>
           <InputComponent
             type="text"
             name="usercred"
@@ -113,6 +118,7 @@ import InputComponent from '@/components/shared/InputComponent.vue'
 import { useRouter } from 'vue-router'
 
 const showPassword = ref(false)
+const invalidCredential = ref(false)
 const model = ref<Partial<UserCred>>({})
 const modelErrors = ref<Partial<UserCred>>({})
 const router = useRouter()
@@ -142,6 +148,9 @@ const onSignin = async () => {
         name: 'user-type'
       })
     }
+  } else {
+    invalidCredential.value = true
+    model.value.password = ''
   }
 }
 

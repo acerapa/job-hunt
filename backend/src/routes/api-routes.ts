@@ -12,6 +12,6 @@ import profileRoutes from './profile-routes'
 router.use('/auth', authRoute)
 router.use('/users', validateAccessRefreshToken, userRoutes)
 router.use('/company', validateAccessRefreshToken, companyRoutes)
-router.use('/user/:user_id/profile', validateAccessRefreshToken, profileRoutes)
+router.use('/profile', validateAccessRefreshToken, profileRoutes)
 
 export default router
