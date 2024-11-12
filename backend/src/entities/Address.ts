@@ -33,6 +33,9 @@ export class Address extends BaseEntity implements IAddress {
   @Column({ nullable: false })
   postal: string
 
+  @Column()
+  country: string
+
   @CreateDateColumn()
   created_at: Date
 

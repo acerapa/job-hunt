@@ -40,7 +40,13 @@
           <p class="text-main text-base">Sign in to</p>
           <p class="text-main text-[32px] font-bold">Job Hunt</p>
         </div>
-        <div class="flex flex-col gap-5 mt-6">
+        <form
+          class="flex flex-col gap-5 mt-6"
+          @submit.prevent="onSignin"
+          method="post"
+          @click="invalidCredential = false"
+        >
+          <p v-if="invalidCredential" class="text-red-500 text-center">Invalid Credentials</p>
           <InputComponent
             type="text"
             name="usercred"
@@ -66,20 +72,21 @@
               <p class="text-xs">Show password</p>
             </div>
           </div>
-        </div>
-        <button class="btn block mx-auto mt-6 !px-4 !py-2" @click="onSignin">Sign in</button>
+          <button type="submit" class="btn block mx-auto !px-4 !py-2">Sign in</button>
+        </form>
+
         <div class="flex flex-col gap-4 mt-5">
           <p class="text-main text-base mx-auto">or Sign in with</p>
           <div class="flex gap-2 max-[820px]:flex-col">
-            <button class="social-link max-[820px]:justify-center">
+            <button type="button" class="social-link max-[820px]:justify-center">
               <img src="@/assets/icons/google.svg" alt="google" />
               <p class="text-sm">Google</p>
             </button>
-            <button class="social-link max-[820px]:justify-center">
+            <button type="button" class="social-link max-[820px]:justify-center">
               <img src="@/assets/icons/linkedin.svg" alt="linkedin" />
               <p class="text-sm">LinkedIn</p>
             </button>
-            <button class="social-link max-[820px]:justify-center">
+            <button type="button" class="social-link max-[820px]:justify-center">
               <img src="@/assets/icons/github.svg" alt="github" />
               <p class="text-sm">GitHub</p>
             </button>
@@ -98,12 +105,20 @@
 
 <script setup lang="ts">
 import { useAuthStore } from '@/stores/auth-store'
-import { validate, UserAuthSchema, type UserCred, ZodSchema } from '@shared/pack'
+import {
+  validate,
+  UserAuthSchema,
+  type UserCred,
+  ZodSchema,
+  type User,
+  UserType
+} from '@shared/pack'
 import { ref } from 'vue'
 import InputComponent from '@/components/shared/InputComponent.vue'
 import { useRouter } from 'vue-router'
 
 const showPassword = ref(false)
+const invalidCredential = ref(false)
 const model = ref<Partial<UserCred>>({})
 const modelErrors = ref<Partial<UserCred>>({})
 const router = useRouter()
@@ -116,11 +131,26 @@ const onSignin = async () => {
     modelErrors.value = errors as Partial<UserCred>
     return
   }
-  const authenticated = await authStore.signIn(model.value as UserCred)
-  if (authenticated) {
-    router.push({
-      name: 'dashboard'
-    })
+
+  await authStore.signIn(model.value as UserCred)
+  const authUser: User | null = await authStore.getAuthUser()
+  if (authUser) {
+    if (authUser.type == UserType.HUNTER) {
+      router.push({
+        name: 'hunter'
+      })
+    } else if (authUser.type == UserType.PROVIDER) {
+      router.push({
+        name: 'provider'
+      })
+    } else if (authUser.type == null) {
+      router.push({
+        name: 'user-type'
+      })
+    }
+  } else {
+    invalidCredential.value = true
+    model.value.password = ''
   }
 }
 

@@ -1,19 +1,42 @@
 import { Request, Response } from 'express'
 import { Profile } from '../entities/Profile'
-import { User } from '../entities/User'
+import { Address } from '../entities/Address'
 
-export const createProfile = async (req: Request, res: Response) => {
+export const updateProfile = async (req: Request, res: Response) => {
   try {
-    const data = req.validated
-    const user = await User.findOne({
-      where: { id: data.user_id },
+    await Profile.update(req.params.id, req.validated)
+
+    res.sendSuccess({ message: 'Successfully updated profile' })
+  } catch (error) {
+    const { message, name, stack } = error as Error
+    res.sendError({ message: `${name} ${message} ${stack}` })
+  }
+}
+
+export const updateCreateProfileAddress = async (req: Request, res: Response) => {
+  try {
+    const profile = await Profile.findOne({
+      where: {
+        id: parseInt(req.params.id)
+      },
       relations: {
-        profile: true
+        address: true
       }
     })
 
-    // res.sendSuccess({ data: profile })
+    if (profile) {
+      if (profile.address) {
+        await Address.update(profile.address.id, req.validated)
+      } else {
+        const address = Address.create(req.validated)
+        profile.address = address
+        await profile.save()
+      }
+    }
+
+    res.sendSuccess({ message: 'Successfully updated address' })
   } catch (error) {
-    res.sendError({ message: (error as Error).message })
+    const { message, name, stack } = error as Error
+    res.sendError({ message: `${name} ${message} ${stack}` })
   }
 }

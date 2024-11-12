@@ -6,6 +6,7 @@ import { User as UserTyping } from '@shared/pack'
 import { instanceToInstance } from 'class-transformer'
 import { Address } from '../entities/Address'
 import { generateAccessAndRefreshToken } from '../services/auth-service'
+import { Profile } from '../entities/Profile'
 
 export const all = async (req: Request, res: Response) => {
   try {
@@ -33,42 +34,31 @@ export const register = async (req: Request, res: Response) => {
     })
 
     await user.save()
-    // login user
-    const tokens = generateAccessAndRefreshToken(user)
 
-    res
-      .status(200)
-      .json(formatResponse({ user_id: user.id, ...tokens }, 'Successfully created!', 200))
+    const profile = new Profile()
+    profile.user = user
+    await profile.save()
+
+    res.sendSuccess({ message: 'Successfully created!' })
   } catch (e) {
     const { name, message } = e as Error
-    res.status(400).json(formatResponse({ name, message }, "Something wen't wrong!", 400))
+    res.sendError({ message: `${name} ${message}` })
   }
 }
 
 export const update = async (req: Request, res: Response) => {
   try {
-    const validated = req.body.validated
-    if (validated && validated.user) {
-      const user = await User.findOne({
-        where: { id: Number.parseInt(req.params.id) }
-      })
-
-      if (!user) {
-        throw Error('No user found!')
-      }
-
-      Object.assign(user, validated.user)
-      await user.save()
+    const validated = req.validated
+    if (validated) {
+      await User.update(req.params.id, validated)
     } else {
       throw Error('No data pass to update!')
     }
 
-    res.status(200).json(formatResponse({}, 'Successfully updated!', 200))
+    res.sendSuccess({ message: 'Successfully updated!' })
   } catch (e) {
     const { message, stack, name } = e as Error
-    res
-      .status(400)
-      .json(formatResponse({ name, message, stack }, "Something wen't wrong => " + message, 400))
+    res.sendError({ message: `${name} ${message} ${stack}` })
   }
 }
 

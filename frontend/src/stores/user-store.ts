@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
-import type { UserCreation, User, ApiResponse, UserUpdate } from '@shared/pack'
+import type { UserCreation, User, ApiResponse, UserUpdate, Profile } from '@shared/pack'
 import { authenticatedApi, Method } from '@/api'
 import { LocalStorageKeys } from '@/const'
 
@@ -33,8 +33,21 @@ export const useUserStore = defineStore('user', () => {
     return user.value
   }
 
-  const updateUser = async (data: UserUpdate) => {
-    const res = await authenticatedApi(`users/${data.id}/update`, Method.POST, data)
+  const updateUser = async (data: Partial<User>, user_id: number): Promise<ApiResponse> => {
+    const res: ApiResponse = await authenticatedApi(`users/${user_id}/update`, Method.POST, data)
+    return res
+  }
+
+  const updateProfile = async (
+    data: Partial<Profile>,
+    profile_id: number
+  ): Promise<ApiResponse> => {
+    const res: ApiResponse = await authenticatedApi(
+      `profile/${profile_id}/update`,
+      Method.POST,
+      data
+    )
+
     return res
   }
 
@@ -53,6 +66,7 @@ export const useUserStore = defineStore('user', () => {
     createUser,
     updateUser,
     currentUser,
-    fetchOneUser
+    fetchOneUser,
+    updateProfile
   }
 })

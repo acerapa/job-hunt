@@ -96,6 +96,7 @@ export interface Address {
   city: string
   province: string
   postal: string
+  country: string
 }
 
 export interface Shift<Job = Object> {

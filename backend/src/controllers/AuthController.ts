@@ -4,7 +4,7 @@ import { compare } from 'bcryptjs'
 import { formatResponse } from '../middlewares/response'
 import { isEmail } from '@shared/pack/dist'
 import { User } from './../entities/User'
-import { type User as IUser } from '@shared/pack'
+import { type User as IUser, type Profile as IProfile } from '@shared/pack'
 import { generateAccessAndRefreshToken } from '../services/auth-service'
 import { setCookie } from '../helpers/set-cookies'
 import { instanceToInstance } from 'class-transformer'
@@ -48,16 +48,22 @@ export const signOut = async (req: Request, res: Response) => {
 
 export const authUser = async (req: Request, res: Response) => {
   try {
-    const user: IUser | null = instanceToInstance(
+    const user: IUser<IProfile> | null = instanceToInstance(
       await User.findOne({
         where: {
           id: req.body.auth_user
+        },
+        relations: {
+          profile: {
+            address: true
+          }
         }
       })
     )
 
     res.sendSuccess({ data: user, message: 'Successfully retrieved' })
   } catch (error) {
-    res.sendError()
+    const { name, message, stack } = error as Error
+    res.sendError({ message: `${name} ${message} ${stack}` })
   }
 }

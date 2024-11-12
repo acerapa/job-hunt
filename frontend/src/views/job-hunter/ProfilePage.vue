@@ -1,5 +1,5 @@
 <template>
-  <div class="flex gap-4">
+  <div class="flex gap-4" v-if="authUser">
     <div class="max-w-[400px] w-full sticky top-0 flex flex-col gap-4">
       <div class="wrap !px-8 !py-6 !bg-green-bright text-white">
         <div class="flex gap-3 items-center">
@@ -9,8 +9,11 @@
             class="w-20 h-20 rounded-full ring ring-white"
           />
           <div>
-            <p class="font-semibold">Harvey Aparece</p>
-            <span class="text-pale-gray text-sm font-semibold">Web Developer</span>
+            <p class="font-semibold">
+              {{ `${authUser.first_name || ''} ${authUser.last_name || ''}` }}
+              <span class="font-normal text-blue-100">@{{ authUser.username }}</span>
+            </p>
+            <span class="text-blue-300 text-sm font-semibold">Web Developer</span>
           </div>
         </div>
         <div class="wrap !bg-pale-green mt-5 flex flex-col gap-3">
@@ -22,11 +25,11 @@
           </div>
           <div class="flex gap-2 items-center">
             <img src="@/assets/icons/email.png" class="brightness-0" alt="email.png" />
-            <span class="text-sm text-black"> harvey.aparece.work@gmail.com </span>
+            <span class="text-sm text-black"> {{ authUser.email }} </span>
           </div>
           <div class="flex gap-2 items-center">
             <img src="@/assets/icons/phone.png" alt="phone.png" />
-            <span class="text-sm text-black"> 09508605332 </span>
+            <span class="text-sm text-black"> {{ authUser.phone }} </span>
           </div>
           <div class="flex gap-2 items-center">
             <img src="@/assets/icons/money-bag.png" class="brightness-0" alt="money-bag.png" />
@@ -63,7 +66,25 @@
       <div class="wrap flex flex-col gap-3">
         <div class="flex justify-between items-center">
           <p class="font-semibold text-main">Personal Information</p>
-          <button class="btn-outline">Edit</button>
+          <button
+            class="btn-outline"
+            v-if="!sectionFormState.personalSkill"
+            @click="sectionFormState.personalSkill = true"
+          >
+            Edit
+          </button>
+          <button
+            class="btn"
+            v-if="sectionFormState.personalSkill"
+            @click="
+              () => {
+                sectionFormState.personalSkill = false
+                onUpdateUser()
+              }
+            "
+          >
+            Save
+          </button>
         </div>
         <div class="flex gap-3">
           <InputComponent
@@ -73,7 +94,8 @@
             placeholder="First Name"
             label-css="text-sm"
             input-class="text-sm"
-            v-model="model.first_name"
+            v-model="userModel.first_name"
+            :disabled="!sectionFormState.personalSkill"
           />
           <InputComponent
             label="Last Name"
@@ -82,7 +104,8 @@
             placeholder="Last Name"
             label-css="text-sm"
             input-class="text-sm"
-            v-model="model.last_name"
+            v-model="userModel.last_name"
+            :disabled="!sectionFormState.personalSkill"
           />
         </div>
         <div class="flex gap-3">
@@ -93,7 +116,8 @@
             placeholder="Email"
             label-css="text-sm"
             input-class="text-sm"
-            v-model="model.email"
+            v-model="userModel.email"
+            :disabled="!sectionFormState.personalSkill"
           />
           <InputComponent
             type="text"
@@ -102,7 +126,8 @@
             label="Phone number"
             input-class="text-sm"
             placeholder="Phone number"
-            v-model="model.phone_number"
+            v-model="userModel.phone"
+            :disabled="!sectionFormState.personalSkill"
           />
           <InputComponent
             type="select"
@@ -114,21 +139,29 @@
             :options="[
               {
                 text: 'Male',
-                value: 'male'
+                value: Gender.MALE
               },
               {
                 text: 'Female',
-                value: 'female'
+                value: Gender.FEMALE
               }
             ]"
-            v-model="model.gender"
+            v-model="userModel.gender"
+            :disabled="!sectionFormState.personalSkill"
           />
         </div>
       </div>
       <div class="wrap flex flex-col gap-3">
         <div class="flex justify-between items-center">
           <p class="font-semibold text-main">Address</p>
-          <button class="btn-outline">Edit</button>
+          <button
+            class="btn-outline"
+            v-if="!sectionFormState.address"
+            @click="sectionFormState.address = true"
+          >
+            Edit
+          </button>
+          <button class="btn" v-if="sectionFormState.address">Save</button>
         </div>
         <div class="flex gap-3">
           <InputComponent
@@ -138,6 +171,8 @@
             placeholder="Ex. 1234 Main St"
             label-css="text-sm"
             input-class="text-sm"
+            v-model="addressModel.address1"
+            :disabled="!sectionFormState.address"
           />
           <InputComponent
             label="Address 2"
@@ -146,6 +181,8 @@
             placeholder="Ex. Apt. 7B"
             label-css="text-sm"
             input-class="text-sm"
+            v-model="addressModel.address2"
+            :disabled="!sectionFormState.address"
           />
         </div>
         <div class="flex gap-3">
@@ -156,6 +193,8 @@
             placeholder="City"
             label-css="text-sm"
             input-class="text-sm"
+            v-model="addressModel.city"
+            :disabled="!sectionFormState.address"
           />
           <InputComponent
             label="Postal Code"
@@ -164,6 +203,8 @@
             placeholder="Postal Code"
             label-css="text-sm"
             input-class="text-sm"
+            v-model="addressModel.postal"
+            :disabled="!sectionFormState.address"
           />
           <InputComponent
             label="Province"
@@ -172,6 +213,8 @@
             placeholder="Province"
             label-css="text-sm"
             input-class="text-sm"
+            v-model="addressModel.province"
+            :disabled="!sectionFormState.address"
           />
           <InputComponent
             label="Country"
@@ -180,6 +223,8 @@
             placeholder="Country"
             label-css="text-sm"
             input-class="text-sm"
+            v-model="addressModel.country"
+            :disabled="!sectionFormState.address"
           />
         </div>
       </div>
@@ -187,7 +232,14 @@
       <div class="wrap flex flex-col gap-3">
         <div class="flex justify-between items-center">
           <p class="font-semibold text-main">Social and Community Links</p>
-          <button class="btn-outline">Edit</button>
+          <button
+            class="btn-outline"
+            v-if="!sectionFormState.social"
+            @click="sectionFormState.social = true"
+          >
+            Edit
+          </button>
+          <button class="btn" v-if="sectionFormState.social" @click="onUpdateProfile">Save</button>
         </div>
         <div class="flex gap-3">
           <InputComponent
@@ -197,6 +249,8 @@
             placeholder="Website/Portfolio"
             label-css="text-sm"
             input-class="text-sm"
+            v-model="profileModel.website"
+            :disabled="!sectionFormState.social"
           />
           <InputComponent
             label="LinkedIn"
@@ -205,6 +259,8 @@
             placeholder="LinkedIn"
             label-css="text-sm"
             input-class="text-sm"
+            v-model="profileModel.linkedin"
+            :disabled="!sectionFormState.social"
           />
         </div>
         <InputComponent
@@ -215,12 +271,23 @@
           placeholder="GitHub"
           label-css="text-sm"
           input-class="text-sm"
+          v-model="profileModel.github"
+          :disabled="!sectionFormState.social"
         />
       </div>
       <div class="wrap flex flex-col gap-3">
         <div class="flex justify-between items-center">
           <p class="font-semibold text-main">Job hunter Specific Information</p>
-          <button class="btn-outline">Edit</button>
+          <button
+            class="btn-outline"
+            v-if="!sectionFormState.jobHunter"
+            @click="sectionFormState.jobHunter = true"
+          >
+            Edit
+          </button>
+          <button class="btn" v-if="sectionFormState.jobHunter" @click="onUpdateProfile">
+            Save
+          </button>
         </div>
         <InputComponent
           label="Cover Letter"
@@ -230,6 +297,8 @@
           placeholder="Cover Letter"
           label-css="text-sm"
           input-class="text-sm"
+          v-model="profileModel.cover_letter"
+          :disabled="!sectionFormState.jobHunter"
         />
         <!-- TODO: Need to add a file uploader type of InputComponent -->
       </div>
@@ -240,13 +309,55 @@
 <script setup lang="ts">
 import TagComponent from '@/components/shared/TagComponent.vue'
 import InputComponent from '@/components/shared/InputComponent.vue'
-import { ref } from 'vue'
+import { onMounted, reactive, ref } from 'vue'
+import { useAuthStore } from '@/stores/auth-store'
+import { Gender, type Address, type Profile, type User } from '@shared/pack'
+import { useUserStore } from '@/stores/user-store'
 
-const model = ref({
-  first_name: '',
-  last_name: '',
-  email: '',
-  phone_number: '',
-  gender: ''
+const authUser = ref<User<Profile> | null>()
+const authStore = useAuthStore()
+const userStore = useUserStore()
+
+const sectionFormState = reactive<{
+  technicalSkill: boolean
+  softSkill: boolean
+  personalSkill: boolean
+  address: boolean
+  social: boolean
+  jobHunter: boolean
+}>({
+  technicalSkill: false,
+  softSkill: false,
+  personalSkill: false,
+  address: false,
+  social: false,
+  jobHunter: false
+})
+
+const userModel = ref<Partial<User>>({})
+const profileModel = ref<Partial<Profile>>({})
+const addressModel = ref<Partial<Address>>({})
+
+const onUpdateUser = async () => {
+  if (authUser.value) {
+    await userStore.updateUser(userModel.value, authUser.value.id)
+  }
+}
+
+const onUpdateProfile = async () => {
+  if (authUser.value && authUser.value.profile) {
+    await userStore.updateProfile(profileModel.value, authUser.value.profile.id)
+  }
+}
+
+onMounted(async () => {
+  authUser.value = await authStore.getAuthUser()
+
+  if (authUser.value) {
+    userModel.value = authUser.value
+    if (authUser.value.profile) {
+      profileModel.value = authUser.value.profile
+    }
+  }
 })
 </script>

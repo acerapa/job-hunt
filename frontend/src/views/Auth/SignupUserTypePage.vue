@@ -46,64 +46,59 @@
 
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
-import { UserType } from '@shared/pack/index'
-import { useUserStore } from '@/stores/user-store'
+import { useRouter } from 'vue-router'
+import { UserType, type ApiResponse, type User } from '@shared/pack/index'
 import LoadingComponent from '@/components/shared/LoadingComponent.vue'
 import { useAuthStore } from '@/stores/auth-store'
+import { useUserStore } from '@/stores/user-store'
 
 // TODO: If the user is not yet finish setting up this info, well redirect them here to finish this setups.
 const isLoading = ref<boolean>(false)
 
 const type = ref<UserType>()
-const route = useRoute()
 const router = useRouter()
 const authStore = useAuthStore()
+const authUser = ref<User | null>()
 const userStore = useUserStore()
-const user = ref()
 
 onMounted(async () => {
-  isLoading.value = true
-  user.value = await userStore.fetchOneUser(route.params.id as string)
   isLoading.value = false
 
-  // for safety
-  if (user.value?.type) {
+  // validations
+  authUser.value = await authStore.getAuthUser()
+
+  if (!authUser.value) {
     router.push({
-      name: 'user-info',
-      params: {
-        id: user.value.id,
-        type: user.value.type
-      }
+      name: 'signin'
     })
+  } else if (authUser.value.type != null) {
+    if (authUser.value.type == UserType.HUNTER) {
+      router.push({
+        name: 'hunter'
+      })
+    } else if (authUser.value.type == UserType.PROVIDER) {
+      router.push({
+        name: 'provider'
+      })
+    }
   }
 })
 
 const onSubmit = async () => {
-  isLoading.value = true
-  if (user.value) {
-    const data = {
-      id: user.value.id,
-      user: {
-        type: type.value
-      },
-      user_registration: {
-        done_type: true
-      },
-      address: {}
-    }
-    const res = await userStore.updateUser(data)
-    // await authStore.fetchAuthUser(true)
-    isLoading.value = false
-    if (res.status == 200) {
-      router.push({
-        name: 'user-info',
-        params: {
-          id: user.value.id,
-          type: type.value
-        }
-      })
-    }
+  if (authUser.value == null) {
+    return
+  }
+  const res: ApiResponse = await userStore.updateUser(
+    {
+      type: type.value
+    },
+    authUser.value.id
+  )
+
+  if (res.status == 200) {
+    router.push({
+      name: 'user-info'
+    })
   }
 }
 </script>
