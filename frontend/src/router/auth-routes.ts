@@ -23,7 +23,7 @@ export default <RouteRecordRaw[]>[
         component: () => import('@/views/Auth/SignupUserTypePage.vue')
       },
       {
-        path: '/info',
+        path: ':type/info',
         name: 'user-info',
         component: () => import('@/views/Auth/SignupUserInforPage.vue')
       }

@@ -43,6 +43,9 @@ export const signOut = async (req: Request, res: Response) => {
   res.clearCookie('access', { path: '/api' })
   res.clearCookie('refresh', { path: '/api' })
 
+  // reset auth user in request
+  req.authUser = 0
+
   res.status(200).json(formatResponse({}, 'Successfully sign out!', 200))
 }
 
@@ -51,7 +54,7 @@ export const authUser = async (req: Request, res: Response) => {
     const user: IUser<IProfile> | null = instanceToInstance(
       await User.findOne({
         where: {
-          id: req.body.auth_user
+          id: req.authUser
         },
         relations: {
           profile: {

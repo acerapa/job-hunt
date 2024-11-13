@@ -1,11 +1,21 @@
 import { z } from 'zod'
-import { Gender } from '../types'
 
 export const AddressSchema = z.object({
   address1: z.string().min(1, 'Address 1 is required'),
   address2: z.string().optional(),
   city: z.string().min(1, 'City is required'),
-  postal: z.string().min(1, 'Postal/Zip code is required')
+  postal: z.string().min(1, 'Postal/Zip code is required'),
+  province: z.string().min(1, 'Province is required'),
+  country: z.string().min(1, 'Country is required')
+})
+
+export const AddressUpdateSchema = z.object({
+  address1: z.string().min(1, 'Address 1 is required').optional(),
+  address2: z.string().optional(),
+  city: z.string().min(1, 'City is required').optional(),
+  postal: z.string().min(1, 'Postal/Zip code is required').optional(),
+  province: z.string().min(1, 'Province is required').optional(),
+  country: z.string().min(1, 'Country is required').optional()
 })
 
 export const UserCreationSchema = z.object({

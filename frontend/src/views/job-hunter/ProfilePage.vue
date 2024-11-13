@@ -1,6 +1,8 @@
 <template>
   <div class="flex gap-4" v-if="authUser">
-    <div class="max-w-[400px] w-full sticky top-0 flex flex-col gap-4">
+    <div
+      class="max-w-[400px] w-full sticky top-0 flex flex-col gap-4 h-[calc(100vh_-_134px)] overflow-y-auto thin-scrollbar"
+    >
       <div class="wrap !px-8 !py-6 !bg-green-bright text-white">
         <div class="flex gap-3 items-center">
           <img
@@ -17,11 +19,9 @@
           </div>
         </div>
         <div class="wrap !bg-pale-green mt-5 flex flex-col gap-3">
-          <div class="flex gap-2 items-center">
+          <div class="flex gap-2 items-center" v-if="stringAddress">
             <img src="@/assets/icons/map-pin.png" class="brightness-0" alt="map-pin.png" />
-            <span class="text-sm text-black">
-              Tech Solutions Inc., 1234 Technology Way, San Francisco, CA 94103, USA
-            </span>
+            <span class="text-sm text-black">{{ stringAddress }}</span>
           </div>
           <div class="flex gap-2 items-center">
             <img src="@/assets/icons/email.png" class="brightness-0" alt="email.png" />
@@ -161,7 +161,18 @@
           >
             Edit
           </button>
-          <button class="btn" v-if="sectionFormState.address">Save</button>
+          <button
+            class="btn"
+            v-if="sectionFormState.address"
+            @click="
+              () => {
+                onUpdateProfileAddress()
+                sectionFormState.address = false
+              }
+            "
+          >
+            Save
+          </button>
         </div>
         <div class="flex gap-3">
           <InputComponent
@@ -309,7 +320,7 @@
 <script setup lang="ts">
 import TagComponent from '@/components/shared/TagComponent.vue'
 import InputComponent from '@/components/shared/InputComponent.vue'
-import { onMounted, reactive, ref } from 'vue'
+import { computed, onMounted, reactive, ref } from 'vue'
 import { useAuthStore } from '@/stores/auth-store'
 import { Gender, type Address, type Profile, type User } from '@shared/pack'
 import { useUserStore } from '@/stores/user-store'
@@ -338,6 +349,21 @@ const userModel = ref<Partial<User>>({})
 const profileModel = ref<Partial<Profile>>({})
 const addressModel = ref<Partial<Address>>({})
 
+const stringAddress = computed(() => {
+  let addressStr = ''
+  if (authUser.value && authUser.value.profile && authUser.value.profile.address) {
+    addressStr = `
+      ${authUser.value.profile.address.address1 + ' '}
+      ${authUser.value.profile.address.address2 || ''}
+      ${authUser.value.profile.address.city + ' '},
+      ${authUser.value.profile.address.province + ' '},
+      ${authUser.value.profile.address.postal + ''}
+      ${authUser.value.profile.address.country}
+    `
+  }
+  return addressStr
+})
+
 const onUpdateUser = async () => {
   if (authUser.value) {
     await userStore.updateUser(userModel.value, authUser.value.id)
@@ -350,6 +376,12 @@ const onUpdateProfile = async () => {
   }
 }
 
+const onUpdateProfileAddress = async () => {
+  if (authUser.value && authUser.value.profile) {
+    await userStore.updateProfileAddress(addressModel.value, authUser.value.profile.id)
+  }
+}
+
 onMounted(async () => {
   authUser.value = await authStore.getAuthUser()
 
@@ -357,6 +389,10 @@ onMounted(async () => {
     userModel.value = authUser.value
     if (authUser.value.profile) {
       profileModel.value = authUser.value.profile
+
+      if (authUser.value.profile.address) {
+        addressModel.value = authUser.value.profile.address
+      }
     }
   }
 })

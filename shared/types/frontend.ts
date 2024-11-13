@@ -14,13 +14,13 @@ export type UserInfoCreation = {
   email?: string
 }
 
-export type UserUpdate<P, C> = {
+export type UserUpdate = {
   id: number
-  user: Partial<User<P, C>>
+  user: Partial<User>
   address: Partial<Address>
 }
 
-export type CompanyCreation<U, J> = {
-  company: Partial<Company<U, J>>
+export type CompanyCreation = {
+  company: Partial<Company>
   address: Partial<Address>
 }

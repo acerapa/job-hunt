@@ -1,11 +1,11 @@
 import { Router } from 'express'
 import { updateCreateProfileAddress, updateProfile } from '../controllers/ProfileController'
-import { ProfileSchema } from '@shared/pack/dist'
+import { AddressUpdateSchema, ProfileSchema } from '@shared/pack/dist'
 import { validateBody } from '../middlewares/request-validators'
 
 const router = Router()
 
 router.post('/:id/update', validateBody(ProfileSchema), updateProfile)
-router.post('/:id/update-address', validateBody(ProfileSchema), updateCreateProfileAddress)
+router.post('/:id/update-address', validateBody(AddressUpdateSchema), updateCreateProfileAddress)
 
 export default router
