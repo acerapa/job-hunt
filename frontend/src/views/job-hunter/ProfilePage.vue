@@ -27,7 +27,7 @@
             <img src="@/assets/icons/email.png" class="brightness-0" alt="email.png" />
             <span class="text-sm text-black"> {{ authUser.email }} </span>
           </div>
-          <div class="flex gap-2 items-center">
+          <div class="flex gap-2 items-center" v-if="authUser.phone">
             <img src="@/assets/icons/phone.png" alt="phone.png" />
             <span class="text-sm text-black"> {{ authUser.phone }} </span>
           </div>

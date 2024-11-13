@@ -5,6 +5,7 @@ import {
 } from 'vue-router'
 import NavLayout from '@/layouts/NavLayout.vue'
 import { useAuthStore } from '@/stores/auth-store'
+import { UserType } from '@shared/pack'
 
 export default <RouteRecordRaw[]>[
   {
@@ -21,7 +22,7 @@ export default <RouteRecordRaw[]>[
       const authStore = useAuthStore()
       const authUser = await authStore.getAuthUser()
       if (authUser) {
-        if (authUser.type) {
+        if (authUser.type && authUser.type === UserType.HUNTER) {
           next()
         } else {
           next({ name: 'user-type' })
