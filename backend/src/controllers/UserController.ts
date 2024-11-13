@@ -5,7 +5,6 @@ import { User } from '../entities/User'
 import { User as UserTyping } from '@shared/pack'
 import { instanceToInstance } from 'class-transformer'
 import { Address } from '../entities/Address'
-import { generateAccessAndRefreshToken } from '../services/auth-service'
 import { Profile } from '../entities/Profile'
 
 export const all = async (req: Request, res: Response) => {

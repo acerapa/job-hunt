@@ -1,5 +1,10 @@
-import { type RouteRecordRaw } from 'vue-router'
+import {
+  type RouteLocationNormalized,
+  type RouteRecordRaw,
+  type NavigationGuardNext
+} from 'vue-router'
 import NavLayout from '@/layouts/NavLayout.vue'
+import { useAuthStore } from '@/stores/auth-store'
 
 export default <RouteRecordRaw[]>[
   {
@@ -7,6 +12,23 @@ export default <RouteRecordRaw[]>[
     name: 'hunter',
     redirect: {
       name: 'job-list'
+    },
+    beforeEnter: async (
+      to: RouteLocationNormalized,
+      from: RouteLocationNormalized,
+      next: NavigationGuardNext
+    ) => {
+      const authStore = useAuthStore()
+      const authUser = await authStore.getAuthUser()
+      if (authUser) {
+        if (authUser.type) {
+          next()
+        } else {
+          next({ name: 'user-type' })
+        }
+      } else {
+        next({ name: 'signin' })
+      }
     },
     component: NavLayout,
     children: [

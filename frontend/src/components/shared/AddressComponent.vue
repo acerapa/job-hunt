@@ -40,7 +40,7 @@
         :error-message="getModelErrs(getPrefix('city'))"
       />
       <InputComponent
-        name="postal"
+        name="country"
         id="postal"
         type="text"
         class="w-full"
@@ -48,6 +48,32 @@
         v-model="address.postal"
         @input="emit('on-change', getPrefix('postal'), AddressSchema.shape.postal, address.postal)"
         :error-message="getModelErrs(getPrefix('postal'))"
+      />
+    </div>
+    <div class="flex gap-3">
+      <InputComponent
+        name="province"
+        id="province"
+        type="text"
+        class="w-full"
+        placeholder="province *"
+        v-model="address.province"
+        @input="
+          emit('on-change', getPrefix('province'), AddressSchema.shape.province, address.province)
+        "
+        :error-message="getModelErrs(getPrefix('province'))"
+      />
+      <InputComponent
+        name="country"
+        id="country"
+        type="text"
+        class="w-full"
+        placeholder="country *"
+        v-model="address.country"
+        @input="
+          emit('on-change', getPrefix('country'), AddressSchema.shape.country, address.country)
+        "
+        :error-message="getModelErrs(getPrefix('country'))"
       />
     </div>
   </div>

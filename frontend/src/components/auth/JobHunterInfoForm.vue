@@ -9,7 +9,7 @@
       <p class="text-[28px] font-semibold text-main">Welcome Hunter</p>
     </div>
     <p class="italic text-sm font-light">*(Please fill forms to finish your registration)*</p>
-    <div class="flex flex-col gap-5">
+    <form class="flex flex-col gap-5" method="post" @submit.prevent="onSubmit">
       <div class="flex gap-6">
         <InputComponent
           name="first_name"
@@ -44,21 +44,15 @@
       </div>
       <div class="flex gap-6">
         <InputComponent
-          name="mobile_number"
+          name="phone"
           placeholder="Contact Number *"
           type="text"
-          id="mobile_number"
+          id="phone"
           input-class="w-full"
           class="flex-1"
-          @input="
-            setupErrors(
-              'mobile_number',
-              RequiredUserInfoSchema.shape.mobile_number,
-              model.user.mobile_number
-            )
-          "
-          v-model="model.user.mobile_number"
-          :error-message="modelErrors?.mobile_number"
+          @input="setupErrors('phone', RequiredUserInfoSchema.shape.phone, model.user.phone)"
+          v-model="model.user.phone"
+          :error-message="modelErrors?.phone"
         />
         <InputComponent
           name="email"
@@ -69,7 +63,7 @@
           class="flex-1"
           @input="setupErrors('email', RequiredUserInfoSchema.shape.email, model.user.email)"
           v-model="model.user.email"
-          :error-message="modelErrors?.email"
+          :disabled="true"
         />
       </div>
       <AddressComponent
@@ -78,26 +72,11 @@
         v-model="model.address"
         class="[&>div]:gap-6 flex flex-col gap-5"
       />
-      <InputComponent
-        name="prof_summary"
-        placeholder="Professional Summary or Objectives *"
-        type="textarea"
-        id="prof_summary"
-        input-class="w-full"
-        class="flex-1"
-        @input="
-          setupErrors(
-            'professional_summary',
-            RequiredUserInfoSchema.shape.professional_summary,
-            model.user.professional_summary
-          )
-        "
-        v-model="model.user.professional_summary"
-        :error-message="modelErrors?.professional_summary"
-        :rows="4"
-      />
-      <button class="btn w-fit mx-auto" @click="onSubmit">Finish</button>
-    </div>
+      <div class="flex gap-3 justify-center">
+        <button type="submit" class="btn w-fit">Finish</button>
+        <button type="button" class="btn-outline w-fit" @click="proceed">Skip</button>
+      </div>
+    </form>
   </div>
 </template>
 
@@ -108,7 +87,11 @@ import {
   AddressSchema,
   validate,
   z,
-  ZodSchema
+  ZodSchema,
+  type User,
+  type ApiResponse,
+  type Profile,
+  UserType
 } from '@shared/pack'
 import InputComponent from '../shared/InputComponent.vue'
 import AddressComponent from '../shared/AddressComponent.vue'
@@ -123,39 +106,41 @@ const userUpdate: UserUpdate = {
     first_name: '',
     last_name: '',
     email: '',
-    professional_summary: '',
-    mobile_number: ''
-  },
-  user_registration: {
-    is_completed: true
+    phone: ''
   },
   address: {
     address1: '',
     address2: '',
     city: '',
-    postal: ''
+    postal: '',
+    province: '',
+    country: ''
   }
 }
 
 const router = useRouter()
 const authStore = useAuthStore()
+const authUser = ref<User<Profile> | null>()
 const userStore = useUserStore()
 const isLoading = defineModel<boolean>()
 const modelErrors = ref()
 const model = ref<UserUpdate>(userUpdate)
 
-onMounted(() => {
-  // setting email
-  model.value.id = userStore.user ? userStore.user.id : 0
-  model.value.user.email = userStore.user ? userStore.user.email : ''
+onMounted(async () => {
+  authUser.value = await authStore.getAuthUser()
+  if (authUser.value) {
+    model.value.user = authUser.value
+    if (authUser.value.profile && authUser.value.profile.address) {
+      model.value.address = authUser.value.profile.address
+    }
+  }
 })
 
 const RequiredUserInfoSchema = UserUpdateSchema.extend({
   first_name: z.string().min(1, 'First name is required'),
   last_name: z.string().min(1, 'Last name is required'),
   email: z.string().email(),
-  mobile_number: z.string().min(1, 'Contact number is required'),
-  professional_summary: z.string().min(1, 'Professional Summary is required')
+  phone: z.string().min(1, 'Contact number is required')
 })
 
 const onSubmit = async () => {
@@ -178,19 +163,36 @@ const onSubmit = async () => {
   }
 
   isLoading.value = true
-  const res = await userStore.updateUser(model.value)
-  // await authStore.fetchAuthUser(true)
+  let res: ApiResponse | null = null
+  if (authUser.value) {
+    res = await userStore.updateUser(model.value.user, authUser.value.id)
+    if (res.status == 200 && authUser.value.profile && authUser.value.profile.address) {
+      res = await userStore.updateProfileAddress(
+        model.value.address,
+        authUser.value.profile.address.id
+      )
+    }
+  }
   isLoading.value = false
 
-  if (res.status == 200) {
-    router.push({
-      name: 'dashboard'
-    })
+  if (res && res.status == 200) {
+    proceed()
+  }
+}
+
+const proceed = () => {
+  if (authUser.value) {
+    if (authUser.value.type == UserType.HUNTER) {
+      router.push({ name: 'hunter' })
+    } else if (authUser.value.type == UserType.PROVIDER) {
+      router.push({ name: 'provider' })
+    }
   }
 }
 
 const setupErrors = (field: string, schema: ZodSchema, value: any) => {
   modelErrors.value = modelErrors.value ? modelErrors.value : {}
+  console.log(field, schema, value)
   const { valid, errors } = validate(schema, value)
   const fieldError: Record<string, string> = {}
   fieldError[field] = !valid ? (errors as string) : ''

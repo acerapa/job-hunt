@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
-import type { UserCreation, User, ApiResponse, UserUpdate, Profile } from '@shared/pack'
+import type { UserCreation, User, ApiResponse, Profile, Address } from '@shared/pack'
 import { authenticatedApi, Method } from '@/api'
 import { LocalStorageKeys } from '@/const'
 
@@ -51,6 +51,19 @@ export const useUserStore = defineStore('user', () => {
     return res
   }
 
+  const updateProfileAddress = async (
+    data: Partial<Address>,
+    profile_id: number
+  ): Promise<ApiResponse> => {
+    const res: ApiResponse = await authenticatedApi(
+      `profile/${profile_id}/update-address`,
+      Method.POST,
+      data
+    )
+
+    return res
+  }
+
   // just a test
   const currentUser = {
     name: 'Harvey Aparece',
@@ -67,6 +80,7 @@ export const useUserStore = defineStore('user', () => {
     updateUser,
     currentUser,
     fetchOneUser,
-    updateProfile
+    updateProfile,
+    updateProfileAddress
   }
 })

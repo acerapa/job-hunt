@@ -29,6 +29,7 @@ export const updateCreateProfileAddress = async (req: Request, res: Response) =>
         await Address.update(profile.address.id, req.validated)
       } else {
         const address = Address.create(req.validated)
+        await address.save()
         profile.address = address
         await profile.save()
       }

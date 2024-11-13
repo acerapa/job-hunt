@@ -11,14 +11,14 @@ import JobHunterInfoForm from '@/components/auth/JobHunterInfoForm.vue'
 import JobProviderInfoForm from '@/components/auth/JobProviderInfoForm.vue'
 import LoadingComponent from '@/components/shared/LoadingComponent.vue'
 
-import { useRoute, useRouter } from 'vue-router'
-import { UserType } from '@shared/pack/index'
+import { useRouter } from 'vue-router'
+import { UserType, type User } from '@shared/pack/index'
 import { onMounted, ref } from 'vue'
-import { useUserStore } from '@/stores/user-store'
+import { useAuthStore } from '@/stores/auth-store'
 
-const route = useRoute()
 const router = useRouter()
-const userStore = useUserStore()
+const authStore = useAuthStore()
+const authUser = ref<User | null>()
 
 const isLoading = ref<boolean>(false)
 
@@ -26,17 +26,14 @@ const type = ref<UserType | null>()
 
 onMounted(async () => {
   isLoading.value = true
-  await userStore.fetchOneUser(route.params.id as string)
-  if (userStore.user) {
-    if (!userStore.user.user_registration.done_type) {
-      router.push({
-        name: 'user-type',
-        params: {
-          id: route.params.id
-        }
-      })
-    }
-    type.value = userStore.user.type
+  authUser.value = await authStore.getAuthUser()
+  console.log(authUser.value)
+  if (!authUser.value) {
+    router.push({
+      name: 'signin'
+    })
+  } else {
+    type.value = authUser.value.type
   }
   isLoading.value = false
 })

@@ -95,9 +95,14 @@ const onSubmit = async () => {
     authUser.value.id
   )
 
+  await authStore.fetchAuthUser()
+
   if (res.status == 200) {
     router.push({
-      name: 'user-info'
+      name: 'user-info',
+      params: {
+        type: type.value
+      }
     })
   }
 }
