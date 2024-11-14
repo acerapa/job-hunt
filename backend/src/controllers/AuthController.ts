@@ -26,6 +26,7 @@ export const authenticate = async (req: Request, res: Response) => {
         const { refresh, access } = generateAccessAndRefreshToken(user)
 
         // set cookies and token
+        req.authUser = user.id
         setCookie(res, 'access', access)
         setCookie(res, 'refresh', refresh, { maxAge: 2 * 24 * 60 * 60 * 1000 })
 

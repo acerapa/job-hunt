@@ -27,7 +27,7 @@
             <img src="@/assets/icons/email.png" class="brightness-0" alt="email.png" />
             <span class="text-sm text-black"> {{ authUser.email }} </span>
           </div>
-          <div class="flex gap-2 items-center">
+          <div class="flex gap-2 items-center" v-if="authUser.phone">
             <img src="@/assets/icons/phone.png" alt="phone.png" />
             <span class="text-sm text-black"> {{ authUser.phone }} </span>
           </div>
@@ -73,18 +73,22 @@
           >
             Edit
           </button>
-          <button
-            class="btn"
-            v-if="sectionFormState.personalSkill"
-            @click="
-              () => {
-                sectionFormState.personalSkill = false
-                onUpdateUser()
-              }
-            "
-          >
-            Save
-          </button>
+          <div class="flex gap-3" v-if="sectionFormState.personalSkill">
+            <button class="btn-outline" @click="sectionFormState.personalSkill = false">
+              Cancel
+            </button>
+            <button
+              class="btn"
+              @click="
+                () => {
+                  sectionFormState.personalSkill = false
+                  onUpdateUser()
+                }
+              "
+            >
+              Save
+            </button>
+          </div>
         </div>
         <div class="flex gap-3">
           <InputComponent
@@ -161,18 +165,21 @@
           >
             Edit
           </button>
-          <button
-            class="btn"
-            v-if="sectionFormState.address"
-            @click="
-              () => {
-                onUpdateProfileAddress()
-                sectionFormState.address = false
-              }
-            "
-          >
-            Save
-          </button>
+          <div class="flex gap-3" v-if="sectionFormState.address">
+            <button class="btn-outline" @click="sectionFormState.address = false">Cancel</button>
+            <button
+              class="btn"
+              v-if="sectionFormState.address"
+              @click="
+                () => {
+                  onUpdateProfileAddress()
+                  sectionFormState.address = false
+                }
+              "
+            >
+              Save
+            </button>
+          </div>
         </div>
         <div class="flex gap-3">
           <InputComponent
@@ -250,7 +257,12 @@
           >
             Edit
           </button>
-          <button class="btn" v-if="sectionFormState.social" @click="onUpdateProfile">Save</button>
+          <div class="flex gap-3" v-if="sectionFormState.social">
+            <button class="btn-outline" @click="sectionFormState.social = false">Cancel</button>
+            <button class="btn" v-if="sectionFormState.social" @click="onUpdateProfile">
+              Save
+            </button>
+          </div>
         </div>
         <div class="flex gap-3">
           <InputComponent
@@ -296,9 +308,12 @@
           >
             Edit
           </button>
-          <button class="btn" v-if="sectionFormState.jobHunter" @click="onUpdateProfile">
-            Save
-          </button>
+          <div class="flex gap-3" v-if="sectionFormState.jobHunter">
+            <button class="btn-outline" @click="sectionFormState.jobHunter = false">Cancel</button>
+            <button class="btn" v-if="sectionFormState.jobHunter" @click="onUpdateProfile">
+              Save
+            </button>
+          </div>
         </div>
         <InputComponent
           label="Cover Letter"

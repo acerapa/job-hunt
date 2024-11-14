@@ -15,7 +15,7 @@ export const useAuthStore = defineStore('auth', function () {
   }
 
   const signOut = async () => {
-    return await api(`/auth/sign-out`)
+    return await api(`auth/sign-out`)
   }
 
   const fetchAuthUser = async () => {
