@@ -1,16 +1,15 @@
 import { NextFunction, Request, Response } from 'express'
 import { ZodSchema, ZodError } from '@shared/pack'
-import { formatResponse } from './response'
 
 export const validateBody = <Schema extends ZodSchema>(schema: Schema) => {
-  return (req: Request<{ test: string }>, res: Response, next: NextFunction) => {
+  return (req: Request, res: Response, next: NextFunction) => {
     try {
       const result = schema.parse(req.body)
       req.validated = result
       next()
     } catch (e) {
       const { errors } = e as ZodError
-      res.status(400).json(formatResponse(errors, 'Validation errors!', 400))
+      res.sendError({ message: 'Validation errors!', data: errors })
     }
   }
 }

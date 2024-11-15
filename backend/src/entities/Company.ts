@@ -24,13 +24,17 @@ export class Company extends BaseEntity implements ICompany<User, Job> {
   @JoinColumn({ name: 'user_id' })
   user: User
 
-  @Column()
+  @Column({
+    nullable: true
+  })
   logo: string
 
   @Column({ nullable: true })
   website: string
 
-  @Column()
+  @Column({
+    nullable: true
+  })
   industry: string
 
   @Column({
@@ -43,11 +47,8 @@ export class Company extends BaseEntity implements ICompany<User, Job> {
   })
   description: string
 
-  @Column()
+  @Column({ nullable: true })
   employee_range: string
-
-  @Column()
-  site_url: string
 
   @ManyToOne(() => Address)
   address: Address

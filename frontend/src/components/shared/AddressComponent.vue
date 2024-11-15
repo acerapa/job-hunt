@@ -9,6 +9,7 @@
         input-class="w-full"
         placeholder="Address 1 *"
         :disabled="props.disabled"
+        :label-css="props.labelCss"
         :label="props.hasLabel ? 'Address 1 *' : ''"
         @input="
           emit('on-change', getPrefix('address1'), AddressSchema.shape.address1, address.address1)
@@ -24,6 +25,7 @@
         input-class="w-full"
         placeholder="Address 2"
         :disabled="props.disabled"
+        :label-css="props.labelCss"
         :label="props.hasLabel ? 'Address 2' : ''"
         @input="
           emit('on-change', getPrefix('address2'), AddressSchema.shape.address2, address.address2)
@@ -32,7 +34,7 @@
         :error-message="getModelErrs(getPrefix('address2'))"
       />
     </div>
-    <div>
+    <div class="flex flex-col gap-3">
       <div class="flex gap-3">
         <InputComponent
           name="city"
@@ -42,6 +44,7 @@
           placeholder="City *"
           v-model="address.city"
           :disabled="props.disabled"
+          :label-css="props.labelCss"
           :label="props.hasLabel ? 'City *' : ''"
           @input="emit('on-change', getPrefix('city'), AddressSchema.shape.city, address.city)"
           :error-message="getModelErrs(getPrefix('city'))"
@@ -54,6 +57,7 @@
           placeholder="Postal *"
           v-model="address.postal"
           :disabled="props.disabled"
+          :label-css="props.labelCss"
           :label="props.hasLabel ? 'Postal *' : ''"
           @input="
             emit('on-change', getPrefix('postal'), AddressSchema.shape.postal, address.postal)
@@ -70,6 +74,7 @@
           placeholder="province *"
           v-model="address.province"
           :disabled="props.disabled"
+          :label-css="props.labelCss"
           :label="props.hasLabel ? 'Province *' : ''"
           @input="
             emit('on-change', getPrefix('province'), AddressSchema.shape.province, address.province)
@@ -84,6 +89,7 @@
           placeholder="country *"
           v-model="address.country"
           :disabled="props.disabled"
+          :label-css="props.labelCss"
           :label="props.hasLabel ? 'Country *' : ''"
           @input="
             emit('on-change', getPrefix('country'), AddressSchema.shape.country, address.country)
@@ -105,9 +111,9 @@ const emit = defineEmits(['on-change'])
 export interface Props {
   modelErrors: Record<string, any> | undefined
   prefix?: string
-  hasLabel: boolean
+  hasLabel?: boolean
   labelCss?: string
-  disabled: boolean
+  disabled?: boolean
 }
 
 const props = withDefaults(defineProps<Props>(), {

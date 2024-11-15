@@ -1,4 +1,5 @@
 import { type RouteRecordRaw } from 'vue-router'
+import { userInfoGuard } from './guards'
 
 export default <RouteRecordRaw[]>[
   {
@@ -25,6 +26,7 @@ export default <RouteRecordRaw[]>[
       {
         path: ':type/info',
         name: 'user-info',
+        beforeEnter: userInfoGuard,
         component: () => import('@/views/Auth/SignupUserInforPage.vue')
       }
     ]

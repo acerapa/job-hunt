@@ -1,8 +1,8 @@
 import {
+  useRouter,
   type NavigationGuardNext,
   type RouteLocationNormalized,
-  type RouteRecordRaw,
-  useRouter
+  type RouteRecordRaw
 } from 'vue-router'
 import NavLayout from '@/layouts/NavLayout.vue'
 import { useAuthStore } from '@/stores/auth-store'
@@ -25,7 +25,11 @@ export default <RouteRecordRaw[]>[
       const authUser = await authStore.getAuthUser()
       if (authUser) {
         if (authUser.type === UserType.PROVIDER) {
-          next()
+          if (authUser.company) {
+            next()
+          } else {
+            next({ name: 'user-info', params: { type: UserType.PROVIDER } })
+          }
         } else {
           router.back()
         }

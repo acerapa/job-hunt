@@ -17,6 +17,7 @@
 * {
   font-family: 'urbanist';
   font-weight: normal;
+  @apply tracking-wide;
 }
 
 body {
