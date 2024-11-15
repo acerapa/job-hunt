@@ -56,9 +56,14 @@ export default <RouteRecordRaw[]>[
         component: () => import('@/views/job-provider/ApplicantListPage.vue')
       },
       {
-        path: 'prfile',
+        path: 'profile',
         name: 'provider-profile',
         component: () => import('@/views/job-provider/ProfilePage.vue')
+      },
+      {
+        path: 'account-settings',
+        name: 'provider-account-settings',
+        component: () => import('@/views/job-provider/AccountSettingsPage.vue')
       }
     ]
   }

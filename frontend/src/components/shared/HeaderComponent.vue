@@ -92,11 +92,19 @@
               v-if="showDroppdown && overHeader"
             >
               <RouterLink
-                :to="{ name: authUser?.type == UserType.HUNTER ? 'profile' : 'provider-profile' }"
+                :to="{ name: authUser.type == UserType.HUNTER ? 'profile' : 'provider-profile' }"
                 exact-active-class="!bg-pale-blue font-bold"
                 class="px-4 text-left hover:bg-pale-blue py-0.5"
               >
                 Profile
+              </RouterLink>
+              <RouterLink
+                v-if="authUser.type == UserType.PROVIDER"
+                :to="{ name: 'provider-account-settings' }"
+                exact-active-class="!bg-pale-blue font-bold"
+                class="px-4 text-left hover:bg-pale-blue py-0.5 whitespace-nowrap"
+              >
+                Account Settings
               </RouterLink>
               <button class="px-4 text-left hover:bg-pale-blue py-0.5" @click="onSignOut">
                 Sign out

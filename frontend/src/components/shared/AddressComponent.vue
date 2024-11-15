@@ -8,6 +8,8 @@
         class="w-full"
         input-class="w-full"
         placeholder="Address 1 *"
+        :disabled="props.disabled"
+        :label="props.hasLabel ? 'Address 1 *' : ''"
         @input="
           emit('on-change', getPrefix('address1'), AddressSchema.shape.address1, address.address1)
         "
@@ -21,6 +23,8 @@
         class="w-full"
         input-class="w-full"
         placeholder="Address 2"
+        :disabled="props.disabled"
+        :label="props.hasLabel ? 'Address 2' : ''"
         @input="
           emit('on-change', getPrefix('address2'), AddressSchema.shape.address2, address.address2)
         "
@@ -28,53 +32,65 @@
         :error-message="getModelErrs(getPrefix('address2'))"
       />
     </div>
-    <div class="flex gap-3">
-      <InputComponent
-        name="city"
-        id="city"
-        type="text"
-        class="w-full"
-        placeholder="City *"
-        v-model="address.city"
-        @input="emit('on-change', getPrefix('city'), AddressSchema.shape.city, address.city)"
-        :error-message="getModelErrs(getPrefix('city'))"
-      />
-      <InputComponent
-        name="country"
-        id="postal"
-        type="text"
-        class="w-full"
-        placeholder="Postal *"
-        v-model="address.postal"
-        @input="emit('on-change', getPrefix('postal'), AddressSchema.shape.postal, address.postal)"
-        :error-message="getModelErrs(getPrefix('postal'))"
-      />
-    </div>
-    <div class="flex gap-3">
-      <InputComponent
-        name="province"
-        id="province"
-        type="text"
-        class="w-full"
-        placeholder="province *"
-        v-model="address.province"
-        @input="
-          emit('on-change', getPrefix('province'), AddressSchema.shape.province, address.province)
-        "
-        :error-message="getModelErrs(getPrefix('province'))"
-      />
-      <InputComponent
-        name="country"
-        id="country"
-        type="text"
-        class="w-full"
-        placeholder="country *"
-        v-model="address.country"
-        @input="
-          emit('on-change', getPrefix('country'), AddressSchema.shape.country, address.country)
-        "
-        :error-message="getModelErrs(getPrefix('country'))"
-      />
+    <div>
+      <div class="flex gap-3">
+        <InputComponent
+          name="city"
+          id="city"
+          type="text"
+          class="w-full"
+          placeholder="City *"
+          v-model="address.city"
+          :disabled="props.disabled"
+          :label="props.hasLabel ? 'City *' : ''"
+          @input="emit('on-change', getPrefix('city'), AddressSchema.shape.city, address.city)"
+          :error-message="getModelErrs(getPrefix('city'))"
+        />
+        <InputComponent
+          name="country"
+          id="postal"
+          type="text"
+          class="w-full"
+          placeholder="Postal *"
+          v-model="address.postal"
+          :disabled="props.disabled"
+          :label="props.hasLabel ? 'Postal *' : ''"
+          @input="
+            emit('on-change', getPrefix('postal'), AddressSchema.shape.postal, address.postal)
+          "
+          :error-message="getModelErrs(getPrefix('postal'))"
+        />
+      </div>
+      <div class="flex gap-3">
+        <InputComponent
+          name="province"
+          id="province"
+          type="text"
+          class="w-full"
+          placeholder="province *"
+          v-model="address.province"
+          :disabled="props.disabled"
+          :label="props.hasLabel ? 'Province *' : ''"
+          @input="
+            emit('on-change', getPrefix('province'), AddressSchema.shape.province, address.province)
+          "
+          :error-message="getModelErrs(getPrefix('province'))"
+        />
+        <InputComponent
+          name="country"
+          id="country"
+          type="text"
+          class="w-full"
+          placeholder="country *"
+          v-model="address.country"
+          :disabled="props.disabled"
+          :label="props.hasLabel ? 'Country *' : ''"
+          @input="
+            emit('on-change', getPrefix('country'), AddressSchema.shape.country, address.country)
+          "
+          :error-message="getModelErrs(getPrefix('country'))"
+        />
+      </div>
     </div>
   </div>
 </template>
@@ -89,9 +105,15 @@ const emit = defineEmits(['on-change'])
 export interface Props {
   modelErrors: Record<string, any> | undefined
   prefix?: string
+  hasLabel: boolean
+  labelCss?: string
+  disabled: boolean
 }
 
-const props = defineProps<Props>()
+const props = withDefaults(defineProps<Props>(), {
+  hasLabel: false,
+  disabled: false
+})
 
 const address = defineModel<Partial<Address>>()
 
