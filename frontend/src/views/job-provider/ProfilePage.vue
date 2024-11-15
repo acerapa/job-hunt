@@ -1,5 +1,5 @@
 <template>
-  <div v-if="authUser" class="flex flex-col gap-3">
+  <div v-if="authUser" class="flex flex-col gap-3 mb-8">
     <div class="wrap !p-0">
       <div class="wrap !rounded-b-none !bg-green-bright h-24"></div>
       <div class="wrap !rounded-t-none flex justify-between items-start">
@@ -99,20 +99,78 @@
         </div>
       </div>
     </div>
+    <div class="wrap">
+      <div class="flex justify-between items-center">
+        <p class="font-semibold text-main tracking-wide">Address Information</p>
+        <button class="btn-outline">Edit</button>
+      </div>
+      <AddressComponent
+        :has-label="true"
+        :model-errors="{}"
+        v-model="addressModel"
+        class="address-component"
+      />
+    </div>
+    <div class="wrap">
+      <div class="flex justify-between items-center">
+        <p class="font-semibold text-main tracking-wide">Overview</p>
+        <button class="btn-outline">Edit</button>
+      </div>
+      <div class="flex flex-col gap-4">
+        <InputComponent
+          type="textarea"
+          name="description"
+          label="Description"
+          placeholder="Description"
+          label-css="text-sm font-medium"
+        />
+        <InputComponent
+          type="textarea"
+          name="mission"
+          label="Mission"
+          placeholder="Mission"
+          label-css="text-sm font-medium"
+        />
+        <InputComponent
+          type="textarea"
+          name="vision"
+          label="Vision"
+          placeholder="Vision"
+          label-css="text-sm font-medium"
+        />
+      </div>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import { useAuthStore } from '@/stores/auth-store'
-import type { User } from '@shared/pack'
+import type { Address, User } from '@shared/pack'
 import { onMounted, ref } from 'vue'
 import InputComponent from '@/components/shared/InputComponent.vue'
+import AddressComponent from '@/components/shared/AddressComponent.vue'
 import CheckButtonComponent from '@/components/shared/CheckButtonComponent.vue'
 
 const authStore = useAuthStore()
 const authUser = ref<User | null>(null)
 
+const addressModel = ref<Partial<Address>>({})
+
 onMounted(async () => {
   authUser.value = await authStore.getAuthUser()
 })
 </script>
+
+<style>
+.address-component {
+  @apply mt-4
+    flex
+    gap-4
+    flex-col
+    [&>div:first-child]:flex-row
+    [&>div:nth-child(2)]:flex
+    [&>div:nth-child(2)]:flex-row
+    [&>div:nth-child(2)]:gap-4
+    [&>div:nth-child(2)>div]:flex-1;
+}
+</style>
