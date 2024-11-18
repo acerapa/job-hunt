@@ -1,6 +1,7 @@
 import { Request, Response } from 'express'
 import { Company } from '../entities/Company'
 import { User } from '../entities/User'
+import { Address } from '../entities/Address'
 
 export const register = async (req: Request, res: Response) => {
   try {
@@ -40,5 +41,41 @@ export const update = async (req: Request, res: Response) => {
       },
       req.validated
     )
-  } catch (error) {}
+
+    res.sendSuccess({ message: 'Successfully updated!' })
+  } catch (error) {
+    const { name, message } = error as Error
+    res.sendError({ message: `${name}: ${message}` })
+  }
+}
+
+export const updateCreateCompanyAddress = async (req: Request, res: Response) => {
+  try {
+    const company = await Company.findOne({
+      where: {
+        id: parseInt(req.params.id)
+      },
+      relations: {
+        address: true
+      }
+    })
+
+    if (company) {
+      if (company.address) {
+        await Address.update(company.address.id, req.validated)
+      } else {
+        const address = Address.create(req.validated)
+        await address.save()
+        company.address = address
+        await company.save()
+      }
+    } else {
+      throw new Error('Company not found')
+    }
+
+    res.sendSuccess({ message: 'Successfully updated address' })
+  } catch (error) {
+    const { name, message } = error as Error
+    res.sendError({ message: `${name}: ${message}` })
+  }
 }

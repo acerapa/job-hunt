@@ -10,7 +10,7 @@ import {
   JoinColumn,
   ManyToOne
 } from 'typeorm'
-import { type Company as ICompany } from '@shared/pack'
+import { CompanyType, type Company as ICompany } from '@shared/pack'
 import { Job } from './Job'
 import { User } from './User'
 import { Address } from './Address'
@@ -41,6 +41,13 @@ export class Company extends BaseEntity implements ICompany<User, Job> {
     comment: 'Refers to the name of the comany'
   })
   name: string
+
+  @Column({
+    type: 'enum',
+    nullable: true,
+    enum: [CompanyType.STARTUP, CompanyType.CORPORATION, CompanyType.NON_PROFIT]
+  })
+  type: CompanyType
 
   @Column({
     comment: 'Company descriptions'

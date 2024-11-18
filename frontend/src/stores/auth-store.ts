@@ -1,10 +1,10 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
-import type { ApiResponse, Profile, User, UserCred } from '@shared/pack'
+import type { ApiResponse, Company, Profile, User, UserCred } from '@shared/pack'
 import { api, Method } from '@/api'
 
 export const useAuthStore = defineStore('auth', function () {
-  const authUser = ref<User<Profile> | null>(null)
+  const authUser = ref<User<Profile, Company> | null>(null)
 
   const signIn = async (credential: UserCred) => {
     const loginResponse: ApiResponse<User> = await api('auth/login', Method.POST, credential)
@@ -19,14 +19,14 @@ export const useAuthStore = defineStore('auth', function () {
   }
 
   const fetchAuthUser = async () => {
-    const res: ApiResponse<User<Profile>> = await api(`auth/authenticated`)
+    const res: ApiResponse<User<Profile, Company>> = await api(`auth/authenticated`)
 
     if (res.status == 200) {
       authUser.value = res.data
     }
   }
 
-  const getAuthUser = async (): Promise<User<Profile> | null> => {
+  const getAuthUser = async (): Promise<User<Profile, Company> | null> => {
     if (!authUser.value) {
       await fetchAuthUser()
     }

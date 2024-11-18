@@ -61,7 +61,9 @@ export const authUser = async (req: Request, res: Response) => {
           profile: {
             address: true
           },
-          company: true
+          company: {
+            address: true
+          }
         }
       })
     )
