@@ -1,4 +1,4 @@
-import { ApplicationStatus, Gender, UserType, WorkSetup, WorkType } from '.'
+import { ApplicationStatus, CompanyType, Gender, UserType, WorkSetup, WorkType } from '.'
 import { SkillType } from '.'
 
 export interface User<Profile = Object, Company = Object> {
@@ -50,6 +50,7 @@ export interface Company<User = Object, Job = Object> {
   employee_range: string
   website: string
   logo: string
+  type: CompanyType
   address?: Address
   address_id?: number
   jobs?: Job[]

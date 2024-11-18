@@ -97,6 +97,7 @@
         :model-errors="{}"
         class="address-component"
         :disabled="!sectionFormState.address"
+        label-css="text-sm font-medium"
       />
     </div>
     <div class="wrap">

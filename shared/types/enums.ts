@@ -42,3 +42,9 @@ export const enum ApplicationStatus {
   OFFERED = 'offered',
   DECLINED = 'declined'
 }
+
+export const enum CompanyType {
+  STARTUP = 'startup',
+  CORPORATION = 'corporation',
+  NON_PROFIT = 'non-profit'
+}

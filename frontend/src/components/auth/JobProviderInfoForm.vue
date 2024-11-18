@@ -9,166 +9,145 @@
       <p class="text-[28px] font-semibold text-main">Welcome Job Provider</p>
     </div>
     <p class="italic text-sm font-light">*(Please fill forms to finish your registration)*</p>
-    <div v-if="!isAddressShowing">
-      <p class="text-sm font-semibold text-left text-main">Representative Info</p>
-      <div class="flex flex-col gap-5">
-        <div class="flex gap-6">
-          <InputComponent
-            type="text"
-            class="flex-1"
-            name="first_name"
-            input-class="w-full"
-            placeholder="First name *"
-            v-model="userModel.user.first_name"
-            :error-message="modelErrors.first_name"
-            @input="
-              setupErrors(
-                'first_name',
-                RequiredUserInfoSchema.shape.first_name,
-                userModel.user.first_name
-              )
-            "
-          />
-          <InputComponent
-            name="last_name"
-            class="flex-1"
-            input-class="w-full"
-            type="text"
-            placeholder="Last name *"
-            :error-message="modelErrors.last_name"
-            v-model="userModel.user.last_name"
-            @input="
-              setupErrors(
-                'last_name',
-                RequiredUserInfoSchema.shape.last_name,
-                userModel.user.last_name
-              )
-            "
-          />
-        </div>
-        <div class="flex gap-6">
-          <InputComponent
-            name="mobile_number"
-            class="flex-1"
-            input-class="w-full"
-            type="text"
-            placeholder="Contact Number *"
-            :error-message="modelErrors.mobile_number"
-            v-model="userModel.user.mobile_number"
-            @input="
-              setupErrors(
-                'mobile_number',
-                RequiredUserInfoSchema.shape.mobile_number,
-                userModel.user.mobile_number
-              )
-            "
-          />
-          <InputComponent
-            name="email"
-            class="flex-1"
-            input-class="w-full"
-            type="email"
-            placeholder="Email *"
-            :error-message="modelErrors.email"
-            v-model="userModel.user.email"
-            @input="setupErrors('email', RequiredUserInfoSchema.shape.email, userModel.user.email)"
-          />
-        </div>
-        <div class="flex gap-6">
-          <InputComponent
-            name="position"
-            class="flex-1"
-            type="text"
-            placeholder="Position *"
-            v-model="companyModel.rep.position"
-            :error-message="modelErrors.position"
-            @input="
-              setupErrors('position', CompanyRepSchema.shape.position, companyModel.rep.position)
-            "
-          />
+
+    <div class="flex flex-col gap-10" v-if="!isCompanyShow">
+      <div>
+        <p class="text-base font-semibold text-left text-main">Account Info</p>
+        <div class="flex flex-col gap-4 mt-3">
+          <div class="flex gap-6">
+            <InputComponent
+              type="text"
+              class="flex-1"
+              name="first_name"
+              label="First Name"
+              input-class="w-full"
+              placeholder="First name *"
+              v-model="userModel.first_name"
+              label-css="text-sm font-medium"
+              :error-message="modelErrors.first_name"
+              @input="
+                setupErrors(
+                  'first_name',
+                  RequiredUserInfoSchema.shape.first_name,
+                  userModel.first_name
+                )
+              "
+            />
+            <InputComponent
+              type="text"
+              class="flex-1"
+              name="last_name"
+              label="Last Name"
+              input-class="w-full"
+              placeholder="Last name *"
+              v-model="userModel.last_name"
+              label-css="text-sm font-medium"
+              :error-message="modelErrors.last_name"
+              @input="
+                setupErrors(
+                  'last_name',
+                  RequiredUserInfoSchema.shape.last_name,
+                  userModel.last_name
+                )
+              "
+            />
+          </div>
+          <div class="flex gap-6">
+            <InputComponent
+              type="text"
+              class="flex-1"
+              name="phone"
+              input-class="w-full"
+              label="Phone Number"
+              v-model="userModel.phone"
+              placeholder="Contact Number *"
+              label-css="text-sm font-medium"
+              :error-message="modelErrors.phone"
+              @input="setupErrors('phone', RequiredUserInfoSchema.shape.phone, userModel.phone)"
+            />
+            <InputComponent
+              name="email"
+              type="email"
+              class="flex-1"
+              label="Email"
+              :disabled="true"
+              input-class="w-full"
+              placeholder="Email"
+              v-model="userModel.email"
+              label-css="text-sm font-medium"
+              :error-message="modelErrors.email"
+              @input="setupErrors('email', RequiredUserInfoSchema.shape.email, userModel.email)"
+            />
+          </div>
         </div>
       </div>
-    </div>
-    <div v-if="!isAddressShowing">
-      <p class="text-sm font-semibold text-left text-main">Company Info</p>
-      <div class="flex flex-col gap-5">
-        <div class="flex gap-6">
-          <InputComponent
-            name="name"
-            type="text"
-            class="flex-1"
-            input-class="w-full"
-            placeholder="Company name *"
-            :error-message="modelErrors.name"
-            v-model="companyModel.company.name"
-            @input="setupErrors('name', CompanySchema.shape.name, companyModel.company.name)"
-          />
-          <InputComponent
-            name="employee_range"
-            type="text"
-            class="flex-1"
-            input-class="w-full"
-            placeholder="Employee Range *"
-            :error-message="modelErrors.employee_range"
-            v-model="companyModel.company.employee_range"
-            @input="
-              setupErrors(
-                'employee_range',
-                CompanySchema.shape.employee_range,
-                companyModel.company.employee_range
-              )
-            "
-          />
-        </div>
-        <div class="flex">
-          <InputComponent
-            type="text"
-            placeholder="Site url"
-            name="site_url"
-            :error-message="modelErrors.site_url"
-            v-model="companyModel.company.site_url"
-            @input="
-              setupErrors('site_url', CompanySchema.shape.site_url, companyModel.company.site_url)
-            "
-          />
-        </div>
-        <InputComponent
-          name="prof_summary"
-          type="textarea"
-          :rows="4"
-          class="w-full"
-          input-class="w-full"
-          placeholder="Company description (Description, site, vision, mission, etc) *"
-          :error-message="modelErrors.description"
-          v-model="companyModel.company.description"
-          @input="
-            setupErrors(
-              'description',
-              CompanySchema.shape.description,
-              companyModel.company.description
-            )
-          "
+      <div class="flex flex-col gap-1">
+        <p class="text-base font-semibold text-left text-main">Address</p>
+        <AddressComponent
+          :has-label="true"
+          v-model="profileAddress"
+          @on-change="setupErrors"
+          :model-errors="modelErrors"
+          :prefix="userAddressPrefix"
+          label-css="text-sm font-medium"
+          class="[&>div]:gap-4 flex flex-col gap-5"
         />
       </div>
     </div>
 
-    <div class="flex flex-col gap-6" v-if="isAddressShowing">
-      <div class="flex flex-col gap-1">
-        <p class="text-sm font-semibold text-left text-main">Rep Address</p>
-        <AddressComponent
-          :prefix="userAddressPrefix"
-          :model-errors="modelErrors"
-          v-model="userModel.address"
-          @on-change="setupErrors"
-          class="[&>div]:gap-6 flex flex-col gap-5"
-        />
+    <div class="flex flex-col gap-6" v-if="isCompanyShow">
+      <div>
+        <p class="text-base font-semibold text-left text-main">Company Info</p>
+        <div class="flex flex-col gap-4 mt-3">
+          <div class="flex gap-6">
+            <InputComponent
+              name="name"
+              type="text"
+              class="flex-1"
+              input-class="w-full"
+              label="Company Name"
+              placeholder="Company name *"
+              label-css="text-sm font-medium"
+              :error-message="modelErrors.name"
+              v-model="companyModel.name"
+              @input="setupErrors('name', CompanySchema.shape.name, companyModel.name)"
+            />
+            <InputComponent
+              type="text"
+              name="website"
+              class="flex-1"
+              label="Website"
+              input-class="w-full"
+              placeholder="Website"
+              label-css="text-sm font-medium"
+              :error-message="modelErrors.website"
+              v-model="companyModel.website"
+              @input="setupErrors('website', CompanySchema.shape.website, companyModel.website)"
+            />
+          </div>
+          <InputComponent
+            :rows="4"
+            type="textarea"
+            class="w-full"
+            name="prof_summary"
+            input-class="w-full"
+            label="Company Description"
+            label-css="text-sm font-medium"
+            placeholder="Company description (Description, site, vision, mission, etc) *"
+            :error-message="modelErrors.description"
+            v-model="companyModel.description"
+            @input="
+              setupErrors('description', CompanySchema.shape.description, companyModel.description)
+            "
+          />
+        </div>
       </div>
       <div class="flex flex-col gap-1">
-        <p class="text-sm font-semibold text-left text-main">Company Address</p>
+        <p class="text-base font-semibold text-left text-main">Company Address</p>
         <AddressComponent
           :prefix="companyAddressPrefix"
           :model-errors="modelErrors"
-          v-model="companyModel.address"
+          v-model="companyAddress"
           @on-change="setupErrors"
           class="[&>div]:gap-6 flex flex-col gap-5"
         />
@@ -177,13 +156,21 @@
 
     <button
       class="btn w-fit mx-auto"
-      @click="isAddressShowing = isValidComAndRep()"
-      v-if="!isAddressShowing"
+      @click="
+        isCompanyShow = isValidModelAndAddress(
+          userModel,
+          RequiredUserInfoSchema,
+          profileAddress,
+          AddressSchema,
+          userAddressPrefix
+        )
+      "
+      v-if="!isCompanyShow"
     >
       Next
     </button>
-    <div class="flex gap-3" v-if="isAddressShowing">
-      <button class="btn-outline w-fit mx-auto" @click="isAddressShowing = false">Back</button>
+    <div class="flex gap-3" v-if="isCompanyShow">
+      <button class="btn-outline w-fit mx-auto" @click="isCompanyShow = false">Back</button>
       <button class="btn w-fit mx-auto" @click="onSubmit">Finish</button>
     </div>
   </div>
@@ -196,152 +183,121 @@ import AddressComponent from '../shared/AddressComponent.vue'
 import { useCompanyStore } from '@/stores/company-store'
 import {
   UserUpdateSchema,
-  type UserUpdate,
   z,
   validate,
   ZodSchema,
   AddressSchema,
   CompanySchema,
-  CompanyRepSchema,
-  type CompanyCreation,
-  type Address
+  type Address,
+  type User,
+  type Profile,
+  type Company
 } from '@shared/pack'
 import { useUserStore } from '@/stores/user-store'
 import { useRouter } from 'vue-router'
+import { useAuthStore } from '@/stores/auth-store'
 
 const router = useRouter()
 const userStore = useUserStore()
+const authStore = useAuthStore()
+const authUser = ref<User<Profile> | null>()
 const companyStore = useCompanyStore()
 
 const isLoading = defineModel<boolean>()
 
 const userAddressPrefix = 'user'
-const isAddressShowing = ref(false)
+const isCompanyShow = ref(false)
 const companyAddressPrefix = 'company'
-const userUpdateModel: UserUpdate = {
-  id: 0,
-  user: {
-    first_name: '',
-    last_name: '',
-    mobile_number: '',
-    email: ''
-  },
-  user_registration: {
-    is_completed: true
-  },
-  address: {
-    address1: '',
-    address2: '',
-    city: '',
-    postal: ''
-  }
-}
 
 const modelErrors = ref({
   first_name: '',
   last_name: '',
   email: '',
-  mobile_number: '',
+  phone: '',
   position: '',
   name: '',
-  employee_range: '',
   description: '',
-  site_url: ''
+  website: ''
 })
 
 const RequiredUserInfoSchema = UserUpdateSchema.extend({
   first_name: z.string().min(1, 'First name is required'),
   last_name: z.string().min(1, 'Last name is required'),
   email: z.string().email(),
-  mobile_number: z.string().min(1, 'Contact number is required')
+  phone: z.string().min(1, 'Contact number is required')
 })
 
-const userModel = ref<UserUpdate>(userUpdateModel)
-
-const companyModel = ref<CompanyCreation>({
-  company: {
-    name: '',
-    description: '',
-    employee_range: '',
-    site_url: ''
-  },
-  rep: {
-    position: '',
-    user_id: 0
-  },
-  address: {
-    address1: '',
-    address2: '',
-    city: '',
-    postal: ''
-  }
-})
-
-onMounted(async () => {
-  if (userStore.user) {
-    userModel.value.user.email = userStore.user.email
-    userModel.value.id = userStore.user.id
-    companyModel.value.rep.user_id = userStore.user.id
-  }
-})
+const userModel = ref<Partial<User>>({})
+const profileAddress = ref<Partial<Address>>({})
+const companyAddress = ref<Partial<Address>>({})
+const companyModel = ref<Partial<Company>>({})
 
 const onSubmit = async () => {
-  let isValid = isValidComAndRep()
-  isValid = isValidAddresses(userModel.value.address, userAddressPrefix)
-  isValid = isValidAddresses(companyModel.value.address, companyAddressPrefix)
+  let isValid = isValidModelAndAddress(
+    userModel.value,
+    RequiredUserInfoSchema,
+    profileAddress.value,
+    AddressSchema,
+    userAddressPrefix
+  )
+
+  isValid = isValidModelAndAddress(
+    companyModel.value,
+    CompanySchema,
+    companyAddress.value,
+    AddressSchema,
+    companyAddressPrefix
+  )
 
   if (!isValid) {
     return
   }
 
   isLoading.value = true
-  const userUpdateRes = await userStore.updateUser(userModel.value)
-  if (userUpdateRes.status == 200) {
-    const companyCreateRes = await companyStore.registerCompany(companyModel.value)
-    if (companyCreateRes.status == 200) {
-      router.push({
-        name: 'dashboard'
-      })
+  if (authUser.value) {
+    const userUpdateRes = await userStore.updateUser(userModel.value, authUser.value.id)
+    if (userUpdateRes.status == 200) {
+      const companyCreateRes = await companyStore.registerCompany(
+        companyModel.value,
+        authUser.value.id
+      )
+      // TODO: Need to save the address of the company too
+      if (companyCreateRes.status == 200) {
+        await authStore.fetchAuthUser()
+        router.push({
+          name: 'provider'
+        })
+      }
     }
   }
   isLoading.value = false
 }
 
-const isValidComAndRep = (): boolean => {
+const isValidModelAndAddress = (
+  model: Object,
+  schema: ZodSchema,
+  addressModel: object,
+  addressSchema: ZodSchema,
+  prefix: string
+): boolean => {
   let isValid = true
-  const userValidated = validate(RequiredUserInfoSchema, userModel.value.user)
-  if (!userValidated.valid) {
-    modelErrors.value = Object.assign(modelErrors.value, userValidated.errors)
+  const validated = validate(schema, model)
+  if (!validated.valid) {
+    modelErrors.value = Object.assign(modelErrors.value, validated.errors)
     isValid = false
   }
 
-  if (!setupErrors('position', CompanyRepSchema.shape.position, companyModel.value.rep.position)) {
-    isValid = false
-  }
-  const companyValidated = validate(CompanySchema, companyModel.value.company)
-  if (!companyValidated.valid) {
-    modelErrors.value = Object.assign(modelErrors.value, companyValidated.errors)
-    isValid = false
-  }
-
-  return isValid
-}
-
-const isValidAddresses = (model: Partial<Address>, prefix: string): boolean => {
-  let isValid = true
-
-  const userAddressValidate = validate(AddressSchema, model)
-  if (!userAddressValidate.valid) {
+  const addressValidate = validate(addressSchema, addressModel)
+  if (!addressValidate.valid) {
     const userAddValidate: Record<string, string> = {}
-    if (userAddressValidate.errors) {
-      Object.keys(userAddressValidate.errors).forEach((key) => {
-        userAddValidate[`${prefix}_${key}`] = (
-          userAddressValidate.errors as Record<string, string>
-        )[key]
+    if (addressValidate.errors) {
+      Object.keys(addressValidate.errors).forEach((key) => {
+        userAddValidate[`${prefix}_${key}`] = (addressValidate.errors as Record<string, string>)[
+          key
+        ]
       })
       modelErrors.value = Object.assign(modelErrors.value, userAddValidate)
     }
-
     isValid = false
   }
 
@@ -355,4 +311,20 @@ const setupErrors = (field: string, schema: ZodSchema, value: any) => {
   modelErrors.value = Object.assign(modelErrors.value, fieldError)
   return valid
 }
+
+onMounted(async () => {
+  authUser.value = await authStore.getAuthUser()
+
+  if (authUser.value) {
+    userModel.value = authUser.value
+
+    if (authUser.value.profile && authUser.value.profile.address) {
+      profileAddress.value = authUser.value.profile.address
+    }
+
+    if (authUser.value.company) {
+      companyModel.value = authUser.value.company
+    }
+  }
+})
 </script>

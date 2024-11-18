@@ -1,5 +1,5 @@
 <template>
-  <div class="relative">
+  <div class="relative flex flex-col">
     <label :class="props.labelCss" :for="props.id ? props.id : props.name" v-if="props.label">{{
       props.label
     }}</label>
@@ -52,13 +52,9 @@
         {{ opt.text }}
       </option>
     </select>
-    <small
-      class="text-red-400 absolute w-full block"
-      :style="{
-        top: `${errorMsgTop}px`
-      }"
-      >{{ props.errorMessage }}</small
-    >
+    <small class="text-red-400 absolute w-full block -bottom-4" v-if="props.errorMessage">
+      {{ props.errorMessage }}
+    </small>
   </div>
 </template>
 

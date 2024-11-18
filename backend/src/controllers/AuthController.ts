@@ -60,6 +60,9 @@ export const authUser = async (req: Request, res: Response) => {
         relations: {
           profile: {
             address: true
+          },
+          company: {
+            address: true
           }
         }
       })

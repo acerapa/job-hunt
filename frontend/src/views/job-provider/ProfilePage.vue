@@ -22,7 +22,17 @@
     <div class="wrap">
       <div class="flex justify-between items-center">
         <p class="font-semibold text-main tracking-wide">Basic Information</p>
-        <button class="btn-outline">Edit</button>
+        <button
+          class="btn-outline"
+          v-if="!sectionFormState.basic"
+          @click="sectionFormState.basic = true"
+        >
+          Edit
+        </button>
+        <div class="flex gap-3" v-if="sectionFormState.basic">
+          <button class="btn-outline" @click="sectionFormState.basic = false">Cancel</button>
+          <button class="btn" @click="onUpdateCompany">Save</button>
+        </div>
       </div>
       <div class="mt-4 flex gap-10">
         <div class="flex flex-col gap-3">
@@ -32,6 +42,7 @@
             label="Company Name"
             placeholder="Ex. ABC Company"
             label-css="text-sm font-medium"
+            v-model="companyModel.name"
           />
           <InputComponent
             type="select"
@@ -40,6 +51,7 @@
             label="Company Type"
             placeholder="Ex. ABC Company"
             label-css="text-sm font-medium"
+            v-model="companyModel.type"
           />
           <div class="flex flex-col gap-0">
             <p class="text-sm font-medium">Industry</p>
@@ -69,9 +81,21 @@
           <div class="flex flex-col gap-1">
             <p class="text-sm font-medium">Employee Range</p>
             <div class="flex gap-3 items-center">
-              <InputComponent name="min" type="number" class="max-w-28" placeholder="Min" />
+              <InputComponent
+                name="min"
+                type="number"
+                class="max-w-28"
+                placeholder="Min"
+                v-model="min"
+              />
               <span>to</span>
-              <InputComponent name="max" type="number" class="max-w-28" placeholder="Max" />
+              <InputComponent
+                name="max"
+                type="number"
+                class="max-w-28"
+                placeholder="Max"
+                v-model="max"
+              />
             </div>
           </div>
           <div class="flex flex-col gap-1">
@@ -102,7 +126,17 @@
     <div class="wrap">
       <div class="flex justify-between items-center">
         <p class="font-semibold text-main tracking-wide">Address Information</p>
-        <button class="btn-outline">Edit</button>
+        <button
+          class="btn-outline"
+          v-if="!sectionFormState.address"
+          @click="sectionFormState.address = true"
+        >
+          Edit
+        </button>
+        <div class="flex gap-3" v-if="sectionFormState.address">
+          <button class="btn-outline" @click="sectionFormState.address = false">Cancel</button>
+          <button class="btn" @click="onUpdateAddress()">Save</button>
+        </div>
       </div>
       <AddressComponent
         :has-label="true"
@@ -123,6 +157,7 @@
           label="Description"
           placeholder="Description"
           label-css="text-sm font-medium"
+          v-model="companyModel.description"
         />
         <InputComponent
           type="textarea"
@@ -145,19 +180,52 @@
 
 <script setup lang="ts">
 import { useAuthStore } from '@/stores/auth-store'
-import type { Address, User } from '@shared/pack'
+import type { Address, Company, Profile, User } from '@shared/pack'
 import { onMounted, ref } from 'vue'
 import InputComponent from '@/components/shared/InputComponent.vue'
 import AddressComponent from '@/components/shared/AddressComponent.vue'
 import CheckButtonComponent from '@/components/shared/CheckButtonComponent.vue'
+import { useCompanyStore } from '@/stores/company-store'
+
+const min = ref<number>()
+const max = ref<number>()
+const sectionFormState = ref<{ basic: boolean; address: boolean; overview: boolean }>({
+  basic: false,
+  address: false,
+  overview: false
+})
 
 const authStore = useAuthStore()
-const authUser = ref<User | null>(null)
+const companyStore = useCompanyStore()
+const authUser = ref<User<Profile, Company> | null>(null)
+
+const companyModel = ref<Partial<Company>>({})
 
 const addressModel = ref<Partial<Address>>({})
 
+const onUpdateAddress = async () => {
+  if (authUser.value && authUser.value.company) {
+    await companyStore.updateComapnyAddress(addressModel.value, authUser.value.company.id)
+  }
+
+  sectionFormState.value.address = false
+}
+
+const onUpdateCompany = async () => {
+  if (authUser.value && authUser.value.company) {
+    await companyStore.updateCompany(companyModel.value, authUser.value.company.id)
+  }
+}
+
 onMounted(async () => {
   authUser.value = await authStore.getAuthUser()
+
+  if (authUser.value && authUser.value.company) {
+    companyModel.value = authUser.value.company
+    if (authUser.value.company.address) {
+      addressModel.value = authUser.value.company.address
+    }
+  }
 })
 </script>
 

@@ -21,13 +21,11 @@ const authStore = useAuthStore()
 const authUser = ref<User | null>()
 
 const isLoading = ref<boolean>(false)
-
 const type = ref<UserType | null>()
 
 onMounted(async () => {
   isLoading.value = true
   authUser.value = await authStore.getAuthUser()
-  console.log(authUser.value)
   if (!authUser.value) {
     router.push({
       name: 'signin'
