@@ -54,7 +54,7 @@ export interface Company<User = Object, Job = Object> {
   address?: Address
   address_id?: number
   jobs?: Job[]
-  industry: string
+  industry: Industry
   created_at: Date
   updated_at: Date
 }
@@ -133,6 +133,14 @@ export interface Like {
   id: number
   user_id: number
   job_id: number
+  created_at: Date
+  updated_at: Date
+}
+
+export interface Industry<Company = Object> {
+  id: number
+  name: string
+  companies?: Company[]
   created_at: Date
   updated_at: Date
 }

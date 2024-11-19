@@ -1,10 +1,11 @@
 <template>
-  <div class="step-1 flex flex-col gap-3">
+  <div class="step-1 flex flex-col gap-3" v-if="jobModel">
     <InputComponent
       type="text"
       name="title"
       label="Job Title"
       label-css="font-medium"
+      v-model="jobModel.title"
       placeholder="Enter job title"
     />
     <div class="flex flex-col gap-0">
@@ -95,4 +96,7 @@
 <script setup lang="ts">
 import InputComponent from '@/components/shared/InputComponent.vue'
 import CheckButtonComponent from '@/components/shared/CheckButtonComponent.vue'
+import type { Job } from '@shared/pack'
+
+const jobModel = defineModel<Partial<Job>>()
 </script>

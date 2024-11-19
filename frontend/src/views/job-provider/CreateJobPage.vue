@@ -25,7 +25,7 @@
         </div>
 
         <!-- step 1 -->
-        <FormStep1 v-if="step === Step.STEP1" />
+        <FormStep1 v-if="step === Step.STEP1" v-model="jobModel" />
         <FormStep2 v-if="step === Step.STEP2" />
         <!-- step 2 -->
         <div class="step-2 flex flex-col gap-3"></div>
@@ -50,11 +50,14 @@ import FormStep1 from '@/components/job-creation/FormStep1.vue'
 import FormStep2 from '@/components/job-creation/FormStep2.vue'
 import { useJobStore } from '@/stores/job-store'
 import { ref } from 'vue'
+import type { Job } from '@shared/pack'
 
 enum Step {
   STEP1 = 1,
   STEP2 = 2
 }
+
+const jobModel = ref<Partial<Job>>({})
 
 const step = ref<Step>(Step.STEP1)
 
