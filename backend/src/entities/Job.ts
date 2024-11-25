@@ -10,7 +10,7 @@ import {
   AfterLoad
 } from 'typeorm'
 
-import { type Job as IJob, WorkSetup, WorkType } from '@shared/pack'
+import { type Job as IJob, JobStatus, WorkSetup, WorkType } from '@shared/pack'
 import { Tag } from './Tag'
 import { Skill } from './Skill'
 import { Shift } from './Shift'
@@ -30,13 +30,18 @@ export class Job extends BaseEntity implements IJob<Skill, Company, Shift, Appli
   @Column()
   description: string
 
-  @Column()
+  @Column({
+    nullable: true
+  })
   salary_range: string
 
   @Column({
     nullable: true
   })
   posted_on: Date
+
+  @Column({})
+  status: JobStatus
 
   @Column({
     nullable: true
@@ -47,18 +52,23 @@ export class Job extends BaseEntity implements IJob<Skill, Company, Shift, Appli
     type: 'enum',
     enum: [WorkSetup.REMOTE, WorkSetup.HYBRID, WorkSetup.ONSITE]
   })
-  work_setup: WorkSetup
+  work_setup: WorkSetup[]
 
   @Column({
     type: 'enum',
     enum: [WorkType.FULLTIME, WorkType.PARTTIME, WorkType.INTERNSHIP]
   })
-  work_type: WorkType
+  work_type: WorkType[]
 
   @Column({
     default: false
   })
   is_flex: boolean
+
+  @Column({
+    default: true
+  })
+  show_salary_range: boolean
 
   @Column()
   responsibilities: string

@@ -3,6 +3,7 @@
     <input
       :id="props.id"
       type="checkbox"
+      v-model="model"
       :name="props.name"
       :value="props.value"
       class="peer top-0 absolute z-0 invisible"
@@ -27,6 +28,7 @@ interface Props {
 }
 
 const props = defineProps<Props>()
+const model = defineModel()
 </script>
 
 <style scoped>

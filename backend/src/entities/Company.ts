@@ -57,6 +57,9 @@ export class Company extends BaseEntity implements ICompany<User, Job> {
   @Column({ nullable: true })
   employee_range: string
 
+  @Column({ nullable: true })
+  ratings: number
+
   @ManyToOne(() => Address)
   address: Address
 

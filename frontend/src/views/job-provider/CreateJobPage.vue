@@ -39,7 +39,7 @@
       </div>
     </div>
     <div class="h-full max-h-[calc(100vh_-_134px)] overflow-y-auto thin-scrollbar flex-1">
-      <JobDescription :job="job" />
+      <JobDescription :job="jobModel" :state="JobDescriptionState.EDITING" />
     </div>
   </div>
 </template>
@@ -48,16 +48,16 @@
 import JobDescription from '@/components/shared/JobDescription.vue'
 import FormStep1 from '@/components/job-creation/FormStep1.vue'
 import FormStep2 from '@/components/job-creation/FormStep2.vue'
-import { useJobStore } from '@/stores/job-store'
 import { ref } from 'vue'
 import type { Job } from '@shared/pack'
+import { JobDescriptionState } from '@/const/enum'
 
 enum Step {
   STEP1 = 1,
   STEP2 = 2
 }
 
-const jobModel = ref<Partial<Job>>({})
+const jobModel = ref<Partial<Job>>({ work_setup: [], work_type: [] })
 
 const step = ref<Step>(Step.STEP1)
 
@@ -72,10 +72,6 @@ const onBack = () => {
 const onSubmit = () => {
   console.log('submit')
 }
-
-const jobStore = useJobStore()
-
-const job = jobStore.jobs[0]
 </script>
 
 <style scoped>

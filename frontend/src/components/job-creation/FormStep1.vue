@@ -9,29 +9,29 @@
       placeholder="Enter job title"
     />
     <div class="flex flex-col gap-0">
-      <p class="font-medium">Available work setup</p>
-      <div class="flex gap-4">
-        <CheckButtonComponent label="On-site" id="on-site" name="on-site" value="on-site" />
-        <CheckButtonComponent label="Remote" id="remote" name="remote" value="remote" />
-        <CheckButtonComponent label="Hybrid" id="hybrid" name="hybrid" value="hybrid" />
-      </div>
-      <div class="px-3 mt-4 flex flex-col gap-2">
-        <InputComponent
-          type="checkbox"
-          input-class="!w-fit"
-          id="same-as-account"
-          name="same_as_account"
-          label="Same as account"
-          class="flex items-center flex-row-reverse justify-end gap-2"
-        />
-        <InputComponent type="text" name="location" label="Location" placeholder="Enter location" />
-      </div>
-    </div>
-    <div class="flex flex-col gap-0">
       <p class="font-medium">Available working hours</p>
       <div class="flex gap-4">
-        <CheckButtonComponent label="Full-time" id="full-time" name="full-time" value="full-time" />
-        <CheckButtonComponent label="Part-time" id="part-time" name="part-time" value="part-time" />
+        <CheckButtonComponent
+          label="Full-time"
+          id="full-time"
+          name="full-time"
+          :value="WorkType.FULLTIME"
+          v-model="jobModel.work_type"
+        />
+        <CheckButtonComponent
+          label="Part-time"
+          id="part-time"
+          name="part-time"
+          :value="WorkType.PARTTIME"
+          v-model="jobModel.work_type"
+        />
+        <CheckButtonComponent
+          label="Internship"
+          id="internship"
+          name="internship"
+          :value="WorkType.INTERNSHIP"
+          v-model="jobModel.work_type"
+        />
       </div>
       <div class="px-3 mt-4 flex flex-col gap-2">
         <InputComponent
@@ -40,7 +40,7 @@
           id="flexible-hours"
           name="flexible-hours"
           label="Flexible hours"
-          class="flex items-center flex-row-reverse justify-end gap-2"
+          class="flex items-center !flex-row-reverse justify-end gap-2"
         />
 
         <div>
@@ -65,7 +65,50 @@
       </div>
     </div>
     <div class="flex flex-col gap-0">
+      <p class="font-medium">Available work setup</p>
+      <div class="flex gap-4">
+        <CheckButtonComponent
+          label="On-site"
+          id="on-site"
+          name="on-site"
+          :value="WorkSetup.ONSITE"
+          v-model="jobModel.work_setup"
+        />
+        <CheckButtonComponent
+          label="Remote"
+          id="remote"
+          name="remote"
+          :value="WorkSetup.REMOTE"
+          v-model="jobModel.work_setup"
+        />
+        <CheckButtonComponent
+          label="Hybrid"
+          id="hybrid"
+          name="hybrid"
+          :value="WorkSetup.HYBRID"
+          v-model="jobModel.work_setup"
+        />
+      </div>
+      <div class="px-3 mt-4 flex flex-col gap-2">
+        <InputComponent
+          type="checkbox"
+          input-class="!w-fit"
+          id="same-as-account"
+          name="same_as_account"
+          label="Same as account"
+          class="flex items-center !flex-row-reverse justify-end gap-2"
+        />
+        <InputComponent type="text" name="location" label="Location" placeholder="Enter location" />
+      </div>
+    </div>
+    <div class="flex flex-col gap-0">
       <p class="font-medium">Enter Salary Range</p>
+      <InputComponent
+        type="checkbox"
+        name="show-salary"
+        label="Show salary"
+        class="flex items-center !flex-row-reverse justify-end gap-2 [&>input]:w-fit mt-1"
+      />
       <div class="flex gap-3">
         <InputComponent
           name="min"
@@ -96,7 +139,7 @@
 <script setup lang="ts">
 import InputComponent from '@/components/shared/InputComponent.vue'
 import CheckButtonComponent from '@/components/shared/CheckButtonComponent.vue'
-import type { Job } from '@shared/pack'
+import { WorkSetup, WorkType, type Job } from '@shared/pack'
 
 const jobModel = defineModel<Partial<Job>>()
 </script>
