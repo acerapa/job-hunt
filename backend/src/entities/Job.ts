@@ -53,13 +53,13 @@ export class Job
   closing_date: Date
 
   @Column({
-    type: 'enum',
+    type: 'json',
     enum: [WorkSetup.REMOTE, WorkSetup.HYBRID, WorkSetup.ONSITE]
   })
   work_setup: WorkSetup[]
 
   @Column({
-    type: 'enum',
+    type: 'json',
     enum: [WorkType.FULLTIME, WorkType.PARTTIME, WorkType.INTERNSHIP]
   })
   work_type: WorkType[]
@@ -120,9 +120,9 @@ export class Job
 
   @AfterLoad()
   populateProperties() {
-    this.skills = this.job_skills.map((jobToSkill) => jobToSkill.skill)
-    this.tags = this.job_tags.map((jobToTag) => jobToTag.tag)
-    this.shifts = this.job_shifts.map((jobToShift) => jobToShift.shift)
+    this.skills = this.job_skills ? this.job_skills.map((jobToSkill) => jobToSkill.skill) : []
+    this.tags = this.job_tags ? this.job_tags.map((jobToTag) => jobToTag.tag) : []
+    this.shifts = this.job_shifts ? this.job_shifts.map((jobToShift) => jobToShift.shift) : []
   }
 
   @CreateDateColumn()

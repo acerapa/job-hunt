@@ -7,7 +7,7 @@ export const JobSchema = z.object({
   description: z.string().min(1, 'Description is required!'),
   salary_range: z.string().optional(),
   posted_on: z.date().optional(),
-  status: z.enum([JobStatus.CLOSED, JobStatus.OPEN, JobStatus.DRAFT]),
+  status: z.enum([JobStatus.CLOSED, JobStatus.ACTIVE, JobStatus.DRAFT]),
   closing_date: z.date().optional(),
   work_setup: z.array(z.enum([WorkSetup.HYBRID, WorkSetup.ONSITE, WorkSetup.REMOTE])),
   work_type: z.array(z.enum([WorkType.FULLTIME, WorkType.INTERNSHIP, WorkType.PARTTIME])),

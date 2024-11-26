@@ -1,4 +1,4 @@
-import { Router } from 'express'
+import { Request, Response, Router } from 'express'
 const router = Router()
 
 // middlewares
@@ -7,9 +7,13 @@ import { validateAccessRefreshToken } from '../middlewares/validate-access-refre
 import userRoutes from './user-routes'
 import authRoute from './auth-routes'
 import profileRoutes from './profile-routes'
+import { getAllJobs } from '../controllers/JobController'
 
 router.use('/auth', authRoute)
 router.use('/users', validateAccessRefreshToken, userRoutes)
 router.use('/profile', validateAccessRefreshToken, profileRoutes)
+
+// get all published jobs
+router.get('/published-jobs', getAllJobs)
 
 export default router

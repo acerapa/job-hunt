@@ -68,12 +68,14 @@ import {
 import { JobDescriptionState } from '@/const/enum'
 import { useJobStore } from '@/stores/job-store'
 import { useAuthStore } from '@/stores/auth-store'
+import { useRouter } from 'vue-router'
 
 enum Step {
   STEP1 = 1,
   STEP2 = 2
 }
 
+const router = useRouter()
 const jobStore = useJobStore()
 const authStore = useAuthStore()
 
@@ -83,7 +85,7 @@ const jobModel = ref<Partial<Job<Address>>>({
   work_setup: [],
   work_type: [],
   address: {},
-  status: JobStatus.OPEN
+  status: JobStatus.ACTIVE
 })
 
 const step = ref<Step>(Step.STEP1)
@@ -98,7 +100,12 @@ const onBack = () => {
 
 const onSubmit = async () => {
   if (authUser.value && authUser.value.company) {
-    await jobStore.createJob(jobModel.value, authUser.value.company.id)
+    const res = await jobStore.createJob(jobModel.value, authUser.value.company.id)
+
+    if (res == 200) {
+      await jobStore.fetchJobs(authUser.value.company.id)
+      router.push({ name: 'provider-jobs' })
+    }
   }
 
   // TODO: Upon receiving error when creating show a toast message

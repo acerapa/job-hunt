@@ -279,7 +279,7 @@ const onSubmit = async () => {
         companyModel.value,
         authUser.value.id
       )
-      // TODO: Need to save the address of the company too
+
       if (companyCreateRes.status == 200) {
         await authStore.fetchAuthUser()
         router.push({

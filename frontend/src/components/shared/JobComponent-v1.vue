@@ -6,7 +6,7 @@
     <div class="flex justify-between items-center">
       <div class="flex gap-3 items-center">
         <img
-          :src="props.job.company.image"
+          :src="'test'"
           class="w-9 h-9 object-contain bg-black rounded-full"
           alt="company logo"
         />
@@ -21,25 +21,25 @@
     </div>
     <div class="mt-4 flex flex-col gap-2">
       <span class="text-xs font-bold"
-        >{{ `${props.job.work_type} - ${props.job.exp_level} - Posted on ${props.job.posted_on}` }}
+        >{{ `${props.job.work_type} - Posted on ${props.job.posted_on}` }}
       </span>
       <span class="text-sm text-gray-strong">{{ props.job.description }}</span>
     </div>
 
     <div class="flex mt-6 text-blue-lt text-xs">
       <button v-for="(tag, ndx) in props.job.tags" :key="ndx">
-        {{ `#${tag.replace(' ', '')}` }}
+        {{ `#${tag}` }}
       </button>
     </div>
   </button>
 </template>
 
 <script setup lang="ts">
-import { type Job } from '@/types'
+import { type Company, type Job, type Skill } from '@shared/pack'
 // test typings
 
 interface Props {
-  job: Job
+  job: Job<Skill, Company>
 }
 
 const props = defineProps<Props>()

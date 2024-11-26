@@ -19,7 +19,7 @@ export const enum Gender {
 }
 
 export const enum JobStatus {
-  OPEN = 'open',
+  ACTIVE = 'active',
   DRAFT = 'draft',
   CLOSED = 'closed'
 }
