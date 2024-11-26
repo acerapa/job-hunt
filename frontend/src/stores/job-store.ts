@@ -1,8 +1,16 @@
-import { type Applicant, ApplicantStatus, type Job } from '@/types'
+import { api, Method } from '@/api'
+import { type Applicant, ApplicantStatus } from '@/types'
+import type { Address, Job } from '@shared/pack'
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 
 export const useJobStore = defineStore('job', function () {
+  const createJob = async (job: Partial<Job<Address>>, company_id: number) => {
+    const res = await api(`users/company/${company_id}/jobs/create`, Method.POST, job)
+
+    return res.status
+  }
+
   const jobs = ref<Job[]>([
     {
       title: 'PHP Developer',
@@ -92,6 +100,7 @@ export const useJobStore = defineStore('job', function () {
 
   return {
     jobs,
-    applicants
+    applicants,
+    createJob
   }
 })

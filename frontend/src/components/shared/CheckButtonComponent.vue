@@ -8,11 +8,11 @@
       :value="props.value"
       class="peer top-0 absolute z-0 invisible"
     />
-    <div class="font-bold px-2.5 py-1.5">
+    <div class="font-bold px-2 py-1">
       <p class="bg-transparent text-transparent">{{ props.label }}</p>
     </div>
     <div
-      class="top-0 absolute text-nowrap text-green-bright peer-checked:bg-green-bright peer-checked:border-green-bright peer-checked:text-white font-bold px-2.5 py-1.5 rounded-md border border-gray-strong"
+      class="top-0 absolute text-nowrap text-green-bright peer-checked:bg-green-bright peer-checked:border-green-bright peer-checked:text-white text-sm font-bold px-2 py-1 rounded-md border border-gray-strong"
     >
       {{ props.label }}
     </div>

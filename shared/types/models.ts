@@ -65,7 +65,8 @@ export interface Job<
   Company = Object,
   Shift = Object,
   Application = Object,
-  Tag = Object
+  Tag = Object,
+  Address = Object
 > {
   id: number
   company_id?: number
@@ -81,11 +82,13 @@ export interface Job<
   available_shifts: Shift[]
   is_flex: boolean
   skills?: Skill[]
+  same_address: boolean
   applications?: Application[]
   responsibilities: string
   qualifications: string
   what_we_offer: string
   application_url: string
+  address?: Address
   others: string
   tags?: Tag[]
   company: Company

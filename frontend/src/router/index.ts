@@ -11,9 +11,4 @@ const router = createRouter({
   routes: [...commonRoutes, ...authRoutes, ...jobHunterRoutes, ...jobProviderRoutes]
 })
 
-// TODO: revise this code here
-// router.beforeEach(async (to, from, next) => {
-//   await registrationGuard(to, from, next)
-// })
-
 export default router

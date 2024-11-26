@@ -4,7 +4,7 @@ import { defineStore } from 'pinia'
 
 export const useCompanyStore = defineStore('company', () => {
   const registerCompany = async (
-    company: Partial<Company>,
+    company: { company: Partial<Company>; address: Partial<Address> },
     user_id: number
   ): Promise<ApiResponse> => {
     return await authenticatedApi(`users/${user_id}/company/register`, Method.POST, company)

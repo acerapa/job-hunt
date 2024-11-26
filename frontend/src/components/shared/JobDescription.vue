@@ -21,10 +21,10 @@
       </button>
     </div>
     <div class="px-2 mt-3 flex flex-col gap-3">
-      <div class="flex gap-2 items-center">
+      <div class="flex gap-2 items-center" v-if="stringAddress">
         <img src="@/assets/icons/map-pin.png" alt="map-pin.png" />
         <span class="text-xs text-gray-strong">
-          Tech Solutions Inc., 1234 Technology Way, San Francisco, CA 94103, USA
+          {{ stringAddress }}
         </span>
       </div>
       <div class="flex gap-2 items-center" v-if="props.job.work_type && props.job.work_type.length">
@@ -42,9 +42,9 @@
           {{ props.job.work_setup.map((setup) => WorkSetupMap[setup].text).join(', ') }}
         </span>
       </div>
-      <div class="flex gap-2 items-center">
+      <div class="flex gap-2 items-center" v-if="props.job.salary_range">
         <img src="@/assets/icons/money-bag.png" alt="money-bag.png" />
-        <span class="text-xs text-gray-strong">30k to 60k</span>
+        <span class="text-xs text-gray-strong">{{ props.job.salary_range }}</span>
       </div>
     </div>
     <div class="mt-10">
@@ -114,7 +114,7 @@ import {
 } from '@shared/pack'
 import { useRouter } from 'vue-router'
 import { JobDescriptionState } from '@/const/enum'
-import { onMounted, ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { useAuthStore } from '@/stores/auth-store'
 
 interface Props {
@@ -148,5 +148,19 @@ onMounted(async () => {
       currentCompany.value = authUser.value?.company
     }
   }
+})
+
+const stringAddress = computed(() => {
+  let address = ''
+  if (props.job && props.job.address) {
+    const addressValues = Object.values(props.job.address)
+    if (addressValues.length > 6) {
+      address = Object.values(props.job.address).slice(0, -2).join(', ')
+    } else {
+      address = Object.values(props.job.address).join(', ')
+    }
+  }
+
+  return address
 })
 </script>

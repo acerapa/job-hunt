@@ -30,7 +30,7 @@ export const UserUpdateSchema = z.object({
   first_name: z.string().min(1, 'First name is required').optional(),
   last_name: z.string().min(1, 'Last name is required').optional(),
   type: z.number().optional(),
-  gender: z.number().max(2).min(1).optional(),
+  gender: z.number().max(2).min(1).nullable().optional(),
   password: z.string().min(6, 'Password must have atleast 6 characters').optional(),
   phone: z.string().min(1, 'Contact number name is required').optional()
 })

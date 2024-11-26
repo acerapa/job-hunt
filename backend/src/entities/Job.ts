@@ -15,12 +15,16 @@ import { Tag } from './Tag'
 import { Skill } from './Skill'
 import { Shift } from './Shift'
 import { Company } from './Company'
+import { Address } from './Address'
 import { Application } from './Application'
 import { JobToSkill } from './junctions/JobToSkill'
 import { JobToTag } from './junctions/JobToTag'
 import { JobToShift } from './junctions/JobToShift'
 @Entity('jobs')
-export class Job extends BaseEntity implements IJob<Skill, Company, Shift, Application, Tag> {
+export class Job
+  extends BaseEntity
+  implements IJob<Skill, Company, Shift, Application, Tag, Address>
+{
   @PrimaryGeneratedColumn()
   id: number
 
@@ -70,6 +74,9 @@ export class Job extends BaseEntity implements IJob<Skill, Company, Shift, Appli
   })
   show_salary_range: boolean
 
+  @Column({ default: false })
+  same_address: boolean
+
   @Column()
   responsibilities: string
 
@@ -79,10 +86,10 @@ export class Job extends BaseEntity implements IJob<Skill, Company, Shift, Appli
   @Column()
   what_we_offer: string
 
-  @Column()
+  @Column({ nullable: true })
   application_url: string
 
-  @Column()
+  @Column({ nullable: true })
   others: string
 
   @ManyToOne(() => Company, (company) => company.jobs)
@@ -107,6 +114,9 @@ export class Job extends BaseEntity implements IJob<Skill, Company, Shift, Appli
 
   @OneToMany(() => Application, (application) => application.job)
   applications: Application[]
+
+  @ManyToOne(() => Address)
+  address: Address
 
   @AfterLoad()
   populateProperties() {
