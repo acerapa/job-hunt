@@ -14,6 +14,7 @@ import { CompanyType, type Company as ICompany } from '@shared/pack'
 import { Job } from './Job'
 import { User } from './User'
 import { Address } from './Address'
+import { Industry } from './Industry'
 
 @Entity('companies')
 export class Company extends BaseEntity implements ICompany<User, Job> {
@@ -32,10 +33,9 @@ export class Company extends BaseEntity implements ICompany<User, Job> {
   @Column({ nullable: true })
   website: string
 
-  @Column({
-    nullable: true
-  })
-  industry: string
+  @ManyToOne(() => Industry, (industry) => industry.companies)
+  @JoinColumn({ name: 'industry_id' })
+  industry: Industry
 
   @Column({
     comment: 'Refers to the name of the comany'
@@ -56,6 +56,9 @@ export class Company extends BaseEntity implements ICompany<User, Job> {
 
   @Column({ nullable: true })
   employee_range: string
+
+  @Column({ nullable: true })
+  ratings: number
 
   @ManyToOne(() => Address)
   address: Address

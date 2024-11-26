@@ -52,7 +52,6 @@ import LoadingComponent from '@/components/shared/LoadingComponent.vue'
 import { useAuthStore } from '@/stores/auth-store'
 import { useUserStore } from '@/stores/user-store'
 
-// TODO: If the user is not yet finish setting up this info, well redirect them here to finish this setups.
 const isLoading = ref<boolean>(false)
 
 const type = ref<UserType>()

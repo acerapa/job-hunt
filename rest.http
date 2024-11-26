@@ -47,7 +47,7 @@ Content-Type: application/json
 Accept: application/json
 
 {
-  "usercred": "raven",
+  "usercred": "provider",
   "password": "password"
 }
 
@@ -58,7 +58,7 @@ GET http://localhost:3000/api/company/all
 
 # [ Register Company ]
 ###
-POST http://localhost:3000/api/company/register
+POST http://localhost:3000/api/users/1/company/register
 Accept: application/json
 Content-Type: application/json
 
@@ -73,3 +73,15 @@ GET http://localhost:3000/api/auth/authenticated
 # Test signout
 ###
 GET http://localhost:3000/api/auth/sign-out
+
+
+#Test Create job endpoint
+###
+POST http://localhost:3000/api/users/company/1/jobs/create
+Accept: application/json
+Content-Type: application/json
+
+{
+  "job": {},
+  "address": {}
+}

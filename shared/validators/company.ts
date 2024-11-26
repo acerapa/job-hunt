@@ -15,9 +15,8 @@ export const CompanySchema = z.object({
 
 export const CompanyUpdateSchema = CompanySchema.partial()
 
-export const CombinedCreateCompanyAndRedSchema = z.object({
+export const CompanyCreateSchema = z.object({
   company: CompanySchema,
-  rep: CompanyRepSchema,
   address: AddressSchema
 })
 

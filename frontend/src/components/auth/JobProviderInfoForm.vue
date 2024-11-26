@@ -109,8 +109,8 @@
               placeholder="Company name *"
               label-css="text-sm font-medium"
               :error-message="modelErrors.name"
-              v-model="companyModel.name"
-              @input="setupErrors('name', CompanySchema.shape.name, companyModel.name)"
+              v-model="companyModel.company.name"
+              @input="setupErrors('name', CompanySchema.shape.name, companyModel.company.name)"
             />
             <InputComponent
               type="text"
@@ -121,8 +121,10 @@
               placeholder="Website"
               label-css="text-sm font-medium"
               :error-message="modelErrors.website"
-              v-model="companyModel.website"
-              @input="setupErrors('website', CompanySchema.shape.website, companyModel.website)"
+              v-model="companyModel.company.website"
+              @input="
+                setupErrors('website', CompanySchema.shape.website, companyModel.company.website)
+              "
             />
           </div>
           <InputComponent
@@ -135,9 +137,13 @@
             label-css="text-sm font-medium"
             placeholder="Company description (Description, site, vision, mission, etc) *"
             :error-message="modelErrors.description"
-            v-model="companyModel.description"
+            v-model="companyModel.company.description"
             @input="
-              setupErrors('description', CompanySchema.shape.description, companyModel.description)
+              setupErrors(
+                'description',
+                CompanySchema.shape.description,
+                companyModel.company.description
+              )
             "
           />
         </div>
@@ -147,7 +153,7 @@
         <AddressComponent
           :prefix="companyAddressPrefix"
           :model-errors="modelErrors"
-          v-model="companyAddress"
+          v-model="companyModel.address"
           @on-change="setupErrors"
           class="[&>div]:gap-6 flex flex-col gap-5"
         />
@@ -200,7 +206,7 @@ import { useAuthStore } from '@/stores/auth-store'
 const router = useRouter()
 const userStore = useUserStore()
 const authStore = useAuthStore()
-const authUser = ref<User<Profile> | null>()
+const authUser = ref<User<Profile, Company> | null>()
 const companyStore = useCompanyStore()
 
 const isLoading = defineModel<boolean>()
@@ -224,13 +230,19 @@ const RequiredUserInfoSchema = UserUpdateSchema.extend({
   first_name: z.string().min(1, 'First name is required'),
   last_name: z.string().min(1, 'Last name is required'),
   email: z.string().email(),
-  phone: z.string().min(1, 'Contact number is required')
+  phone: z.string().min(1, 'Contact number is required'),
+  gender: z.number().nullable()
 })
 
 const userModel = ref<Partial<User>>({})
 const profileAddress = ref<Partial<Address>>({})
-const companyAddress = ref<Partial<Address>>({})
-const companyModel = ref<Partial<Company>>({})
+const companyModel = ref<{
+  company: Partial<Company>
+  address: Partial<Address>
+}>({
+  company: {},
+  address: {}
+})
 
 const onSubmit = async () => {
   let isValid = isValidModelAndAddress(
@@ -242,9 +254,9 @@ const onSubmit = async () => {
   )
 
   isValid = isValidModelAndAddress(
-    companyModel.value,
+    companyModel.value.company,
     CompanySchema,
-    companyAddress.value,
+    companyModel.value.address,
     AddressSchema,
     companyAddressPrefix
   )
@@ -256,6 +268,12 @@ const onSubmit = async () => {
   isLoading.value = true
   if (authUser.value) {
     const userUpdateRes = await userStore.updateUser(userModel.value, authUser.value.id)
+
+    // update profile address
+    if (authUser.value.profile) {
+      await userStore.updateProfileAddress(profileAddress.value, authUser.value.profile.id)
+    }
+
     if (userUpdateRes.status == 200) {
       const companyCreateRes = await companyStore.registerCompany(
         companyModel.value,
@@ -323,7 +341,10 @@ onMounted(async () => {
     }
 
     if (authUser.value.company) {
-      companyModel.value = authUser.value.company
+      companyModel.value.company = authUser.value.company
+      if (authUser.value.company.address) {
+        companyModel.value.address = authUser.value.company.address
+      }
     }
   }
 })

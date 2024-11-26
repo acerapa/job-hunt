@@ -1,4 +1,4 @@
-import { ApplicationStatus, CompanyType, Gender, UserType, WorkSetup, WorkType } from '.'
+import { ApplicationStatus, CompanyType, Gender, JobStatus, UserType, WorkSetup, WorkType } from '.'
 import { SkillType } from '.'
 
 export interface User<Profile = Object, Company = Object> {
@@ -54,7 +54,8 @@ export interface Company<User = Object, Job = Object> {
   address?: Address
   address_id?: number
   jobs?: Job[]
-  industry: string
+  ratings: number
+  industry: Industry
   created_at: Date
   updated_at: Date
 }
@@ -64,25 +65,30 @@ export interface Job<
   Company = Object,
   Shift = Object,
   Application = Object,
-  Tag = Object
+  Tag = Object,
+  Address = Object
 > {
   id: number
   company_id?: number
   title: string
   description: string
   salary_range: string
+  show_salary_range: boolean
   posted_on: Date
+  status: JobStatus
   closing_date: Date
-  work_setup: WorkSetup
-  work_type: WorkType
+  work_setup: WorkSetup[]
+  work_type: WorkType[]
   available_shifts: Shift[]
   is_flex: boolean
   skills?: Skill[]
+  same_address: boolean
   applications?: Application[]
   responsibilities: string
   qualifications: string
   what_we_offer: string
   application_url: string
+  address?: Address
   others: string
   tags?: Tag[]
   company: Company
@@ -133,6 +139,14 @@ export interface Like {
   id: number
   user_id: number
   job_id: number
+  created_at: Date
+  updated_at: Date
+}
+
+export interface Industry<Company = Object> {
+  id: number
+  name: string
+  companies?: Company[]
   created_at: Date
   updated_at: Date
 }

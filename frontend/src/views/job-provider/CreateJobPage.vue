@@ -25,8 +25,16 @@
         </div>
 
         <!-- step 1 -->
-        <FormStep1 v-if="step === Step.STEP1" />
-        <FormStep2 v-if="step === Step.STEP2" />
+        <FormStep1
+          v-if="step === Step.STEP1"
+          v-model="jobModel"
+          v-model:model-errors="modelErrors"
+        />
+        <FormStep2
+          v-if="step === Step.STEP2"
+          v-model="jobModel"
+          v-model:model-errors="modelErrors"
+        />
         <!-- step 2 -->
         <div class="step-2 flex flex-col gap-3"></div>
         <div class="flex gap-3 justify-center sticky bottom-0 bg-white py-3">
@@ -39,7 +47,7 @@
       </div>
     </div>
     <div class="h-full max-h-[calc(100vh_-_134px)] overflow-y-auto thin-scrollbar flex-1">
-      <JobDescription :job="job" />
+      <JobDescription :job="jobModel" :state="JobDescriptionState.EDITING" />
     </div>
   </div>
 </template>
@@ -48,13 +56,35 @@
 import JobDescription from '@/components/shared/JobDescription.vue'
 import FormStep1 from '@/components/job-creation/FormStep1.vue'
 import FormStep2 from '@/components/job-creation/FormStep2.vue'
+import { onMounted, ref } from 'vue'
+import {
+  JobStatus,
+  type Address,
+  type Company,
+  type Job,
+  type Profile,
+  type User
+} from '@shared/pack'
+import { JobDescriptionState } from '@/const/enum'
 import { useJobStore } from '@/stores/job-store'
-import { ref } from 'vue'
+import { useAuthStore } from '@/stores/auth-store'
 
 enum Step {
   STEP1 = 1,
   STEP2 = 2
 }
+
+const jobStore = useJobStore()
+const authStore = useAuthStore()
+
+const modelErrors = ref<Partial<Job & Address>>({})
+const authUser = ref<User<Profile, Company> | null>(null)
+const jobModel = ref<Partial<Job<Address>>>({
+  work_setup: [],
+  work_type: [],
+  address: {},
+  status: JobStatus.OPEN
+})
 
 const step = ref<Step>(Step.STEP1)
 
@@ -66,13 +96,18 @@ const onBack = () => {
   step.value = Step.STEP1
 }
 
-const onSubmit = () => {
-  console.log('submit')
+const onSubmit = async () => {
+  if (authUser.value && authUser.value.company) {
+    await jobStore.createJob(jobModel.value, authUser.value.company.id)
+  }
+
+  // TODO: Upon receiving error when creating show a toast message
+  // might need to create your own toast component
 }
 
-const jobStore = useJobStore()
-
-const job = jobStore.jobs[0]
+onMounted(async () => {
+  authUser.value = await authStore.getAuthUser()
+})
 </script>
 
 <style scoped>

@@ -2,7 +2,6 @@ import { useAuthStore } from '@/stores/auth-store'
 import { UserType } from '@shared/pack'
 import type { NavigationGuardNext, RouteLocationNormalized } from 'vue-router'
 
-// TODO: Create a new guard here
 export const userInfoGuard = async (
   to: RouteLocationNormalized,
   from: RouteLocationNormalized,

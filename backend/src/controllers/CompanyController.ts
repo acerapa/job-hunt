@@ -15,7 +15,12 @@ export const register = async (req: Request, res: Response) => {
     })
 
     if (user) {
-      const company = Company.create(req.validated)
+      // create address
+      const address = Address.create(req.validated.address)
+      await address.save()
+
+      const company = Company.create(req.validated.company)
+      company.address = address
       await company.save()
 
       user.company = company

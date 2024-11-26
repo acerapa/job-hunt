@@ -10,9 +10,12 @@
             class="w-20 h-20 rounded-full border-2 border-white bg-gray-700"
           />
           <div class="flex flex-col gap-0">
-            <p class="font-semibold text-base">Harvey Aparece</p>
-            <a href="#" class="text-sm font-semibold text-pale-gray"
-              >&#128279; &lcub;&lcub; website_link &rcub;&rcub;</a
+            <p class="font-semibold text-base">{{ companyModel.name }}</p>
+            <a
+              :href="companyModel.website"
+              target="_blank"
+              class="text-sm font-semibold text-pale-gray"
+              >&#128279; {{ companyModel.website }}</a
             >
           </div>
         </div>
