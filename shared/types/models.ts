@@ -66,7 +66,8 @@ export interface Job<
   Shift = Object,
   Application = Object,
   Tag = Object,
-  Address = Object
+  Address = Object,
+  Question = Object
 > {
   id: number
   company_id?: number
@@ -92,6 +93,7 @@ export interface Job<
   others: string
   tags?: Tag[]
   company: Company
+  questions?: Question[]
   created_at?: Date
   updated_at?: Date
 }
@@ -116,12 +118,13 @@ export interface Shift<Job = Object> {
   updated_at?: Date
 }
 
-export interface Application<Job = Object, Profile = Object> {
+export interface Application<Job = Object, Profile = Object, Answer = Object> {
   id: number
   profile_id?: number
   profile: Profile
   job_id?: number
   job: Job
+  answers?: Answer[]
   status: ApplicationStatus
   created_at?: Date
   updated_at?: Date
@@ -131,22 +134,42 @@ export interface Tag<Job = Object> {
   id: number
   name: string
   jobs: Job[]
-  created_at: Date
-  updated_at: Date
+  created_at?: Date
+  updated_at?: Date
 }
 
 export interface Like {
   id: number
   user_id: number
   job_id: number
-  created_at: Date
-  updated_at: Date
+  created_at?: Date
+  updated_at?: Date
 }
 
 export interface Industry<Company = Object> {
   id: number
   name: string
   companies?: Company[]
-  created_at: Date
-  updated_at: Date
+  created_at?: Date
+  updated_at?: Date
+}
+
+export interface Question<Job = Object, Answer = Object> {
+  id: number
+  question: string
+  is_required: boolean
+  job_id?: number
+  job?: Job
+  answers?: Answer[]
+  created_at?: Date
+  updated_at?: Date
+}
+
+export interface Answer<Question = Object> {
+  id: number
+  answer: string
+  question_id?: number
+  question: Question
+  created_at?: Date
+  updated_at?: Date
 }

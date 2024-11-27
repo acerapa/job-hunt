@@ -38,6 +38,9 @@ export const getJobs = async (req: Request, res: Response) => {
         company: {
           id: parseInt(req.params.company_id)
         }
+      },
+      relations: {
+        applications: true
       }
     })
 
@@ -53,11 +56,30 @@ export const getAllJobs = async (req: Request, res: Response) => {
   try {
     const jobs = await Job.find({
       relations: {
-        company: true
+        company: true,
+        applications: true
       }
     })
 
     res.sendSuccess({ data: jobs, message: 'all jobs' })
+  } catch (error) {
+    const { name, message, stack } = error as Error
+    res.sendError({ message: `${name} ${message} ${stack}` })
+  }
+}
+
+export const getJobById = async (req: Request, res: Response) => {
+  try {
+    const job = await Job.findOne({
+      where: {
+        id: parseInt(req.params.job_id)
+      },
+      relations: {
+        company: true
+      }
+    })
+
+    res.sendSuccess({ data: job, message: 'Job fetched successfully!' })
   } catch (error) {
     const { name, message, stack } = error as Error
     res.sendError({ message: `${name} ${message} ${stack}` })

@@ -20,10 +20,11 @@ import { Application } from './Application'
 import { JobToSkill } from './junctions/JobToSkill'
 import { JobToTag } from './junctions/JobToTag'
 import { JobToShift } from './junctions/JobToShift'
+import { Question } from './Question'
 @Entity('jobs')
 export class Job
   extends BaseEntity
-  implements IJob<Skill, Company, Shift, Application, Tag, Address>
+  implements IJob<Skill, Company, Shift, Application, Tag, Address, Question>
 {
   @PrimaryGeneratedColumn()
   id: number
@@ -53,14 +54,12 @@ export class Job
   closing_date: Date
 
   @Column({
-    type: 'json',
-    enum: [WorkSetup.REMOTE, WorkSetup.HYBRID, WorkSetup.ONSITE]
+    type: 'json'
   })
   work_setup: WorkSetup[]
 
   @Column({
-    type: 'json',
-    enum: [WorkType.FULLTIME, WorkType.PARTTIME, WorkType.INTERNSHIP]
+    type: 'json'
   })
   work_type: WorkType[]
 
@@ -117,6 +116,9 @@ export class Job
 
   @ManyToOne(() => Address)
   address: Address
+
+  @OneToMany(() => Question, (question) => question.job)
+  questions: Question[]
 
   @AfterLoad()
   populateProperties() {

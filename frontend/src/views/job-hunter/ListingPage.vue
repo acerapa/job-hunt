@@ -21,12 +21,25 @@
           :key="ndx"
           :job="job"
           class="w-full"
+          :class="selectedJob && selectedJob.id == job.id ? 'border-green-bright' : ''"
           @click="selectedJob = job"
         />
       </div>
     </div>
     <JobDescription v-if="selectedJob" :job="selectedJob" class="job-description thin-scrollbar" />
   </div>
+
+  <!-- // TODO: -->
+  <code>
+    <input type="checkbox" disabled />
+    <code>Need to implement the filters</code>
+    <br />
+    <input type="checkbox" disabled />
+    <code>Need to implement infinite scrolling</code>
+    <br />
+    <input type="checkbox" disabled />
+    <code>Need to implement search</code>
+  </code>
 </template>
 
 <script setup lang="ts">
@@ -45,6 +58,11 @@ const data = computed(() => jobStore.publishedJobs)
 
 onMounted(async () => {
   await jobStore.fetchPublishedJobs()
+
+  // set the first on the list as selected
+  if (data.value.length) {
+    selectedJob.value = data.value[0]
+  }
 })
 </script>
 

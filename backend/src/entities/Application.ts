@@ -5,12 +5,14 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn
 } from 'typeorm'
 import { ApplicationStatus, Application as IApplication } from '@shared/pack'
 import { Job } from './Job'
 import { Profile } from './Profile'
+import { ApplicationToAnswer } from './junctions/ApplicationToAnswer'
 
 @Entity('applications')
 export class Application extends BaseEntity implements IApplication<Job, Profile> {
@@ -36,6 +38,9 @@ export class Application extends BaseEntity implements IApplication<Job, Profile
   @ManyToOne(() => Job, (job) => job.applications)
   @JoinColumn({ name: 'job_id' })
   job: Job
+
+  @OneToMany(() => ApplicationToAnswer, (applicationToAnswer) => applicationToAnswer.application)
+  application_answers: ApplicationToAnswer[]
 
   @CreateDateColumn()
   created_at: Date
