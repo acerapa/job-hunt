@@ -2,8 +2,10 @@
   <div class="step-1 flex flex-col gap-5" v-if="jobModel && modelErrors">
     <InputComponent
       type="text"
+      class="w-fit"
       name="title"
       label="Job Title"
+      input-class="text-sm"
       label-css="font-medium"
       v-model="jobModel.title"
       placeholder="Enter job title"
@@ -37,10 +39,10 @@
       <div class="px-3 mt-4 flex flex-col gap-2">
         <InputComponent
           type="checkbox"
-          input-class="!w-fit"
           id="flexible-hours"
           name="flexible-hours"
           label="Flexible hours"
+          input-class="!w-fit text-sm"
           class="flex items-center !flex-row-reverse justify-end gap-2"
         />
 
@@ -96,12 +98,12 @@
       >
         <InputComponent
           type="checkbox"
-          input-class="!w-fit"
           id="same-as-account"
           name="same_as_account"
           label="Same as account"
-          v-model="jobModel.same_address"
           @change="onSameAsAccount"
+          input-class="!w-fit text-sm"
+          v-model="jobModel.same_address"
           class="flex items-center !flex-row-reverse justify-end gap-2"
         />
         <div>
@@ -123,6 +125,7 @@
         name="show-salary"
         label="Show salary"
         v-model="showSalary"
+        input-class="!w-fit text-sm"
         class="flex items-center !flex-row-reverse justify-end gap-2 [&>input]:w-fit mt-1"
       />
       <div class="flex gap-3">
@@ -133,6 +136,7 @@
           v-model="min"
           class="flex-1"
           label-css="text-sm"
+          input-class="text-sm"
           placeholder="Enter min"
         />
         <InputComponent
@@ -142,6 +146,7 @@
           type="number"
           class="flex-1"
           label-css="text-sm"
+          input-class="text-sm"
           placeholder="Enter max"
         />
       </div>
@@ -150,6 +155,7 @@
       type="text"
       id="application_url"
       name="application_url"
+      input-class="text-sm"
       label="Application URL"
       label-css="font-medium"
       v-model="jobModel.application_url"
@@ -162,6 +168,7 @@
       <InputComponent
         type="textarea"
         name="description"
+        input-class="text-sm"
         v-model="jobModel.description"
         placeholder="Enter job description"
         :error-message="modelErrors.description"
@@ -175,6 +182,7 @@ import InputComponent from '@/components/shared/InputComponent.vue'
 import AddressComponent from '../shared/AddressComponent.vue'
 import CheckButtonComponent from '@/components/shared/CheckButtonComponent.vue'
 import {
+  type Skill,
   WorkSetup,
   WorkType,
   type Address,
@@ -187,7 +195,7 @@ import { onMounted, ref, watch } from 'vue'
 import { useAuthStore } from '@/stores/auth-store'
 
 const showSalary = ref<boolean>(true)
-const jobModel = defineModel<Partial<Job<Address>>>()
+const jobModel = defineModel<Partial<Job<Skill, Partial<Address>>>>()
 const modelErrors = defineModel<Partial<Job & Address>>('modelErrors')
 const min = ref<number>(0)
 const max = ref<number>(0)
@@ -214,6 +222,20 @@ watch(
   () => {
     if (jobModel.value) {
       jobModel.value.salary_range = `${min.value}k - ${max.value}k`
+    }
+  }
+)
+
+watch(
+  () => jobModel.value?.salary_range,
+  () => {
+    if (jobModel.value && jobModel.value.salary_range) {
+      const salaryRange = jobModel.value.salary_range.replace('k', '').replace('k', '').split(' - ')
+
+      if (salaryRange.length === 2) {
+        min.value = parseInt(salaryRange[0])
+        max.value = parseInt(salaryRange[1])
+      }
     }
   }
 )

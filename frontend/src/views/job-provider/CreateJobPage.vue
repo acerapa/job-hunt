@@ -1,59 +1,82 @@
 <template>
+  <ModelComponent
+    title="Add Question"
+    v-model="showQuestionModal"
+    v-if="showQuestionModal"
+    @save="onSaveQuestion"
+  >
+    <div class="flex flex-col gap-3 min-w-[400px]">
+      <InputComponent
+        name="question"
+        id="question"
+        type="text"
+        label="Question"
+        placeholder="Question"
+        v-model="question.question"
+      />
+      <InputComponent
+        type="checkbox"
+        name="required"
+        id="required"
+        label="Is Required"
+        input-class="!w-4"
+        v-model="question.is_required"
+        class="flex !flex-row-reverse gap-3 justify-end"
+      />
+    </div>
+  </ModelComponent>
+
   <div class="flex gap-4">
-    <div class="max-w-[550px] w-full h-full max-h-[calc(100vh_-_134px)] flex flex-col gap-4">
+    <div class="w-full h-full flex flex-col gap-4">
       <div class="wrap text-white !bg-green-bright sticky top-0">
         <p class="text-2xl font-semibold">Create Job Posting</p>
       </div>
-      <div class="wrap !py-0 flex flex-col gap-3 h-full overflow-y-auto thin-scrollbar">
-        <div
-          class="flex pt-4 gap-3 pb-3 justify-center items-center font-bold sticky top-0 bg-white z-10"
-        >
-          <button
-            class="step-item"
-            @click="step = Step.STEP1"
-            :class="step === Step.STEP1 ? 'active-item' : ''"
-          >
-            1
-          </button>
-          <button
-            class="step-item"
-            @click="step = Step.STEP2"
-            :class="step === Step.STEP2 ? 'active-item' : ''"
-          >
-            2
-          </button>
+      <div class="wrap flex flex-col gap-3 h-full overflow-y-auto thin-scrollbar">
+        <FormStep1 v-model="jobModel" v-model:model-errors="modelErrors" />
+        <FormStep2 v-model="jobModel" v-model:model-errors="modelErrors" />
+        <button class="btn w-fit" @click="showQuestionModal = true">Add questions</button>
+
+        <div class="flex flex-col gap-3">
+          <div v-for="(q, ndx) in questions" :key="ndx" class="question-list">
+            <p>{{ q.question }}</p>
+            <p
+              class="w-fit px-2 rounded-md font-bold text-sm text-green-bright border-2 border-green-bright"
+              v-if="q.is_required"
+            >
+              Required
+            </p>
+            <div class="question-actions">
+              <button type="button" class="text-blue-500">&#128394;</button>
+              <button type="button" class="text-red-500">&#x2A09;</button>
+            </div>
+          </div>
         </div>
 
-        <!-- step 1 -->
-        <FormStep1
-          v-if="step === Step.STEP1"
-          v-model="jobModel"
-          v-model:model-errors="modelErrors"
-        />
-        <FormStep2
-          v-if="step === Step.STEP2"
-          v-model="jobModel"
-          v-model:model-errors="modelErrors"
-        />
-        <!-- step 2 -->
-        <div class="step-2 flex flex-col gap-3"></div>
         <div class="flex gap-3 justify-center sticky bottom-0 bg-white py-3">
-          <button class="btn-outline" v-if="step === Step.STEP1">Cancel</button>
-          <button class="btn-outline" v-if="step === Step.STEP2" @click="onBack">Back</button>
+          <button class="btn-outline" @click="onCancel">Cancel</button>
           <button class="btn-outline">Save as draft</button>
-          <button class="btn" @click="onContinue" v-if="step !== Step.STEP2">Continue</button>
-          <button class="btn" @click="onSubmit" v-if="step !== Step.STEP1">Save</button>
+          <button class="btn" @click="onSubmit">Save</button>
         </div>
       </div>
     </div>
-    <div class="h-full max-h-[calc(100vh_-_134px)] overflow-y-auto thin-scrollbar flex-1">
-      <JobDescription :job="jobModel" :state="JobDescriptionState.EDITING" />
-    </div>
   </div>
+
+  <!-- // TODO: -->
+  <code class="pb-5">
+    Here are the remaing todos for this page:
+    <br />
+    <input type="checkbox" disabled /> Add validation to the form
+    <br />
+    <input type="checkbox" disabled /> Add inputs to add questions to be asnwered by applicants
+    <br />
+    <input type="checkbox" disabled /> Need to rethink of removing the preview while creating the
+    job
+  </code>
 </template>
 
 <script setup lang="ts">
-import JobDescription from '@/components/shared/JobDescription.vue'
+import InputComponent from '@/components/shared/InputComponent.vue'
+import ModelComponent from '@/components/shared/ModelComponent.vue'
 import FormStep1 from '@/components/job-creation/FormStep1.vue'
 import FormStep2 from '@/components/job-creation/FormStep2.vue'
 import { onMounted, ref } from 'vue'
@@ -63,50 +86,75 @@ import {
   type Company,
   type Job,
   type Profile,
+  type Question,
+  type Skill,
   type User
 } from '@shared/pack'
-import { JobDescriptionState } from '@/const/enum'
 import { useJobStore } from '@/stores/job-store'
 import { useAuthStore } from '@/stores/auth-store'
+import { useRoute, useRouter } from 'vue-router'
 
-enum Step {
-  STEP1 = 1,
-  STEP2 = 2
-}
-
+const route = useRoute()
+const router = useRouter()
 const jobStore = useJobStore()
 const authStore = useAuthStore()
 
+const showQuestionModal = ref(false)
+const questions = ref<Partial<Question>[]>([])
+const question = ref<Partial<Question>>({})
 const modelErrors = ref<Partial<Job & Address>>({})
 const authUser = ref<User<Profile, Company> | null>(null)
-const jobModel = ref<Partial<Job<Address>>>({
+const jobModel = ref<Partial<Job<Skill, Partial<Address>>>>({
   work_setup: [],
   work_type: [],
   address: {},
-  status: JobStatus.OPEN
+  status: JobStatus.ACTIVE
 })
 
-const step = ref<Step>(Step.STEP1)
-
-const onContinue = () => {
-  step.value = Step.STEP2
-}
-
-const onBack = () => {
-  step.value = Step.STEP1
+const onCancel = () => {
+  router.back()
 }
 
 const onSubmit = async () => {
+  // data modification
+  if (jobModel.value.status === JobStatus.ACTIVE) {
+    jobModel.value.posted_on = new Date()
+  }
+
   if (authUser.value && authUser.value.company) {
-    await jobStore.createJob(jobModel.value, authUser.value.company.id)
+    const res = await jobStore.createJob(jobModel.value, authUser.value.company.id)
+
+    if (res == 200) {
+      await jobStore.fetchJobs(authUser.value.company.id)
+      router.push({ name: 'provider-jobs' })
+    }
   }
 
   // TODO: Upon receiving error when creating show a toast message
   // might need to create your own toast component
 }
 
+const onSaveQuestion = () => {
+  //TODO: needs to add validations
+  questions.value.push(question.value)
+
+  // clear question model and close modal
+  question.value = {}
+  showQuestionModal.value = false
+}
+
 onMounted(async () => {
   authUser.value = await authStore.getAuthUser()
+
+  if (route.params.id) {
+    const job: Job<Skill, Address> | null = await jobStore.getJobById(
+      parseInt(route.params.id.toString())
+    )
+
+    if (job) {
+      jobModel.value = job
+    }
+  }
 })
 </script>
 
@@ -117,5 +165,21 @@ onMounted(async () => {
 
 .active-item {
   @apply !text-white !bg-main;
+}
+
+.question-list {
+  @apply flex gap-3 cursor-pointer items-center;
+}
+
+.question-actions {
+  @apply hidden gap-3 font-bold;
+}
+
+.question-list button {
+  aspect-ratio: 1;
+}
+
+.question-list:hover .question-actions {
+  @apply !flex;
 }
 </style>

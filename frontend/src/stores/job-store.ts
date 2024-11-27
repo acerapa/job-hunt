@@ -1,69 +1,13 @@
 import { api, Method } from '@/api'
 import { type Applicant, ApplicantStatus } from '@/types'
-import type { Address, Job } from '@shared/pack'
+import type { Address, ApiResponse, Application, Company, Job, Skill } from '@shared/pack'
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 
 export const useJobStore = defineStore('job', function () {
-  const createJob = async (job: Partial<Job<Address>>, company_id: number) => {
-    const res = await api(`users/company/${company_id}/jobs/create`, Method.POST, job)
-
-    return res.status
-  }
-
-  const jobs = ref<Job[]>([
-    {
-      title: 'PHP Developer',
-      company: {
-        name: 'ABC Company',
-        image:
-          'https://plus.unsplash.com/premium_photo-1663127721165-f29d5bbd3da1?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-        rating: 5,
-        address: 'Cecilia Chapman 711-2880 Nulla St. Mankato Mississippi 96522 (257) 563-7401'
-      },
-      description:
-        'Lorem ipsum dolor sit amet consectetur adipisicing elit. Eligendi, dolor pariatur sint illo quae, vitae ullam facere ipsum inventore voluptatem error! Sunt quo blanditiis porro laboriosam necessitatibus aut fuga neque.',
-      work_type: 'Full-Time',
-      exp_level: 'Entry Level',
-      work_setup: 'Remote',
-      posted_on: 'Mar 28, 2024',
-      tags: ['Software development', 'PHP', 'Python']
-    },
-    {
-      title: 'Python Developer',
-      company: {
-        name: 'ABC Company',
-        image:
-          'https://plus.unsplash.com/premium_photo-1663127721165-f29d5bbd3da1?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-        rating: 5,
-        address: 'Cecilia Chapman 711-2880 Nulla St. Mankato Mississippi 96522 (257) 563-7401'
-      },
-      description:
-        'Lorem ipsum dolor sit amet consectetur adipisicing elit. Eligendi, dolor pariatur sint illo quae, vitae ullam facere ipsum inventore voluptatem error! Sunt quo blanditiis porro laboriosam necessitatibus aut fuga neque.',
-      work_type: 'Full-Time',
-      exp_level: 'Entry Level',
-      work_setup: 'Remote',
-      posted_on: 'Mar 28, 2024',
-      tags: ['Software development', 'PHP', 'Python']
-    },
-    {
-      title: 'Java Developer',
-      company: {
-        name: 'ABC Company',
-        image:
-          'https://plus.unsplash.com/premium_photo-1663127721165-f29d5bbd3da1?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-        rating: 5,
-        address: 'Cecilia Chapman 711-2880 Nulla St. Mankato Mississippi 96522 (257) 563-7401'
-      },
-      description:
-        'Lorem ipsum dolor sit amet consectetur adipisicing elit. Eligendi, dolor pariatur sint illo quae, vitae ullam facere ipsum inventore voluptatem error! Sunt quo blanditiis porro laboriosam necessitatibus aut fuga neque.',
-      work_type: 'Full-Time',
-      exp_level: 'Entry Level',
-      work_setup: 'Remote',
-      posted_on: 'Mar 28, 2024',
-      tags: ['Software development', 'PHP', 'Python']
-    }
-  ])
+  const jobs = ref<Job<Application>[]>([])
+  const job = ref<Job<Skill, Address> | null>(null)
+  const publishedJobs = ref<Job<Skill, Company, Application>[]>([])
 
   const applicants = ref<Applicant[]>([
     {
@@ -98,9 +42,71 @@ export const useJobStore = defineStore('job', function () {
     }
   ])
 
+  const createJob = async (job: Partial<Job<Skill, Partial<Address>>>, company_id: number) => {
+    const res = await api(`users/company/${company_id}/jobs/create`, Method.POST, job)
+
+    return res.status
+  }
+
+  const fetchJobs = async (company_id: number) => {
+    const res: ApiResponse<Job<Application>[]> = await api(`users/company/${company_id}/jobs`)
+
+    if (res.status === 200) {
+      jobs.value = res.data
+    }
+  }
+
+  const getJobs = async (company_id: number): Promise<Job<Application>[]> => {
+    if (!jobs.value.length) {
+      await fetchJobs(company_id)
+    }
+
+    return jobs.value
+  }
+
+  const fetchPublishedJobs = async () => {
+    const res: ApiResponse<Job<Skill, Company, Application>[]> = await api(`published-jobs`)
+
+    if (res.status === 200) {
+      publishedJobs.value = res.data
+    }
+  }
+
+  const getPublishedJobs = async (): Promise<Job<Skill, Company, Application>[]> => {
+    if (!publishedJobs.value.length) {
+      await fetchPublishedJobs()
+    }
+
+    return publishedJobs.value
+  }
+
+  const fetchJobById = async (job_id: number) => {
+    const res: ApiResponse<Job<Skill, Address>> = await api(`users/company/jobs/${job_id}`)
+
+    if (res.status === 200) {
+      job.value = res.data
+    }
+  }
+
+  const getJobById = async (job_id: number): Promise<Job<Skill, Address> | null> => {
+    if (!job.value) {
+      await fetchJobById(job_id)
+    }
+
+    return job.value
+  }
+
   return {
     jobs,
     applicants,
-    createJob
+    publishedJobs,
+
+    getJobs,
+    createJob,
+    fetchJobs,
+    getJobById,
+    fetchJobById,
+    getPublishedJobs,
+    fetchPublishedJobs
   }
 })

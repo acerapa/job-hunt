@@ -16,11 +16,30 @@
         />
       </div>
       <div class="flex flex-col gap-4 mt-5 max-w-[450px]">
-        <JobComponent v-for="(job, ndx) in jobs" :key="ndx" :job="job" class="w-full" />
+        <JobComponent
+          v-for="(job, ndx) in data"
+          :key="ndx"
+          :job="job"
+          class="w-full"
+          :class="selectedJob && selectedJob.id == job.id ? 'border-green-bright' : ''"
+          @click="selectedJob = job"
+        />
       </div>
     </div>
-    <JobDescription :job="job" class="job-description thin-scrollbar" />
+    <JobDescription v-if="selectedJob" :job="selectedJob" class="job-description thin-scrollbar" />
   </div>
+
+  <!-- // TODO: -->
+  <code>
+    <input type="checkbox" disabled />
+    <code>Need to implement the filters</code>
+    <br />
+    <input type="checkbox" disabled />
+    <code>Need to implement infinite scrolling</code>
+    <br />
+    <input type="checkbox" disabled />
+    <code>Need to implement search</code>
+  </code>
 </template>
 
 <script setup lang="ts">
@@ -29,12 +48,22 @@ import JobDescription from '@/components/shared/JobDescription.vue'
 import InputComponent from '@/components/shared/InputComponent.vue'
 import JobComponent from '@/components/shared/JobComponent-v1.vue'
 import { useJobStore } from '@/stores/job-store'
-import type { Job } from '@/types'
+import { computed, onMounted, ref } from 'vue'
+import type { Job } from '@shared/pack'
 
+const selectedJob = ref<Job | null>(null)
 const jobStore = useJobStore()
 
-const jobs: Job[] = jobStore.jobs
-const job: Job = jobs[0]
+const data = computed(() => jobStore.publishedJobs)
+
+onMounted(async () => {
+  await jobStore.fetchPublishedJobs()
+
+  // set the first on the list as selected
+  if (data.value.length) {
+    selectedJob.value = data.value[0]
+  }
+})
 </script>
 
 <style scoped>

@@ -11,7 +11,7 @@
       <p
         class="w-7 h-7 pt-0.5 rounded-full border border-vivid-blue text-center text-vivid-blue font-bold"
       >
-        {{ props.row.hunters }}
+        {{ props.row.applications ? props.row.applications.length : 0 }}
       </p>
     </div>
     <div class="col-span-1">
@@ -19,27 +19,36 @@
         {{ StatusMap[props.row.status].text }}
       </p>
     </div>
-    <div class="col-span-1">{{ props.row.added_on.toLocaleDateString() }}</div>
+    <div class="col-span-1">
+      {{ props.row.posted_on ? new Date(props.row.posted_on).toLocaleDateString() : '' }}
+    </div>
     <div class="relative">
       <button @click="isShowMenu = true" class="col-span-1 w-fit ml-4">
         <img src="@/assets/icons/menu.png" alt="menu.png" />
       </button>
       <div
-        class="wrap shadow-lg w-fit absolute top-1/2 -left-16 z-20"
+        class="wrap shadow-lg w-fit absolute top-1/2 -left-16 z-20 flex flex-col gap-1 !px-0"
         v-if="isRowFocused && isShowMenu"
       >
-        Testing
+        <RouterLink
+          class="py-1 font-bold hover:bg-blue-50 px-4"
+          :to="{ name: 'provider-jobs-edit', params: { id: props.row.id } }"
+        >
+          Edit Job
+        </RouterLink>
+        <button class="py-1 text-red-500 font-bold hover:bg-blue-50 px-4">Close Job</button>
       </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { JobViewStatus, type JobView } from '@/types'
+import { JobStatus, type Job } from '@shared/pack'
 import { onMounted, ref } from 'vue'
+import { RouterLink } from 'vue-router'
 
 interface Props {
-  row: JobView
+  row: Job
 }
 
 const isShowMenu = ref<boolean>(false)
@@ -52,13 +61,17 @@ const updateRowState = () => {
 
 // MAP
 const StatusMap = {
-  [JobViewStatus.ACTIVE]: {
+  [JobStatus.ACTIVE]: {
     text: 'active',
     class: 'text-sm border-2 border-vibrant-green text-vibrant-green'
   },
-  [JobViewStatus.CLOSE]: {
-    text: 'close',
+  [JobStatus.DRAFT]: {
+    text: 'active',
     class: 'text-sm border-2 border-gray-strong text-gray-strong'
+  },
+  [JobStatus.CLOSED]: {
+    text: 'close',
+    class: 'text-sm border-2 border-red-strong text-red-strong'
   }
 }
 

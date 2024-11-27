@@ -20,10 +20,11 @@ import { Application } from './Application'
 import { JobToSkill } from './junctions/JobToSkill'
 import { JobToTag } from './junctions/JobToTag'
 import { JobToShift } from './junctions/JobToShift'
+import { Question } from './Question'
 @Entity('jobs')
 export class Job
   extends BaseEntity
-  implements IJob<Skill, Company, Shift, Application, Tag, Address>
+  implements IJob<Skill, Company, Shift, Application, Tag, Address, Question>
 {
   @PrimaryGeneratedColumn()
   id: number
@@ -53,14 +54,12 @@ export class Job
   closing_date: Date
 
   @Column({
-    type: 'enum',
-    enum: [WorkSetup.REMOTE, WorkSetup.HYBRID, WorkSetup.ONSITE]
+    type: 'json'
   })
   work_setup: WorkSetup[]
 
   @Column({
-    type: 'enum',
-    enum: [WorkType.FULLTIME, WorkType.PARTTIME, WorkType.INTERNSHIP]
+    type: 'json'
   })
   work_type: WorkType[]
 
@@ -118,11 +117,14 @@ export class Job
   @ManyToOne(() => Address)
   address: Address
 
+  @OneToMany(() => Question, (question) => question.job)
+  questions: Question[]
+
   @AfterLoad()
   populateProperties() {
-    this.skills = this.job_skills.map((jobToSkill) => jobToSkill.skill)
-    this.tags = this.job_tags.map((jobToTag) => jobToTag.tag)
-    this.shifts = this.job_shifts.map((jobToShift) => jobToShift.shift)
+    this.skills = this.job_skills ? this.job_skills.map((jobToSkill) => jobToSkill.skill) : []
+    this.tags = this.job_tags ? this.job_tags.map((jobToTag) => jobToTag.tag) : []
+    this.shifts = this.job_shifts ? this.job_shifts.map((jobToShift) => jobToShift.shift) : []
   }
 
   @CreateDateColumn()

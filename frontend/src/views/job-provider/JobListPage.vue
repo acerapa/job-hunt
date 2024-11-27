@@ -17,40 +17,46 @@
         </div>
       </template>
     </TableComponent>
+
+    <!-- TODOS: For the jobs overall -->
+    <code>
+      Here are the todos:
+      <br />
+      <input type="checkbox" disabled />
+      <code class="ml-1">Need to setup the applicatants for a job</code>
+      <br />
+      <input type="checkbox" disabled />
+      <code class="ml-1">Need to make the pagination, search, and menus works</code>
+    </code>
   </div>
 </template>
 
 <script setup lang="ts">
 import TableComponent from '@/components/shared/TableComponent.vue'
 import PJobListRow from '@/components/job-list/PJobListRow.vue'
-import { JobViewStatus, type JobView } from '@/types'
 import { useRouter } from 'vue-router'
+import { computed, onMounted, ref } from 'vue'
+import { useJobStore } from '@/stores/job-store'
+import type { Company, Profile, User } from '@shared/pack'
+import { useAuthStore } from '@/stores/auth-store'
 
 const router = useRouter()
-const data: JobView[] = [
-  {
-    title: 'PHP Developer',
-    hunters: 34,
-    added_on: new Date(),
-    status: JobViewStatus.ACTIVE
-  },
-  {
-    title: 'Frontend Developer',
-    hunters: 23,
-    added_on: new Date(),
-    status: JobViewStatus.ACTIVE
-  },
-  {
-    title: 'Backend Developer',
-    hunters: 4,
-    added_on: new Date(),
-    status: JobViewStatus.CLOSE
-  }
-]
+const jobStore = useJobStore()
+const authStore = useAuthStore()
+const authUser = ref<User<Profile, Company> | null>(null)
+
+const data = computed(() => jobStore.jobs)
 
 const onNew = () => {
   router.push({
     name: 'provider-jobs-create'
   })
 }
+
+onMounted(async () => {
+  authUser.value = await authStore.getAuthUser()
+  if (authUser.value && authUser.value.company) {
+    await jobStore.getJobs(authUser.value.company.id)
+  }
+})
 </script>
