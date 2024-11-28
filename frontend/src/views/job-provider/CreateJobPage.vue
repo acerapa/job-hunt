@@ -28,28 +28,41 @@
 
   <div class="flex gap-4">
     <div class="w-full h-full flex flex-col gap-4">
-      <div class="wrap text-white !bg-green-bright sticky top-0">
+      <div class="wrap text-white !bg-green-bright sticky top-0 flex justify-between items-center">
         <p class="text-2xl font-semibold">Create Job Posting</p>
+        <button class="btn-white-outline shadow shadow-white" @click="router.back()">Back</button>
       </div>
       <div class="wrap flex flex-col gap-3 h-full overflow-y-auto thin-scrollbar">
-        <FormStep1 v-model="jobModel" v-model:model-errors="modelErrors" />
-        <FormStep2 v-model="jobModel" v-model:model-errors="modelErrors" />
-        <button class="btn w-fit" @click="showQuestionModal = true">Add questions</button>
-
-        <div class="flex flex-col gap-3">
-          <div v-for="(q, ndx) in questions" :key="ndx" class="question-list">
-            <p>{{ q.question }}</p>
-            <p
-              class="w-fit px-2 rounded-md font-bold text-sm text-green-bright border-2 border-green-bright"
-              v-if="q.is_required"
-            >
-              Required
-            </p>
-            <div class="question-actions">
-              <button type="button" class="text-blue-500">&#128394;</button>
-              <button type="button" class="text-red-500">&#x2A09;</button>
+        <p class="font-bold text-lg">Job Informations</p>
+        <div class="px-3">
+          <FormStep1 v-model="jobModel" v-model:model-errors="modelErrors" />
+          <FormStep2 v-model="jobModel" v-model:model-errors="modelErrors" />
+        </div>
+        <div class="flex gap-4 items-center">
+          <p class="text-lg font-bold">Your Questions</p>
+          <button class="btn w-fit" @click="showQuestionModal = true">Add questions</button>
+        </div>
+        <div class="px-3">
+          <div class="flex flex-col gap-3" v-if="questions.length">
+            <div v-for="(q, ndx) in questions" :key="ndx" class="question-list">
+              <p>{{ q.question }}</p>
+              <p
+                class="w-fit px-2 rounded-md font-bold text-sm text-green-bright border-2 border-green-bright"
+                v-if="q.is_required"
+              >
+                Required
+              </p>
+              <div class="question-actions">
+                <button type="button" class="text-blue-500" @click="editQuestion(ndx)">
+                  &#128394;
+                </button>
+                <button type="button" class="text-red-500" @click="removeQuestion(ndx)">
+                  &#x2A09;
+                </button>
+              </div>
             </div>
           </div>
+          <p v-else class="text-center text-sm">No questions added!</p>
         </div>
 
         <div class="flex gap-3 justify-center sticky bottom-0 bg-white py-3">
@@ -100,6 +113,7 @@ const jobStore = useJobStore()
 const authStore = useAuthStore()
 
 const showQuestionModal = ref(false)
+const questionEdit = ref<boolean>(false)
 const questions = ref<Partial<Question>[]>([])
 const question = ref<Partial<Question>>({})
 const modelErrors = ref<Partial<Job & Address>>({})
@@ -121,6 +135,8 @@ const onSubmit = async () => {
     jobModel.value.posted_on = new Date()
   }
 
+  jobModel.value.questions = questions.value
+
   if (authUser.value && authUser.value.company) {
     const res = await jobStore.createJob(jobModel.value, authUser.value.company.id)
 
@@ -134,9 +150,25 @@ const onSubmit = async () => {
   // might need to create your own toast component
 }
 
+const removeQuestion = (indexed: number) => {
+  questions.value = questions.value.filter((q, i) => i !== indexed)
+}
+
+const editQuestion = (index: number) => {
+  question.value = questions.value[index]
+  showQuestionModal.value = true
+  questionEdit.value = true
+}
+
 const onSaveQuestion = () => {
   //TODO: needs to add validations
-  questions.value.push(question.value)
+
+  if (!questionEdit.value) {
+    questions.value.push(question.value)
+  }
+
+  // set question edit to false
+  questionEdit.value = false
 
   // clear question model and close modal
   question.value = {}
@@ -153,6 +185,9 @@ onMounted(async () => {
 
     if (job) {
       jobModel.value = job
+      if (job.questions) {
+        questions.value = job.questions
+      }
     }
   }
 })

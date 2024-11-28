@@ -2,6 +2,8 @@ import { Request, Response } from 'express'
 import { Company } from '../entities/Company'
 import { type Job as IJob } from '@shared/pack'
 import { Job } from '../entities/Job'
+import { Address } from '../entities/Address'
+import { Question } from '../entities/Question'
 
 export const createJob = async (req: Request, res: Response) => {
   try {
@@ -15,13 +17,31 @@ export const createJob = async (req: Request, res: Response) => {
       }
     })
 
+    let address = null
+    if (validated.address_id) {
+      address = await Address.findOne({
+        where: {
+          id: validated.address_id
+        }
+      })
+    }
+
     if (!company) {
       return res.sendError({ message: 'Company not found!', status: 404 })
+    }
+
+    // questions creations
+    let questions = []
+    if (validated.questions) {
+      questions = Question.create(validated.questions)
+      await Question.save(questions)
     }
 
     // create job
     const job = await Job.create(validated)
     job.company = company
+    if (address) job.address = address
+    if (questions.length) job.questions = questions
     await job.save()
 
     res.sendSuccess({ message: 'Job created successfully!' })
@@ -47,7 +67,6 @@ export const getJobs = async (req: Request, res: Response) => {
     res.sendSuccess({ data: jobs, message: 'Jobs fetched successfully!' })
   } catch (error) {
     const { name, message, stack } = error as Error
-    console.log(stack)
     res.sendError({ message: `${name} ${message} ${stack}` })
   }
 }
@@ -75,7 +94,9 @@ export const getJobById = async (req: Request, res: Response) => {
         id: parseInt(req.params.job_id)
       },
       relations: {
-        company: true
+        company: true,
+        address: true,
+        questions: true
       }
     })
 

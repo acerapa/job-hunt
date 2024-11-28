@@ -42,6 +42,7 @@
           id="flexible-hours"
           name="flexible-hours"
           label="Flexible hours"
+          v-model="jobModel.is_flex"
           input-class="!w-fit text-sm"
           class="flex items-center !flex-row-reverse justify-end gap-2"
         />
@@ -91,31 +92,6 @@
           :value="WorkSetup.HYBRID"
           v-model="jobModel.work_setup"
         />
-      </div>
-      <div
-        class="px-3 mt-4 flex flex-col gap-2"
-        v-if="jobModel.work_setup?.includes(WorkSetup.ONSITE)"
-      >
-        <InputComponent
-          type="checkbox"
-          id="same-as-account"
-          name="same_as_account"
-          label="Same as account"
-          @change="onSameAsAccount"
-          input-class="!w-fit text-sm"
-          v-model="jobModel.same_address"
-          class="flex items-center !flex-row-reverse justify-end gap-2"
-        />
-        <div>
-          <p>Enter custom address</p>
-          <AddressComponent
-            :has-label="true"
-            v-model="jobModel.address"
-            class="flex flex-col gap-3"
-            :model-errors="modelErrors"
-            :disabled="jobModel.same_address"
-          />
-        </div>
       </div>
     </div>
     <div class="flex flex-col gap-0">
@@ -206,16 +182,6 @@ const authStore = useAuthStore()
 onMounted(async () => {
   authUser.value = await authStore.getAuthUser()
 })
-
-const onSameAsAccount = () => {
-  if (jobModel.value) {
-    if (jobModel.value.same_address && authUser.value) {
-      jobModel.value.address = authUser.value.company?.address
-    } else {
-      jobModel.value.address = {}
-    }
-  }
-}
 
 watch(
   () => [min.value, max.value],

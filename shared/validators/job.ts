@@ -1,6 +1,7 @@
 import { z } from 'zod'
 import { JobStatus, WorkSetup, WorkType } from '../types'
 import { AddressSchema } from './user'
+import { QuestionSchema } from './question'
 
 export const JobSchema = z.object({
   title: z.string().min(1, 'Title is required!'),
@@ -19,5 +20,6 @@ export const JobSchema = z.object({
   application_url: z.string().optional(),
   others: z.string().optional(),
   address_id: z.number().optional(),
-  address: AddressSchema.partial().optional()
+  address: AddressSchema.partial().optional(),
+  questions: z.array(QuestionSchema).min(0)
 })
