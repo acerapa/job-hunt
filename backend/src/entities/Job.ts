@@ -73,9 +73,6 @@ export class Job
   })
   show_salary_range: boolean
 
-  @Column({ default: false })
-  same_address: boolean
-
   @Column()
   responsibilities: string
 

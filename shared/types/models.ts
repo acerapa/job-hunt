@@ -83,7 +83,6 @@ export interface Job<
   available_shifts: Shift[]
   is_flex: boolean
   skills?: Skill[]
-  same_address: boolean
   applications?: Application[]
   responsibilities: string
   qualifications: string
@@ -109,10 +108,11 @@ export interface Address {
 }
 
 export interface Shift<Job = Object> {
-  id: number
+  id?: number
   name: string
   start_time: string
-  jobs: Job[]
+  is_default: boolean
+  jobs?: Job[]
   end_time: string
   created_at?: Date
   updated_at?: Date

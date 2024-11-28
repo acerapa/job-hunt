@@ -26,6 +26,9 @@ export class Shift extends BaseEntity implements IShift<Job> {
   @Column({ nullable: true })
   end_time: string
 
+  @Column({ default: false })
+  is_default: boolean
+
   @OneToMany(() => JobToShift, (jobToShift) => jobToShift.shift)
   job_shifts: JobToShift[]
 
