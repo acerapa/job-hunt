@@ -1,5 +1,10 @@
 import { Router } from 'express'
-import { register, update, updateCreateCompanyAddress } from '../controllers/CompanyController'
+import {
+  register,
+  registerShift,
+  update,
+  updateCreateCompanyAddress
+} from '../controllers/CompanyController'
 import { validateBody } from '../middlewares/request-validators'
 import { CompanyUpdateSchema, AddressUpdateSchema, CompanyCreateSchema } from '@shared/pack/dist'
 
@@ -12,6 +17,9 @@ router.post(
   validateBody(AddressUpdateSchema),
   updateCreateCompanyAddress
 )
+
+// shifts
+router.post('/company/:id/shift/register', registerShift)
 
 // job routes
 import jobRoutes from './job-routes'

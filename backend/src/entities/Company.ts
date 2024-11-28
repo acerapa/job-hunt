@@ -15,9 +15,10 @@ import { Job } from './Job'
 import { User } from './User'
 import { Address } from './Address'
 import { Industry } from './Industry'
+import { Shift } from './Shift'
 
 @Entity('companies')
-export class Company extends BaseEntity implements ICompany<User, Job> {
+export class Company extends BaseEntity implements ICompany<User, Job, Shift> {
   @PrimaryGeneratedColumn()
   id: number
 
@@ -65,6 +66,9 @@ export class Company extends BaseEntity implements ICompany<User, Job> {
 
   @OneToMany(() => Job, (job) => job.company)
   jobs: Job[]
+
+  @OneToMany(() => Shift, (shift) => shift.company)
+  shifts: Shift[]
 
   @CreateDateColumn()
   created_at: Date

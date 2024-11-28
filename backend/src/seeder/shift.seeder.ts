@@ -1,6 +1,8 @@
-import { instanceToPlain } from 'class-transformer'
 import { Shift } from '../entities/Shift'
+import { instanceToPlain } from 'class-transformer'
 import { type Shift as IShift } from '@shared/pack/dist'
+
+import { exit } from 'process'
 
 const defaultShifts: IShift[] = [
   {
@@ -31,7 +33,8 @@ const defaultShifts: IShift[] = [
 
 export const run = async () => {
   const shifts = Shift.create(instanceToPlain(defaultShifts))
-  await shifts.save()
+  await Shift.save(shifts)
 
   console.log('Seeded shifts')
+  exit(0)
 }
