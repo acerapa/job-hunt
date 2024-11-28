@@ -104,7 +104,7 @@
                 exact-active-class="!bg-pale-blue font-bold"
                 class="px-4 text-left hover:bg-pale-blue py-0.5 whitespace-nowrap"
               >
-                Account Settings
+                Account
               </RouterLink>
               <button class="px-4 text-left hover:bg-pale-blue py-0.5" @click="onSignOut">
                 Sign out

@@ -2,6 +2,7 @@ import { Request, Response } from 'express'
 import { Company } from '../entities/Company'
 import { User } from '../entities/User'
 import { Address } from '../entities/Address'
+import { Shift } from '../entities/Shift'
 
 export const register = async (req: Request, res: Response) => {
   try {
@@ -79,6 +80,28 @@ export const updateCreateCompanyAddress = async (req: Request, res: Response) =>
     }
 
     res.sendSuccess({ message: 'Successfully updated address' })
+  } catch (error) {
+    const { name, message } = error as Error
+    res.sendError({ message: `${name}: ${message}` })
+  }
+}
+
+// shifts related
+export const registerShift = async (req: Request, res: Response) => {
+  try {
+    const company = await Company.findOneOrFail({
+      where: {
+        id: parseInt(req.params.id)
+      }
+    })
+
+    if (company) {
+      const shift = Shift.create(req.validated)
+      shift.company = company
+      await shift.save()
+    }
+
+    res.sendSuccess({ message: 'Successfully registered shift' })
   } catch (error) {
     const { name, message } = error as Error
     res.sendError({ message: `${name}: ${message}` })

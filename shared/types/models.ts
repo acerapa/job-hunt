@@ -41,7 +41,7 @@ export interface Skill<Profile = Object> {
   profiles?: Profile[]
 }
 
-export interface Company<User = Object, Job = Object> {
+export interface Company<User = Object, Job = Object, Shift = Object> {
   id: number
   name: string
   user_id?: number
@@ -54,6 +54,7 @@ export interface Company<User = Object, Job = Object> {
   address?: Address
   address_id?: number
   jobs?: Job[]
+  shifts?: Shift[]
   ratings: number
   industry: Industry
   created_at: Date
@@ -107,12 +108,14 @@ export interface Address {
   country: string
 }
 
-export interface Shift<Job = Object> {
+export interface Shift<Job = Object, Company = Object> {
   id?: number
   name: string
   start_time: string
   is_default: boolean
   jobs?: Job[]
+  company_id?: number
+  company?: Company
   end_time: string
   created_at?: Date
   updated_at?: Date

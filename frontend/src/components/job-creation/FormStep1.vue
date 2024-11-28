@@ -155,7 +155,6 @@
 
 <script setup lang="ts">
 import InputComponent from '@/components/shared/InputComponent.vue'
-import AddressComponent from '../shared/AddressComponent.vue'
 import CheckButtonComponent from '@/components/shared/CheckButtonComponent.vue'
 import {
   type Skill,
@@ -169,6 +168,7 @@ import {
 } from '@shared/pack'
 import { onMounted, ref, watch } from 'vue'
 import { useAuthStore } from '@/stores/auth-store'
+import { useCompanyStore } from '@/stores/company-store'
 
 const showSalary = ref<boolean>(true)
 const jobModel = defineModel<Partial<Job<Skill, Partial<Address>>>>()
@@ -178,9 +178,13 @@ const max = ref<number>(0)
 
 const authUser = ref<User<Profile, Company> | null>(null)
 const authStore = useAuthStore()
+const companyStore = useCompanyStore()
 
 onMounted(async () => {
   authUser.value = await authStore.getAuthUser()
+
+  if (authUser.value && authUser.value.company)
+    await companyStore.getCompanyShifts(authUser.value.company.id)
 })
 
 watch(

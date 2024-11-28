@@ -4,6 +4,8 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinColumn,
+  ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn
@@ -11,9 +13,10 @@ import {
 import type { Shift as IShift } from '@shared/pack'
 import { JobToShift } from './junctions/JobToShift'
 import { Job } from './Job'
+import { Company } from './Company'
 
 @Entity('shifts')
-export class Shift extends BaseEntity implements IShift<Job> {
+export class Shift extends BaseEntity implements IShift<Job, Company> {
   @PrimaryGeneratedColumn()
   id: number
 
@@ -34,9 +37,13 @@ export class Shift extends BaseEntity implements IShift<Job> {
 
   jobs: Job[]
 
+  @ManyToOne(() => Company, (company) => company.shifts)
+  @JoinColumn({ name: 'company_id' })
+  company: Company
+
   @AfterLoad()
   populateProperties() {
-    this.jobs = this.job_shifts.map((jobToShift) => jobToShift.job)
+    this.jobs = this.job_shifts ? this.job_shifts.map((jobToShift) => jobToShift.job) : []
   }
 
   @CreateDateColumn()
