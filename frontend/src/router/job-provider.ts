@@ -73,6 +73,11 @@ export default <RouteRecordRaw[]>[
         path: 'account-settings',
         name: 'provider-account-settings',
         component: () => import('@/views/job-provider/AccountSettingsPage.vue')
+      },
+      {
+        path: 'company-settings',
+        name: 'provider-company-settings',
+        component: () => import('@/views/job-provider/SettingsPage.vue')
       }
     ]
   }

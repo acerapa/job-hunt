@@ -27,3 +27,9 @@ export const CombinedUpdateCompanyAndCompanySchema = z
     address: AddressSchema
   })
   .partial()
+
+export const ShiftSchema = z.object({
+  name: z.string().min(1, 'Shift name is required!'),
+  start_time: z.string().min(1, 'Start time is required!'),
+  end_time: z.string().min(1, 'End time is required!')
+})

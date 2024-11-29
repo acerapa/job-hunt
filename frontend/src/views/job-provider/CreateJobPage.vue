@@ -29,7 +29,7 @@
   <div class="flex gap-4">
     <div class="w-full h-full flex flex-col gap-4">
       <div class="wrap text-white !bg-green-bright sticky top-0 flex justify-between items-center">
-        <p class="text-2xl font-semibold">Create Job Posting</p>
+        <p class="text-xl font-medium">Create Job Posting</p>
         <button class="btn-white-outline shadow shadow-white" @click="router.back()">Back</button>
       </div>
       <div class="wrap flex flex-col gap-3 h-full overflow-y-auto thin-scrollbar">

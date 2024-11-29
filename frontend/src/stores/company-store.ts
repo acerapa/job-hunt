@@ -5,6 +5,7 @@ import { ref } from 'vue'
 
 export const useCompanyStore = defineStore('company', () => {
   const shifts = ref<Shift[]>([])
+  const shift = ref<Shift | null>(null)
 
   const registerCompany = async (
     company: { company: Partial<Company>; address: Partial<Address> },
@@ -43,13 +44,40 @@ export const useCompanyStore = defineStore('company', () => {
     return res.status
   }
 
+  const updateShift = async (shift: Partial<Shift>, id: number) => {
+    const res = await api(`settings/company/shifts/${id}/update`, Method.POST, shift)
+
+    return res.status
+  }
+
+  const fetchCompanyShiftById = async (id: number) => {
+    const res: ApiResponse<Shift> = await api(`settings/company/shifts/${id}`)
+
+    if (res.status == 200) {
+      shift.value = res.data
+    }
+  }
+
+  const getShiftById = async (id: number): Promise<Shift | null> => {
+    shift.value = shifts.value.find((shift) => shift.id == id) ?? null
+
+    if (!shift.value) {
+      await fetchCompanyShiftById(id)
+    }
+
+    return shift.value
+  }
+
   return {
     shifts,
+    updateShift,
+    getShiftById,
     updateCompany,
     registerShift,
     registerCompany,
     getCompanyShifts,
     fetchCompanyShifts,
-    updateComapnyAddress
+    updateComapnyAddress,
+    fetchCompanyShiftById
   }
 })
