@@ -6,7 +6,12 @@ import {
   updateCreateCompanyAddress
 } from '../controllers/CompanyController'
 import { validateBody } from '../middlewares/request-validators'
-import { CompanyUpdateSchema, AddressUpdateSchema, CompanyCreateSchema } from '@shared/pack/dist'
+import {
+  CompanyUpdateSchema,
+  AddressUpdateSchema,
+  CompanyCreateSchema,
+  ShiftSchema
+} from '@shared/pack/dist'
 
 const router = Router()
 
@@ -19,7 +24,7 @@ router.post(
 )
 
 // shifts
-router.post('/company/:id/shift/register', registerShift)
+router.post('/company/:id/shift/register', validateBody(ShiftSchema), registerShift)
 
 // job routes
 import jobRoutes from './job-routes'

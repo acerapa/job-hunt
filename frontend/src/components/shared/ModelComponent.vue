@@ -11,8 +11,12 @@
         <slot></slot>
 
         <div class="flex items-center gap-3 mt-4">
-          <button class="btn-outline" type="button" @click="show = false">Cancel</button>
-          <button class="btn" type="submit" @click="emit('save')">Save</button>
+          <button class="btn-outline" type="button" @click="show = false">
+            {{ props.closeBtnText }}
+          </button>
+          <button class="btn" type="submit" @click="emit('save')" v-if="props.hasSaveBtn">
+            Save
+          </button>
         </div>
       </form>
     </div>
@@ -22,11 +26,16 @@
 <script setup lang="ts">
 interface Props {
   title: string
+  hasSaveBtn?: boolean
+  closeBtnText?: string
 }
 
 const emit = defineEmits(['save'])
 
-const props = defineProps<Props>()
+const props = withDefaults(defineProps<Props>(), {
+  hasSaveBtn: true,
+  closeBtnText: 'Cancel'
+})
 
 const show = defineModel()
 </script>

@@ -88,13 +88,13 @@
 
             <!-- dropdown of the menu -->
             <div
-              class="wrap shadow dropdown absolute top-12 right-0 !px-0 flex flex-col"
+              class="wrap shadow-lg dropdown absolute top-12 right-0 !px-0 flex flex-col"
               v-if="showDroppdown && overHeader"
             >
               <RouterLink
                 :to="{ name: authUser.type == UserType.HUNTER ? 'profile' : 'provider-profile' }"
                 exact-active-class="!bg-pale-blue font-bold"
-                class="px-4 text-left hover:bg-pale-blue py-0.5"
+                class="px-4 text-left hover:bg-pale-blue py-0.5 !pr-4"
               >
                 Profile
               </RouterLink>
@@ -102,11 +102,19 @@
                 v-if="authUser.type == UserType.PROVIDER"
                 :to="{ name: 'provider-account-settings' }"
                 exact-active-class="!bg-pale-blue font-bold"
-                class="px-4 text-left hover:bg-pale-blue py-0.5 whitespace-nowrap"
+                class="px-4 text-left hover:bg-pale-blue py-0.5 whitespace-nowrap !pr-4"
               >
                 Account
               </RouterLink>
-              <button class="px-4 text-left hover:bg-pale-blue py-0.5" @click="onSignOut">
+              <RouterLink
+                v-if="authUser.type == UserType.PROVIDER"
+                :to="{ name: 'provider-company-settings' }"
+                exact-active-class="!bg-pale-blue font-bold"
+                class="px-4 text-left hover:bg-pale-blue py-0.5 whitespace-nowrap !pr-4"
+              >
+                Settings
+              </RouterLink>
+              <button class="px-4 text-left hover:bg-pale-blue py-0.5 !pr-4" @click="onSignOut">
                 Sign out
               </button>
             </div>
