@@ -12,6 +12,7 @@ export const JobSchema = z.object({
   closing_date: z.string().optional(),
   work_setup: z.array(z.enum([WorkSetup.HYBRID, WorkSetup.ONSITE, WorkSetup.REMOTE])),
   work_type: z.array(z.enum([WorkType.FULLTIME, WorkType.INTERNSHIP, WorkType.PARTTIME])),
+  shifts: z.array(z.number()).optional(),
   is_flex: z.boolean().optional(),
   show_salary_range: z.boolean().optional(),
   responsibilities: z.string().min(1, 'Responsibilities is required!'),

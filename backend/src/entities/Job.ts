@@ -91,8 +91,6 @@ export class Job
   @ManyToOne(() => Company, (company) => company.jobs)
   company: Company
 
-  available_shifts: Shift[]
-
   @OneToMany(() => JobToSkill, (jobToSkill) => jobToSkill.job)
   job_skills: JobToSkill[]
 

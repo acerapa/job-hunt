@@ -4,6 +4,9 @@ import { type Job as IJob } from '@shared/pack'
 import { Job } from '../entities/Job'
 import { Address } from '../entities/Address'
 import { Question } from '../entities/Question'
+import { JobToShift } from '../entities/junctions/JobToShift'
+import { Shift } from '../entities/Shift'
+import { In } from 'typeorm'
 
 export const createJob = async (req: Request, res: Response) => {
   try {
@@ -42,7 +45,27 @@ export const createJob = async (req: Request, res: Response) => {
     job.company = company
     if (address) job.address = address
     if (questions.length) job.questions = questions
+
     await job.save()
+
+    // linking shifts
+    if (validated.shifts) {
+      const fetchedShifts = await Shift.find({
+        where: {
+          id: In(validated.shifts)
+        }
+      })
+
+      await Promise.all(
+        fetchedShifts.map((shift) => {
+          const jobToShift = JobToShift.create()
+          jobToShift.job = job
+          jobToShift.shift = shift
+
+          return jobToShift.save()
+        })
+      )
+    }
 
     res.sendSuccess({ message: 'Job created successfully!' })
   } catch (error) {
@@ -53,14 +76,17 @@ export const createJob = async (req: Request, res: Response) => {
 
 export const getJobs = async (req: Request, res: Response) => {
   try {
-    const jobs: IJob[] = await Job.find({
+    const jobs = await Job.find({
       where: {
         company: {
           id: parseInt(req.params.company_id)
         }
       },
       relations: {
-        applications: true
+        applications: true,
+        job_shifts: {
+          shift: true
+        }
       }
     })
 
@@ -96,7 +122,10 @@ export const getJobById = async (req: Request, res: Response) => {
       relations: {
         company: true,
         address: true,
-        questions: true
+        questions: true,
+        job_shifts: {
+          shift: true
+        }
       }
     })
 

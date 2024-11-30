@@ -81,9 +81,9 @@ export interface Job<
   closing_date: Date
   work_setup: WorkSetup[]
   work_type: WorkType[]
-  available_shifts: Shift[]
   is_flex: boolean
   skills?: Skill[]
+  shifts?: Shift[]
   applications?: Application[]
   responsibilities: string
   qualifications: string

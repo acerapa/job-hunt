@@ -1,12 +1,12 @@
 import { api, Method } from '@/api'
 import { type Applicant, ApplicantStatus } from '@/types'
-import type { Address, ApiResponse, Application, Company, Job, Skill } from '@shared/pack'
+import type { Address, ApiResponse, Application, Company, Job, Shift, Skill } from '@shared/pack'
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 
 export const useJobStore = defineStore('job', function () {
   const jobs = ref<Job<Application>[]>([])
-  const job = ref<Job<Skill, Address> | null>(null)
+  const job = ref<Job<Skill, Address, Shift> | null>(null)
   const publishedJobs = ref<Job<Skill, Company, Application>[]>([])
 
   const applicants = ref<Applicant[]>([
@@ -81,14 +81,14 @@ export const useJobStore = defineStore('job', function () {
   }
 
   const fetchJobById = async (job_id: number) => {
-    const res: ApiResponse<Job<Skill, Address>> = await api(`users/company/jobs/${job_id}`)
+    const res: ApiResponse<Job<Skill, Address, Shift>> = await api(`users/company/jobs/${job_id}`)
 
     if (res.status === 200) {
       job.value = res.data
     }
   }
 
-  const getJobById = async (job_id: number): Promise<Job<Skill, Address> | null> => {
+  const getJobById = async (job_id: number): Promise<Job<Skill, Address, Shift> | null> => {
     if (!job.value) {
       await fetchJobById(job_id)
     }
