@@ -64,14 +64,19 @@ const companyStore = useCompanyStore()
 const authStore = useAuthStore()
 
 const onSave = async () => {
+  let status: number = 0
   if (currentCompany.value) {
     if (!props.id) {
-      await companyStore.registerShift(model.value, currentCompany.value.id)
+      status = await companyStore.registerShift(model.value, currentCompany.value.id)
     } else {
-      await companyStore.updateShift(model.value, props.id)
+      status = await companyStore.updateShift(model.value, props.id)
     }
 
     await companyStore.fetchCompanyShifts(currentCompany.value.id)
+  }
+
+  if (status && status == 200) {
+    showModal.value = false
   }
 }
 

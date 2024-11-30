@@ -1,10 +1,10 @@
 import { api, authenticatedApi, Method } from '@/api'
-import type { Address, ApiResponse, Company, Shift } from '@shared/pack'
+import type { Address, ApiResponse, Company, Job, Shift } from '@shared/pack'
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 
 export const useCompanyStore = defineStore('company', () => {
-  const shifts = ref<Shift[]>([])
+  const shifts = ref<Shift<Job, Company>[]>([])
   const shift = ref<Shift | null>(null)
 
   const registerCompany = async (
@@ -23,7 +23,9 @@ export const useCompanyStore = defineStore('company', () => {
   }
 
   const fetchCompanyShifts = async (company_id: number) => {
-    const res: ApiResponse<Shift[]> = await api(`settings/company/${company_id}/shifts`)
+    const res: ApiResponse<Shift<Job, Company>[]> = await api(
+      `settings/company/${company_id}/shifts`
+    )
 
     if (res.status == 200) {
       shifts.value = res.data
@@ -68,9 +70,15 @@ export const useCompanyStore = defineStore('company', () => {
     return shift.value
   }
 
+  const deleteShift = async (id: number) => {
+    const res = await api(`settings/company/shifts/${id}/delete`, Method.DELETE)
+    return res.status
+  }
+
   return {
     shifts,
     updateShift,
+    deleteShift,
     getShiftById,
     updateCompany,
     registerShift,

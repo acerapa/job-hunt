@@ -1,5 +1,11 @@
 <template>
   <ShiftModal v-model="showShiftModal" v-if="showShiftModal" :id="props.row.id" />
+  <ConfirmationModal
+    v-model="showConfirmationModal"
+    v-if="showConfirmationModal"
+    confirmation-text="This action is irreversible. Do you want to continue?"
+    @confirm="deleteShift"
+  />
   <div
     class="grid grid-cols-6 gap-3 items-center odd:bg-tint-green px-4 py-3"
     @mouseenter="isRowFocused = true"
@@ -33,6 +39,7 @@
         <button
           class="py-1 text-red-500 font-bold hover:bg-blue-50 px-4"
           v-if="!props.row.is_default"
+          @click="showConfirmationModal = true"
         >
           Remove
         </button>
@@ -43,11 +50,13 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import type { Shift } from '@shared/pack'
+import type { Company, Shift } from '@shared/pack'
 import ShiftModal from './ShiftModal.vue'
+import ConfirmationModal from '../shared/ConfirmationModal.vue'
+import { useCompanyStore } from '@/stores/company-store'
 
 interface Props {
-  row: Shift
+  row: Shift<Object, Company>
 }
 
 const props = defineProps<Props>()
@@ -55,9 +64,26 @@ const props = defineProps<Props>()
 const isShowMenu = ref<boolean>(false)
 const isRowFocused = ref<boolean>(false)
 const showShiftModal = ref<boolean>(false)
+const showConfirmationModal = ref<boolean>(false)
+
+const companyStore = useCompanyStore()
 
 const updateRowState = () => {
   isRowFocused.value = false
   isShowMenu.value = false
+}
+
+const deleteShift = async () => {
+  if (props.row.id) {
+    const status = await companyStore.deleteShift(props.row.id)
+
+    if (status) {
+      showConfirmationModal.value = false
+
+      if (props.row.company) {
+        await companyStore.getCompanyShifts(props.row.company.id)
+      }
+    }
+  }
 }
 </script>

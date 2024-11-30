@@ -1,11 +1,11 @@
 <template>
   <ShiftModal v-model="showShiftModal" v-if="showShiftModal" />
-  <div class="flex flex-col gap-4">
+  <div class="flex flex-col gap-4 pb-10">
     <div class="wrap !bg-vibrant-green text-white">
       <p class="text-xl font-medium">Settings</p>
     </div>
     <TableComponent
-      title="List of available shifts"
+      title="Set the shifts you want to use"
       :has-pagination="false"
       :has-add-new="true"
       :row="ShiftListRow"
