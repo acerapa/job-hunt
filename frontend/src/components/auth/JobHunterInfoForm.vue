@@ -192,7 +192,6 @@ const proceed = () => {
 
 const setupErrors = (field: string, schema: ZodSchema, value: any) => {
   modelErrors.value = modelErrors.value ? modelErrors.value : {}
-  console.log(field, schema, value)
   const { valid, errors } = validate(schema, value)
   const fieldError: Record<string, string> = {}
   fieldError[field] = !valid ? (errors as string) : ''

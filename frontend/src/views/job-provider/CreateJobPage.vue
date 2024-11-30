@@ -100,6 +100,7 @@ import {
   type Job,
   type Profile,
   type Question,
+  type Shift,
   type Skill,
   type User
 } from '@shared/pack'
@@ -122,6 +123,7 @@ const jobModel = ref<Partial<Job<Skill, Partial<Address>>>>({
   work_setup: [],
   work_type: [],
   address: {},
+  shifts: [],
   status: JobStatus.ACTIVE
 })
 
@@ -179,14 +181,18 @@ onMounted(async () => {
   authUser.value = await authStore.getAuthUser()
 
   if (route.params.id) {
-    const job: Job<Skill, Address> | null = await jobStore.getJobById(
+    const job: Job<Skill, Address, Shift> | null = await jobStore.getJobById(
       parseInt(route.params.id.toString())
     )
 
     if (job) {
       jobModel.value = job
-      if (job.questions) {
+      if (job.questions && job.questions.length) {
         questions.value = job.questions
+      }
+
+      if (job.shifts && job.shifts.length) {
+        jobModel.value.shifts = job.shifts.map((shift) => shift.id) as number[]
       }
     }
   }

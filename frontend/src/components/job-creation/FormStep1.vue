@@ -36,7 +36,7 @@
           v-model="jobModel.work_type"
         />
       </div>
-      <div class="px-3 mt-4 flex flex-col gap-2">
+      <div class="mt-4 flex flex-col gap-2">
         <InputComponent
           type="checkbox"
           id="flexible-hours"
@@ -47,24 +47,18 @@
           class="flex items-center !flex-row-reverse justify-end gap-2"
         />
 
-        <div>
-          <p>Add availble shifts</p>
-          <div class="flex gap-1 flex-wrap">
-            <CheckButtonComponent label="Morning" id="morning" name="morning" value="morning" />
+        <p class="font-medium">Add availble shifts</p>
+        <div class="flex gap-1 flex-wrap">
+          <template v-for="shift in shifts" :key="shift.id">
             <CheckButtonComponent
-              label="Afternoon"
-              id="afternoon"
-              name="afternoon"
-              value="afternoon"
+              v-if="shift.id"
+              :value="shift.id"
+              :label="shift.name"
+              v-model="jobModel.shifts"
+              :id="shift.name.toLowerCase()"
+              :name="shift.name.toLowerCase()"
             />
-            <CheckButtonComponent label="Evening" id="evening" name="evening" value="evening" />
-            <CheckButtonComponent
-              label="Grave yard"
-              id="grave-ward"
-              name="grave-ward"
-              value="grave-ward"
-            />
-          </div>
+          </template>
         </div>
       </div>
     </div>
@@ -166,7 +160,7 @@ import {
   type Profile,
   type User
 } from '@shared/pack'
-import { onMounted, ref, watch } from 'vue'
+import { computed, onMounted, ref, watch } from 'vue'
 import { useAuthStore } from '@/stores/auth-store'
 import { useCompanyStore } from '@/stores/company-store'
 
@@ -179,6 +173,8 @@ const max = ref<number>(0)
 const authUser = ref<User<Profile, Company> | null>(null)
 const authStore = useAuthStore()
 const companyStore = useCompanyStore()
+
+const shifts = computed(() => companyStore.shifts)
 
 onMounted(async () => {
   authUser.value = await authStore.getAuthUser()
