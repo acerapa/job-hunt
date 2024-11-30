@@ -13,7 +13,10 @@ export const getShifts = async (req: Request, res: Response) => {
         {
           is_default: true
         }
-      ]
+      ],
+      relations: {
+        company: true
+      }
     })
 
     res.sendSuccess({ data: shifts, message: 'Shifts retrieved successfully' })
@@ -43,6 +46,16 @@ export const getShiftById = async (req: Request, res: Response) => {
     })
 
     res.sendSuccess({ data: shift, message: 'Shift retrieved successfully' })
+  } catch (error) {
+    const { name, message } = error as Error
+    res.sendError({ message: `${name}: ${message}` })
+  }
+}
+
+export const deleteShift = async (req: Request, res: Response) => {
+  try {
+    await Shift.delete(req.params.id)
+    res.sendSuccess({ message: 'Shift deleted successfully' })
   } catch (error) {
     const { name, message } = error as Error
     res.sendError({ message: `${name}: ${message}` })

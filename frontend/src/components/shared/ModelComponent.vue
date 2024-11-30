@@ -15,7 +15,7 @@
             {{ props.closeBtnText }}
           </button>
           <button class="btn" type="submit" @click="emit('save')" v-if="props.hasSaveBtn">
-            Save
+            {{ props.saveBtnText }}
           </button>
         </div>
       </form>
@@ -28,13 +28,15 @@ interface Props {
   title: string
   hasSaveBtn?: boolean
   closeBtnText?: string
+  saveBtnText?: string
 }
 
 const emit = defineEmits(['save'])
 
 const props = withDefaults(defineProps<Props>(), {
   hasSaveBtn: true,
-  closeBtnText: 'Cancel'
+  closeBtnText: 'Cancel',
+  saveBtnText: 'Save'
 })
 
 const show = defineModel()
