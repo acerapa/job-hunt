@@ -204,6 +204,7 @@ onMounted(async () => {
   authUser.value = await authStore.getAuthUser()
 
   if (route.params.id) {
+    await jobStore.fetchJobById(parseInt(route.params.id.toString()))
     const job: Job<Skill, Company, Shift> | null = await jobStore.getJobById(
       parseInt(route.params.id.toString())
     )
@@ -215,6 +216,7 @@ onMounted(async () => {
       }
 
       if (job.shifts && job.shifts.length) {
+        console.log(job.shifts)
         jobModel.value.shifts = job.shifts.map((shift) => shift.id) as number[]
       }
     }

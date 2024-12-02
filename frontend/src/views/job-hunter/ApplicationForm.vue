@@ -117,6 +117,7 @@ import { useJobStore } from '@/stores/job-store'
 import {
   WorkSetupMap,
   WorkTypeMap,
+  type Application,
   type Company,
   type Job,
   type Profile,
@@ -129,6 +130,7 @@ import { RouterLink, useRoute } from 'vue-router'
 const route = useRoute()
 const authUser = ref<User<Profile> | null>(null)
 const currentCompany = ref<Company | null>(null)
+const application = ref<Partial<Application>>({})
 const job = ref<Job<Object, Company, Object, Object, Object, Question> | null>(null)
 
 const jobStore = useJobStore()

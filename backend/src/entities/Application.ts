@@ -12,10 +12,10 @@ import {
 import { ApplicationStatus, Application as IApplication } from '@shared/pack'
 import { Job } from './Job'
 import { Profile } from './Profile'
-import { ApplicationToAnswer } from './junctions/ApplicationToAnswer'
+import { Answer } from './Answer'
 
 @Entity('applications')
-export class Application extends BaseEntity implements IApplication<Job, Profile> {
+export class Application extends BaseEntity implements IApplication<Job, Profile, Answer> {
   @PrimaryGeneratedColumn()
   id: number
 
@@ -39,8 +39,8 @@ export class Application extends BaseEntity implements IApplication<Job, Profile
   @JoinColumn({ name: 'job_id' })
   job: Job
 
-  @OneToMany(() => ApplicationToAnswer, (applicationToAnswer) => applicationToAnswer.application)
-  application_answers: ApplicationToAnswer[]
+  @OneToMany(() => Answer, (answer) => answer.application)
+  answers: Answer[]
 
   @CreateDateColumn()
   created_at: Date

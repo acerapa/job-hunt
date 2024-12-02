@@ -176,11 +176,13 @@ export interface Question<Job = Object, Answer = Object> {
   updated_at?: Date
 }
 
-export interface Answer<Question = Object> {
+export interface Answer<Question = Object, Application = Object> {
   id: number
   answer: string
   question_id?: number
   question: Question
+  application?: Application
+  application_id?: number
   created_at?: Date
   updated_at?: Date
 }
