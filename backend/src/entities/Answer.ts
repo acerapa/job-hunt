@@ -12,10 +12,10 @@ import {
 } from 'typeorm'
 import { type Answer as IAnswers } from '@shared/pack/dist'
 import { Question } from './Question'
-import { ApplicationToAnswer } from './junctions/ApplicationToAnswer'
+import { Application } from './Application'
 
 @Entity('answers')
-export class Answer extends BaseEntity implements IAnswers<Question> {
+export class Answer extends BaseEntity implements IAnswers<Question, Application> {
   @PrimaryGeneratedColumn()
   id: number
 
@@ -26,8 +26,9 @@ export class Answer extends BaseEntity implements IAnswers<Question> {
   @JoinColumn({ name: 'question_id' })
   question: Question
 
-  @OneToMany(() => ApplicationToAnswer, (applicationToAnswer) => applicationToAnswer.answer)
-  application_answers: ApplicationToAnswer[]
+  @ManyToOne(() => Application)
+  @JoinColumn({ name: 'application_id' })
+  application: Application
 
   @CreateDateColumn()
   created_at: Date

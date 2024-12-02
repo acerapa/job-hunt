@@ -1,6 +1,5 @@
 import { Request, Response } from 'express'
 import { Company } from '../entities/Company'
-import { type Job as IJob } from '@shared/pack'
 import { Job } from '../entities/Job'
 import { Address } from '../entities/Address'
 import { Question } from '../entities/Question'
@@ -76,8 +75,43 @@ export const createJob = async (req: Request, res: Response) => {
 
 export const updateJob = async (req: Request, res: Response) => {
   try {
-    const job = Job.create(req.validated)
+    const validated = req.validated
+    const job = Job.create(validated)
     job.id = parseInt(req.params.id)
+
+    // if update shifts
+    if (validated.shifts) {
+      // delete old shifts
+      await JobToShift.delete({
+        job: {
+          id: job.id
+        }
+      })
+
+      // add new shifts
+      const fetchedShifts = await Shift.find({
+        where: {
+          id: In(validated.shifts)
+        }
+      })
+
+      await Promise.all(
+        fetchedShifts.map((shift) => {
+          const jobToShift = JobToShift.create()
+          jobToShift.job = job
+          jobToShift.shift = shift
+          return jobToShift.save()
+        })
+      )
+    }
+
+    // update questions
+    if (validated.questions) {
+      const questions = Question.create(validated.questions)
+      await Question.save(questions)
+      job.questions = questions
+    }
+
     await job.save()
 
     res.sendSuccess({ message: 'Job updated successfully!' })
