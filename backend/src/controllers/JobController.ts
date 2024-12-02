@@ -74,6 +74,19 @@ export const createJob = async (req: Request, res: Response) => {
   }
 }
 
+export const updateJob = async (req: Request, res: Response) => {
+  try {
+    const job = Job.create(req.validated)
+    job.id = parseInt(req.params.id)
+    await job.save()
+
+    res.sendSuccess({ message: 'Job updated successfully!' })
+  } catch (error) {
+    const { name, message, stack } = error as Error
+    res.sendError({ message: `${name} ${message} ${stack}` })
+  }
+}
+
 export const getJobs = async (req: Request, res: Response) => {
   try {
     const jobs = await Job.find({
@@ -120,8 +133,9 @@ export const getJobById = async (req: Request, res: Response) => {
         id: parseInt(req.params.job_id)
       },
       relations: {
-        company: true,
-        address: true,
+        company: {
+          address: true
+        },
         questions: true,
         job_shifts: {
           shift: true

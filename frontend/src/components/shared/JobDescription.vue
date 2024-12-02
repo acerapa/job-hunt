@@ -15,7 +15,7 @@
       <button
         v-if="props.state == JobDescriptionState.VIEWING"
         class="btn !bg-blue-bright font-bold hover:text-blue-bright hover:border-blue-bright hover:!bg-white"
-        @click="onApply(1)"
+        @click="onApply()"
       >
         Apply now
       </button>
@@ -110,6 +110,7 @@ import {
   type Company,
   type Job,
   type Profile,
+  type Skill,
   type User
 } from '@shared/pack'
 import { useRouter } from 'vue-router'
@@ -118,7 +119,7 @@ import { computed, onMounted, ref } from 'vue'
 import { useAuthStore } from '@/stores/auth-store'
 
 interface Props {
-  job: Partial<Job>
+  job: Partial<Job<Skill, Company>>
   state?: JobDescriptionState
 }
 
@@ -127,17 +128,22 @@ const props = withDefaults(defineProps<Props>(), {
 })
 const router = useRouter()
 
-const onApply = (job_id: number) => {
+const onApply = () => {
   router.push({
     name: 'application-form',
     params: {
-      job_id: job_id
+      job_id: props.job.id
     }
   })
 }
 
 const authUser = ref<User<Profile, Company> | null>(null)
 const currentCompany = ref<Company | null>(null)
+
+// setting current company from props
+if (props.job.company) {
+  currentCompany.value = props.job.company
+}
 
 const authStore = useAuthStore()
 
