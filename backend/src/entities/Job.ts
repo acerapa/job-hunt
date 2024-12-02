@@ -24,7 +24,7 @@ import { Question } from './Question'
 @Entity('jobs')
 export class Job
   extends BaseEntity
-  implements IJob<Skill, Company, Shift, Application, Tag, Address, Question>
+  implements IJob<Skill, Company, Shift, Application, Tag, Question>
 {
   @PrimaryGeneratedColumn()
   id: number
@@ -108,9 +108,6 @@ export class Job
 
   @OneToMany(() => Application, (application) => application.job)
   applications: Application[]
-
-  @ManyToOne(() => Address)
-  address: Address
 
   @OneToMany(() => Question, (question) => question.job)
   questions: Question[]

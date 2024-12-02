@@ -8,7 +8,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn
 } from 'typeorm'
-import { type Question as IQuestion } from '@shared/pack/dist'
+import { QuestionType, type Question as IQuestion } from '@shared/pack/dist'
 import { Job } from './Job'
 
 @Entity('questions')
@@ -21,6 +21,21 @@ export class Question extends BaseEntity implements IQuestion<Job> {
 
   @Column()
   is_required: boolean
+
+  @Column({
+    type: 'enum',
+    enum: [
+      QuestionType.CHECKBOX,
+      QuestionType.DATE,
+      QuestionType.NUMBER,
+      QuestionType.TEXT,
+      QuestionType.RADIO,
+      QuestionType.SELECT,
+      QuestionType.TEXTAREA,
+      QuestionType.TIME
+    ]
+  })
+  type: QuestionType
 
   @ManyToOne(() => Job)
   @JoinColumn({ name: 'job_id' })

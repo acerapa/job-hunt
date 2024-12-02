@@ -1,4 +1,13 @@
-import { ApplicationStatus, CompanyType, Gender, JobStatus, UserType, WorkSetup, WorkType } from '.'
+import {
+  ApplicationStatus,
+  CompanyType,
+  Gender,
+  JobStatus,
+  QuestionType,
+  UserType,
+  WorkSetup,
+  WorkType
+} from '.'
 import { SkillType } from '.'
 
 export interface User<Profile = Object, Company = Object> {
@@ -67,7 +76,6 @@ export interface Job<
   Shift = Object,
   Application = Object,
   Tag = Object,
-  Address = Object,
   Question = Object
 > {
   id: number
@@ -89,7 +97,6 @@ export interface Job<
   qualifications: string
   what_we_offer: string
   application_url: string
-  address?: Address
   others: string
   tags?: Tag[]
   company: Company
@@ -163,6 +170,7 @@ export interface Question<Job = Object, Answer = Object> {
   is_required: boolean
   job_id?: number
   job?: Job
+  type: QuestionType
   answers?: Answer[]
   created_at?: Date
   updated_at?: Date

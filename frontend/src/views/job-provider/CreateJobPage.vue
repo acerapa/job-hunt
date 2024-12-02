@@ -15,6 +15,14 @@
         v-model="question.question"
       />
       <InputComponent
+        type="select"
+        name="type"
+        :options="questionOptions"
+        label="Input type"
+        placeholder="Input type"
+        v-model="question.type"
+      />
+      <InputComponent
         type="checkbox"
         name="required"
         id="required"
@@ -92,7 +100,7 @@ import InputComponent from '@/components/shared/InputComponent.vue'
 import ModelComponent from '@/components/shared/ModelComponent.vue'
 import FormStep1 from '@/components/job-creation/FormStep1.vue'
 import FormStep2 from '@/components/job-creation/FormStep2.vue'
-import { onMounted, ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import {
   JobStatus,
   type Address,
@@ -102,7 +110,9 @@ import {
   type Question,
   type Shift,
   type Skill,
-  type User
+  type User,
+  QuestionType,
+  QuestionMap
 } from '@shared/pack'
 import { useJobStore } from '@/stores/job-store'
 import { useAuthStore } from '@/stores/auth-store'
@@ -122,7 +132,6 @@ const authUser = ref<User<Profile, Company> | null>(null)
 const jobModel = ref<Partial<Job<Skill, Partial<Address>>>>({
   work_setup: [],
   work_type: [],
-  address: {},
   shifts: [],
   status: JobStatus.ACTIVE
 })
@@ -140,7 +149,12 @@ const onSubmit = async () => {
   jobModel.value.questions = questions.value
 
   if (authUser.value && authUser.value.company) {
-    const res = await jobStore.createJob(jobModel.value, authUser.value.company.id)
+    let res = null
+    if (route.params.id) {
+      res = await jobStore.updateJob(jobModel.value, parseInt(route.params.id as string))
+    } else {
+      res = await jobStore.createJob(jobModel.value, authUser.value.company.id)
+    }
 
     if (res == 200) {
       await jobStore.fetchJobs(authUser.value.company.id)
@@ -151,6 +165,15 @@ const onSubmit = async () => {
   // TODO: Upon receiving error when creating show a toast message
   // might need to create your own toast component
 }
+
+const questionOptions = computed(() => {
+  return Object.keys(QuestionMap).map((key) => {
+    return {
+      text: QuestionMap[key as QuestionType],
+      value: key
+    }
+  })
+})
 
 const removeQuestion = (indexed: number) => {
   questions.value = questions.value.filter((q, i) => i !== indexed)
@@ -181,7 +204,7 @@ onMounted(async () => {
   authUser.value = await authStore.getAuthUser()
 
   if (route.params.id) {
-    const job: Job<Skill, Address, Shift> | null = await jobStore.getJobById(
+    const job: Job<Skill, Company, Shift> | null = await jobStore.getJobById(
       parseInt(route.params.id.toString())
     )
 

@@ -49,3 +49,14 @@ export const enum CompanyType {
   CORPORATION = 'corporation',
   NON_PROFIT = 'non-profit'
 }
+
+export const enum QuestionType {
+  TEXT = 'text',
+  TEXTAREA = 'textarea',
+  SELECT = 'select',
+  CHECKBOX = 'checkbox',
+  RADIO = 'radio',
+  DATE = 'date',
+  TIME = 'time',
+  NUMBER = 'number'
+}

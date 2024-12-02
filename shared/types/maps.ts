@@ -1,4 +1,4 @@
-import { WorkSetup, WorkType } from './enums'
+import { QuestionType, WorkSetup, WorkType } from './enums'
 
 export const WorkTypeMap = {
   [WorkType.FULLTIME]: {
@@ -28,4 +28,15 @@ export const WorkSetupMap = {
     text: 'Remote',
     value: WorkSetup.REMOTE
   }
+}
+
+export const QuestionMap = {
+  [QuestionType.TEXT]: 'Text',
+  [QuestionType.TEXTAREA]: 'Textarea',
+  [QuestionType.CHECKBOX]: 'Checkbox',
+  [QuestionType.RADIO]: 'Radio',
+  [QuestionType.SELECT]: 'Select',
+  [QuestionType.DATE]: 'Date',
+  [QuestionType.TIME]: 'Time',
+  [QuestionType.NUMBER]: 'Number'
 }
