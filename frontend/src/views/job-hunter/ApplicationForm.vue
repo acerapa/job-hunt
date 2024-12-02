@@ -1,102 +1,130 @@
 <template>
-  <div class="flex gap-4">
-    <div class="w-full max-w-[450px]">
-      <div class="wrap !bg-green-bright text-white flex gap-3 items-center">
-        <img src="@/assets/icons/high-importance.png" alt="high-importance.png" />
-        <div>
-          <span class="block font-bold">Keep your profile updated</span>
-          <p class="text-sm leading-4">
-            This is to make sure that the information your sending is complete and accurate
-          </p>
-        </div>
-      </div>
-      <div class="wrap mt-1 flex gap-3 items-center" v-if="authUser">
-        <img src="@/assets/images/default.png" alt="default.png" />
-        <div>
-          <RouterLink :to="{ name: 'profile' }" class="btn-outline float-right">Update</RouterLink>
-          <div class="flex flex-col gap-0">
-            <p class="font-bold">{{ authUser.first_name + ' ' + authUser.last_name }}</p>
-            <span class="text-sm">Web Developer</span>
-          </div>
-          <p>{{ profileAddress }}</p>
-          <p>{{ authUser.phone }}</p>
-          <p>{{ authUser.email }}</p>
+  <div class="flex flex-col gap-5">
+    <div class="wrap flex flex-col gap-3">
+      <div class="flex justify-between items-start">
+        <p class="font-bold text-lg text-green-bright">Job your applying for:</p>
+        <div class="flex gap-3">
+          <button class="w-fit btn-outline" @click="router.back()">&longleftarrow; Back</button>
+          <button class="btn-success whitespace-nowrap">More Details</button>
         </div>
       </div>
 
-      <div class="wrap !bg-green-bright text-white mt-4 flex gap-3 items-center">
-        <img src="@/assets/icons/high-importance.png" alt="high-importance.png" />
-        <div>
-          <span class="block font-bold">You are applying this position </span>
-          <p class="text-sm leading-4">
-            Please verify your information to make sure atmost accuracy
-          </p>
-        </div>
-      </div>
-      <div class="wrap mt-1">
-        <div class="flex justify-between items-start">
-          <div>
-            <p class="text-2xl font-bold">{{ job?.title }}</p>
-            <div class="flex gap-2 items-center">
-              <img
-                src="https://plus.unsplash.com/premium_photo-1663127721165-f29d5bbd3da1?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-                alt="company"
-                class="w-10 h-10 rounded-full object-contain bg-gray-950"
-              />
-              <p class="text-gray-strong font-medium text-sm">{{ currentCompany?.name }}</p>
-              <div class="flex gap-1">
-                <img
-                  src="@/assets/images/star-filled.png"
-                  alt="star-filled.png"
-                  v-for="ndx in 5"
-                  :key="ndx"
-                />
-              </div>
-            </div>
-          </div>
-          <button type="button" class="btn detail-btn">Details</button>
-        </div>
-        <div class="px-2 mt-3 flex flex-col gap-3">
-          <div class="flex gap-2 items-center" v-if="jobAddress">
-            <img src="@/assets/icons/map-pin.png" alt="map-pin.png" />
-            <span class="text-xs text-gray-strong">
-              {{ jobAddress }}
-            </span>
-          </div>
-          <div class="flex gap-2 items-center" v-if="workType">
-            <img src="@/assets/icons/clock.png" alt="clock.png" />
-            <span class="text-xs text-gray-strong">{{ workType }}</span>
-          </div>
-          <div class="flex gap-2 items-center" v-if="workSetup">
-            <img src="@/assets/icons/office.png" alt="office.png" />
-            <span class="text-xs text-gray-strong">{{ workSetup }}</span>
-          </div>
-          <div class="flex gap-2 items-center" v-if="job?.salary_range">
-            <img src="@/assets/icons/money-bag.png" alt="money-bag.png" />
-            <span class="text-xs text-gray-strong">{{ job?.salary_range }}</span>
+      <div class="flex flex-col px-4" v-if="job">
+        <p class="text-xl font-bold">{{ job.title }}</p>
+
+        <div class="flex gap-2 items-center" v-if="currentCompany">
+          <img class="w-10 h-10" src="@/assets/images/default.png" alt="default.png" />
+          <p class="font-semibold text-gray-strong">{{ currentCompany.name }}</p>
+          <div class="flex">
+            <img
+              src="@/assets/images/star-filled.png"
+              alt="star-filled.png"
+              class="w-4 h-4"
+              v-for="ndx in 5"
+              :key="ndx"
+            />
           </div>
         </div>
-        <div class="mt-10">
-          <p class="text-sm font-medium">Job Description</p>
-          <p class="mt-4 font-normal text-sm text-justify">
-            {{ job?.description }}
-          </p>
+
+        <div class="flex flex-col gap-1 mt-5">
+          <p class="font-medium">Job Description</p>
+          <p class="font-normal text-base text-justify text-gray-strong">{{ job.description }}</p>
         </div>
       </div>
     </div>
-    <div class="wrap flex-1 !p-5">
-      <div class="flex justify-between items-center">
-        <p class="font-bold text-base">Employer Specific Questions</p>
-        <button class="btn font-bold">Submit Application</button>
+
+    <div class="wrap flex flex-col gap-5" v-if="authUser">
+      <div class="flex justify-between items-start">
+        <p class="font-bold text-lg text-green-bright">Hunter Informations</p>
+        <div class="flex gap-3">
+          <RouterLink :to="{ name: 'profile' }" class="btn-outline">Edit Informations</RouterLink>
+          <button class="btn-success">Submit Application</button>
+        </div>
       </div>
-      <div class="flex flex-col gap-4 mt-5" v-if="job?.questions?.length">
+
+      <div class="px-4 flex flex-col gap-3 max-w-[60%]">
+        <div>
+          <p class="font-semibold text-gray-strong">Personal Information:</p>
+          <div class="flex gap-5">
+            <InputComponent
+              type="text"
+              label="First Name"
+              name="first_name"
+              :disabled="true"
+              class="w-fit flex-1"
+              v-model="authUser.first_name"
+            />
+            <InputComponent
+              type="text"
+              label="Last Name"
+              name="last_name"
+              :disabled="true"
+              class="w-fit flex-1"
+              v-model="authUser.last_name"
+            />
+          </div>
+          <div class="flex gap-5 mt-3">
+            <InputComponent
+              type="email"
+              label="Email"
+              name="email"
+              :disabled="true"
+              class="w-fit flex-1"
+              v-model="authUser.email"
+            />
+            <InputComponent
+              type="text"
+              label="Phone"
+              name="phone"
+              :disabled="true"
+              class="w-fit flex-1"
+              v-model="authUser.phone"
+            />
+          </div>
+        </div>
+        <div v-if="authUser.profile">
+          <p class="font-semibold text-gray-strong">Social links:</p>
+          <div class="flex gap-5">
+            <InputComponent
+              type="text"
+              label="LinkedIn"
+              name="linkedin"
+              :disabled="true"
+              class="w-fit flex-1"
+              v-model="authUser.profile.linkedin"
+            />
+            <InputComponent
+              type="text"
+              label="Github"
+              name="github"
+              :disabled="true"
+              class="w-fit flex-1"
+              v-model="authUser.profile.github"
+            />
+          </div>
+          <InputComponent
+            type="text"
+            name="website"
+            :disabled="true"
+            class="w-fit flex-1 mt-3"
+            label="Website/Portfolio"
+            v-model="authUser.profile.website"
+          />
+        </div>
+      </div>
+    </div>
+
+    <div class="wrap flex flex-col gap-4">
+      <p class="font-bold text-lg text-green-bright">Employer Specific questions</p>
+
+      <div class="flex flex-col gap-4 mt-5 px-4 max-w-[60%]" v-if="job?.questions?.length">
         <InputComponent
           v-for="question in job.questions"
           :key="question.id"
           :name="`question-${question.id}`"
           :type="question.type"
           placeholder="Ans"
-          class="w-4/5"
+          class="flex-1"
           :label="`${question.question} ${question.is_required ? '*' : ''}`"
           label-css="text-sm font-semibold"
         />
@@ -125,9 +153,10 @@ import {
   type User
 } from '@shared/pack'
 import { computed, onMounted, ref } from 'vue'
-import { RouterLink, useRoute } from 'vue-router'
+import { RouterLink, useRoute, useRouter } from 'vue-router'
 
 const route = useRoute()
+const router = useRouter()
 const authUser = ref<User<Profile> | null>(null)
 const currentCompany = ref<Company | null>(null)
 const application = ref<Partial<Application>>({})

@@ -1,8 +1,6 @@
 <template>
   <div class="flex gap-4" v-if="authUser">
-    <div
-      class="max-w-[400px] w-full sticky top-0 flex flex-col gap-4 h-[calc(100vh_-_134px)] overflow-y-auto thin-scrollbar"
-    >
+    <div class="max-w-[350px] w-full h-fit sticky top-[102px] flex flex-col gap-4">
       <div class="wrap !px-8 !py-6 !bg-green-bright text-white">
         <div class="flex gap-3 items-center">
           <img
@@ -37,32 +35,8 @@
           </div>
         </div>
       </div>
-      <div class="wrap !p-6">
-        <div>
-          <p class="font-bold text-main">Technical Skills</p>
-          <div class="flex gap-3 mt-3 flex-wrap">
-            <TagComponent text="HTML" />
-            <TagComponent text="CSS3" />
-            <TagComponent text="Python" />
-            <TagComponent text="JavaScript" />
-            <TagComponent text="MySQL" />
-            <TagComponent text="MSSQL" />
-          </div>
-        </div>
-        <div class="mt-10">
-          <p class="font-bold text-main">Soft Skills</p>
-          <div class="flex gap-3 mt-3 flex-wrap">
-            <TagComponent text="English Proficiency" />
-            <TagComponent text="Communication" />
-            <TagComponent text="Time Management" />
-            <TagComponent text="Problem Solving" />
-            <TagComponent text="Creativity" />
-            <TagComponent text="Teamwork" />
-          </div>
-        </div>
-      </div>
     </div>
-    <div class="h-[calc(100vh_-_134px)] overflow-y-auto thin-scrollbar flex-1 flex flex-col gap-4">
+    <div class="overflow-y-auto thin-scrollbar flex-1 flex flex-col gap-4">
       <div class="wrap flex flex-col gap-3">
         <div class="flex justify-between items-center">
           <p class="font-semibold text-main">Personal Information</p>
@@ -297,6 +271,35 @@
           v-model="profileModel.github"
           :disabled="!sectionFormState.social"
         />
+      </div>
+      <div class="wrap flex flex-col gap-3">
+        <div class="flex justify-between">
+          <p class="font-bold text-main">Technical Skills</p>
+          <button class="btn-outline">Edit</button>
+        </div>
+
+        <div class="flex gap-3 mt-3 flex-wrap">
+          <TagComponent text="HTML" />
+          <TagComponent text="CSS3" />
+          <TagComponent text="Python" />
+          <TagComponent text="JavaScript" />
+          <TagComponent text="MySQL" />
+          <TagComponent text="MSSQL" />
+        </div>
+      </div>
+      <div class="wrap flex flex-col gap-3">
+        <div class="flex justify-between">
+          <p class="font-bold text-main">Soft Skills</p>
+          <button class="btn-outline">Edit</button>
+        </div>
+        <div class="flex gap-3 mt-3 flex-wrap">
+          <TagComponent text="English Proficiency" />
+          <TagComponent text="Communication" />
+          <TagComponent text="Time Management" />
+          <TagComponent text="Problem Solving" />
+          <TagComponent text="Creativity" />
+          <TagComponent text="Teamwork" />
+        </div>
       </div>
       <div class="wrap flex flex-col gap-3">
         <div class="flex justify-between items-center">
