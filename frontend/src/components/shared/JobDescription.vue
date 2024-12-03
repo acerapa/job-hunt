@@ -21,11 +21,9 @@
       </button>
     </div>
     <div class="px-2 mt-3 flex flex-col gap-3">
-      <div class="flex gap-2 items-center" v-if="stringAddress">
+      <div class="flex gap-2 items-center">
         <img src="@/assets/icons/map-pin.png" alt="map-pin.png" />
-        <span class="text-xs text-gray-strong">
-          {{ stringAddress }}
-        </span>
+        <span class="text-xs text-gray-strong"></span>
       </div>
       <div class="flex gap-2 items-center" v-if="props.job.work_type && props.job.work_type.length">
         <img src="@/assets/icons/clock.png" alt="clock.png" />
@@ -115,7 +113,7 @@ import {
 } from '@shared/pack'
 import { useRouter } from 'vue-router'
 import { JobDescriptionState } from '@/const/enum'
-import { computed, onMounted, ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import { useAuthStore } from '@/stores/auth-store'
 
 interface Props {
@@ -154,19 +152,5 @@ onMounted(async () => {
       currentCompany.value = authUser.value?.company
     }
   }
-})
-
-const stringAddress = computed(() => {
-  let address = ''
-  if (props.job && props.job.address) {
-    const addressValues = Object.values(props.job.address)
-    if (addressValues.length > 6) {
-      address = Object.values(props.job.address).slice(0, -2).join(', ')
-    } else {
-      address = Object.values(props.job.address).join(', ')
-    }
-  }
-
-  return address
 })
 </script>

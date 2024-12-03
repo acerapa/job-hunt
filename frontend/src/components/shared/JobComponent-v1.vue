@@ -1,5 +1,5 @@
 <template>
-  <button class="wrap py-4 px-6 text-left border-2">
+  <button class="wrap py-4 px-6 text-left border-2 cursor-default">
     <div class="flex justify-between items-center">
       <div class="flex gap-3 items-center">
         <img
@@ -29,7 +29,8 @@
         <button>
           <img src="@/assets/icons/favorite.svg" alt="favorite.svg" />
         </button>
-        <button class="btn-success-outline" @click="onApply">Apply</button>
+        <button class="btn-success-outline" @click="onApply" v-if="false">Apply</button>
+        <button class="btn-success-outline" @click="onView">View details</button>
       </div>
     </div>
 
@@ -80,6 +81,15 @@ const onApply = () => {
     name: 'application-form',
     params: {
       job_id: props.job.id
+    }
+  })
+}
+
+const onView = () => {
+  router.push({
+    name: 'job-details',
+    params: {
+      id: props.job.id
     }
   })
 }

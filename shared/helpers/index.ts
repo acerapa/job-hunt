@@ -1,10 +1,10 @@
-export const range = (n: number, start:number = 0): Array<number> => {
+export const range = (n: number, start: number = 0): Array<number> => {
   const iArr = Array(n).keys()
   const rangedNumbers = []
 
-  let isDone: boolean | undefined = false;
-  while(!isDone) {
-    const { value, done } = iArr.next();
+  let isDone: boolean | undefined = false
+  while (!isDone) {
+    const { value, done } = iArr.next()
     if (!done) {
       rangedNumbers.push(value + start)
     }
@@ -16,4 +16,9 @@ export const range = (n: number, start:number = 0): Array<number> => {
 
 export const isEmptyObject = (data: object) => {
   return !Object.keys(data).length
+}
+
+// capitalize first letter of a string
+export const capitalizeFirst = (str: string) => {
+  return str.charAt(0).toUpperCase() + str.slice(1)
 }

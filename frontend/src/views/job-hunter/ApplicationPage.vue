@@ -40,15 +40,11 @@
 <script setup lang="ts">
 import TableComponent from '@/components/shared/TableComponent.vue'
 import JApplicationRow from '@/components/application/JApplicationRow.vue'
-import InputComponent from '@/components/shared/InputComponent.vue'
-import ApplicationJob from '@/components/application/ApplicationJob.vue'
-import JobDescription from '@/components/shared/JobDescription.vue'
 import { onMounted, ref } from 'vue'
-import { useJobStore } from '@/stores/job-store'
-import { RouterLink, useRouter } from 'vue-router'
 import { useProfileStore } from '@/stores/profile-store'
 import type { Profile, User } from '@shared/pack'
 import { useAuthStore } from '@/stores/auth-store'
+import { useRouter } from 'vue-router'
 
 const router = useRouter()
 const authUser = ref<User<Profile> | null>()
@@ -61,8 +57,6 @@ onMounted(async () => {
 
   if (authUser.value && authUser.value.profile) {
     await profileStore.fetchProfileById(authUser.value.profile.id)
-
-    console.log(profileStore.profile)
   }
 })
 </script>
