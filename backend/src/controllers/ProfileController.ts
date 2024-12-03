@@ -41,3 +41,25 @@ export const updateCreateProfileAddress = async (req: Request, res: Response) =>
     res.sendError({ message: `${name} ${message} ${stack}` })
   }
 }
+
+export const getProfileById = async (req: Request, res: Response) => {
+  try {
+    const profile = await Profile.findOne({
+      where: {
+        id: parseInt(req.params.id)
+      },
+      relations: {
+        address: true,
+        applications: {
+          job: {
+            company: true
+          }
+        }
+      }
+    })
+    res.sendSuccess({ data: profile, message: 'Successfully retrieved profile' })
+  } catch (error) {
+    const { message, name, stack } = error as Error
+    res.sendError({ message: `${name} ${message} ${stack}` })
+  }
+}

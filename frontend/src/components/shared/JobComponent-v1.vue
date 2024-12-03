@@ -4,27 +4,58 @@
       <div class="flex gap-3 items-center">
         <img
           :src="'test'"
-          class="w-9 h-9 object-contain bg-black rounded-full"
+          class="w-11 h-11 object-contain bg-black rounded-full"
           alt="company logo"
         />
-        <div class="flex flex-col text-left">
-          <span class="text-base font-bold">{{ props.job.title }}</span>
-          <span class="text-xs font-semibold text-gray-strong">{{ props.job.company.name }}</span>
+        <div class="flex flex-col gap-0 text-left">
+          <span class="text-lg font-bold">{{ props.job.title }}</span>
+          <div class="flex gap-1">
+            <span class="text-sm font-medium leading-none text-gray-strong">
+              {{ props.job.company.name }}
+            </span>
+            <div class="flex">
+              <img
+                src="@/assets/images/star-filled.png"
+                alt="star-filled.png"
+                class="w-4 h-4"
+                v-for="ndx in 5"
+                :key="ndx"
+              />
+            </div>
+          </div>
         </div>
       </div>
-      <button>
-        <img src="@/assets/icons/favorite.svg" alt="favorite.svg" />
-      </button>
-    </div>
-    <div class="mt-4 flex flex-col gap-2">
-      <span class="text-xs font-bold">{{ highlighted }} </span>
-      <span class="text-sm text-gray-strong">{{ props.job.description }}</span>
+      <div class="flex gap-2">
+        <button>
+          <img src="@/assets/icons/favorite.svg" alt="favorite.svg" />
+        </button>
+        <button class="btn-success-outline" @click="onApply">Apply</button>
+      </div>
     </div>
 
-    <div class="flex mt-6 text-blue-lt text-xs">
-      <button v-for="(tag, ndx) in props.job.tags" :key="ndx">
-        {{ `#${tag}` }}
+    <div class="flex gap-1 mt-3" v-if="highlights.length">
+      <button
+        v-for="item in highlights"
+        :key="item"
+        :class="Object.keys(WorkTypeMap).includes(item) ? 'work-type' : 'work-setup'"
+      >
+        <!-- capitalize first letter -->
+        {{ item.charAt(0).toUpperCase() + item.slice(1) }}
       </button>
+    </div>
+
+    <div class="mt-3 flex flex-col gap-2">
+      <span class="text-base text-gray-strong">{{ props.job.description }}</span>
+    </div>
+
+    <div class="flex gap-3 mt-5">
+      <div class="flex flex-wrap flex-1 text-blue-lt text-sm gap-1">
+        <button class="skills">Software developer</button>
+        <button class="skills">Java</button>
+      </div>
+      <span class="text-sm text-pale-gray font-bold whitespace-nowrap">
+        {{ 'Posted on ' + new Date(props.job.posted_on).toLocaleDateString() }}
+      </span>
     </div>
   </button>
 </template>
@@ -32,23 +63,38 @@
 <script setup lang="ts">
 import { WorkTypeMap, type Company, type Job, type Skill } from '@shared/pack'
 import { computed } from 'vue'
-
+import { useRouter } from 'vue-router'
 interface Props {
   job: Job<Skill, Company>
 }
 
+const highlights = computed(() => {
+  return [...props.job.work_setup, ...props.job.work_type]
+})
+
+const router = useRouter()
 const props = defineProps<Props>()
 
-const highlighted = computed(() => {
-  const highlights: string[] = []
-
-  if (props.job.work_type.length) {
-    highlights.push(props.job.work_type.map((type) => WorkTypeMap[type].text).join(', '))
-  }
-
-  if (props.job.posted_on) {
-    highlights.push(`Posted on ${new Date(props.job.posted_on).toLocaleDateString()}`)
-  }
-  return highlights.join(' - ')
-})
+const onApply = () => {
+  router.push({
+    name: 'application-form',
+    params: {
+      job_id: props.job.id
+    }
+  })
+}
 </script>
+
+<style scoped>
+.skills {
+  @apply border-2 border-blue-lt px-2 py-0.5 rounded-md;
+}
+
+.work-setup {
+  @apply bg-green-weak text-white text-xs px-2 py-0.5 rounded-full;
+}
+
+.work-type {
+  @apply border border-gray-strong text-gray-strong text-xs px-2 py-0.5 rounded-full;
+}
+</style>

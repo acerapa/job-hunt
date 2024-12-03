@@ -60,3 +60,26 @@ export const enum QuestionType {
   TIME = 'time',
   NUMBER = 'number'
 }
+
+export const ApplicationStatusMap = {
+  [ApplicationStatus.UNREVIEWED]: {
+    class: 'pending-status',
+    text: 'pending'
+  },
+  [ApplicationStatus.REVIEWED]: {
+    class: 'reviewed-status',
+    text: 'reviewed'
+  },
+  [ApplicationStatus.INTERVIEWING]: {
+    class: 'interviewing-status',
+    text: 'interviewing'
+  },
+  [ApplicationStatus.DECLINED]: {
+    class: 'declined-status',
+    text: 'declined'
+  },
+  [ApplicationStatus.OFFERED]: {
+    class: 'offered-status',
+    text: 'offered'
+  }
+}

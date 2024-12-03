@@ -1,32 +1,35 @@
 <template>
-  <div class="flex gap-4 w-full">
-    <SideFilter />
-    <div class="list-wrapper thin-scrollbar">
-      <div class="wrap text-white !bg-green-bright px-16 pt-5 flex flex-col gap-3 sticky top-0">
-        <p class="text-base font-semibold">Start the HUNT!</p>
-        <p class="text-sm font-normal">
-          Search and explore job openings, Take time to apply the job that you take a liking.
-        </p>
-        <InputComponent
-          :name="'search'"
-          type="search"
-          class="w-full"
-          input-class="w-full"
-          placeholder="Search Job"
-        />
-      </div>
-      <div class="flex flex-col gap-4 mt-5 max-w-[450px]">
-        <JobComponent
-          v-for="(job, ndx) in data"
-          :key="ndx"
-          :job="job"
-          class="w-full"
-          :class="selectedJob && selectedJob.id == job.id ? 'border-green-bright' : ''"
-          @click="selectedJob = job"
-        />
+  <div>
+    <div class="wrap text-white !bg-green-bright px-16 pt-5 flex flex-col gap-3 sticky top-[70px]">
+      <p class="text-base font-semibold">Start the HUNT!</p>
+      <p class="text-sm font-normal">
+        Search and explore job openings, Take time to apply the job that you take a liking.
+      </p>
+      <InputComponent
+        :name="'search'"
+        type="search"
+        class="w-1/3"
+        input-class="w-full"
+        placeholder="Search Job"
+      />
+      <div class="filters relative">
+        <button class="btn-white hover:text-main hover:border-white hover:bg-white">
+          Add filter &plus;
+        </button>
+
+        <!-- filter dropdown -->
+        <div class="wrap !p-2 shadow-md absolute mt-1 text-main">Filters</div>
       </div>
     </div>
-    <JobDescription v-if="selectedJob" :job="selectedJob" class="job-description thin-scrollbar" />
+    <div class="flex flex-col gap-4 mt-5">
+      <JobComponent
+        v-for="(job, ndx) in data"
+        :key="ndx"
+        :job="job"
+        @click="selectedJob = job"
+        class="w-full hover:border-green-bright"
+      />
+    </div>
   </div>
 
   <!-- // TODO: -->
@@ -43,8 +46,7 @@
 </template>
 
 <script setup lang="ts">
-import SideFilter from '@/components/job-list/SideFilter.vue'
-import JobDescription from '@/components/shared/JobDescription.vue'
+import ModelComponent from '@/components/shared/ModelComponent.vue'
 import InputComponent from '@/components/shared/InputComponent.vue'
 import JobComponent from '@/components/shared/JobComponent-v1.vue'
 import { useJobStore } from '@/stores/job-store'
@@ -67,10 +69,6 @@ onMounted(async () => {
 </script>
 
 <style scoped>
-.list-wrapper {
-  @apply flex-1 w-full overflow-y-auto sticky top-0 max-w-[450px] h-full max-h-[calc(100vh_-_134px)];
-}
-
 .job-description {
   @apply flex-1 max-w-[518px] overflow-y-auto h-fit sticky w-full max-h-[calc(100vh_-_134px)];
 }

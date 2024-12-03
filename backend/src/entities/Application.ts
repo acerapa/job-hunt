@@ -31,7 +31,7 @@ export class Application extends BaseEntity implements IApplication<Job, Profile
   })
   status: ApplicationStatus
 
-  @ManyToOne(() => Profile)
+  @ManyToOne(() => Profile, (profile) => profile.applications)
   @JoinColumn({ name: 'profile_id' })
   profile: Profile
 
