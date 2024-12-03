@@ -1,7 +1,7 @@
 <template>
   <div class="wrap flex flex-col gap-3">
     <div class="flex justify-between">
-      <p class="font-semibold text-lg">{{ props.title }}</p>
+      <p class="font-semibold text-lg table-title" :class="props.titleStyle">{{ props.title }}</p>
       <button v-if="props.hasAddNew" class="btn-success" @click="emit('onNew')">Add new</button>
     </div>
     <div class="flex justify-between py-3">
@@ -79,6 +79,7 @@ interface Tools {
 
 interface Props<T> {
   title?: string
+  titleStyle?: string
   hasAddNew?: boolean
   headers?: Component
   row?: Component

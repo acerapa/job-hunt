@@ -71,7 +71,7 @@ export class Profile extends BaseEntity implements IProfile<User, Skill, Applica
 
   skills: Skill[]
 
-  @OneToMany(() => Application, (application) => application.job)
+  @OneToMany(() => Application, (application) => application.profile)
   applications: Application[]
 
   @AfterLoad()

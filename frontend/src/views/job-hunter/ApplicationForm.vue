@@ -38,7 +38,7 @@
         <p class="font-bold text-lg text-green-bright">Hunter Informations</p>
         <div class="flex gap-3">
           <RouterLink :to="{ name: 'profile' }" class="btn-outline">Edit Informations</RouterLink>
-          <button class="btn-success">Submit Application</button>
+          <button class="btn-success" @click="onSubmitApplication">Submit Application</button>
         </div>
       </div>
 
@@ -142,9 +142,10 @@
 import InputComponent from '@/components/shared/InputComponent.vue'
 import { useAuthStore } from '@/stores/auth-store'
 import { useJobStore } from '@/stores/job-store'
+import { useUserStore } from '@/stores/user-store'
 import {
-  WorkSetupMap,
-  WorkTypeMap,
+  ApplicationStatus,
+  type Answer,
   type Application,
   type Company,
   type Job,
@@ -152,56 +153,30 @@ import {
   type Question,
   type User
 } from '@shared/pack'
-import { computed, onMounted, ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import { RouterLink, useRoute, useRouter } from 'vue-router'
 
 const route = useRoute()
 const router = useRouter()
+const userStore = useUserStore()
 const authUser = ref<User<Profile> | null>(null)
 const currentCompany = ref<Company | null>(null)
-const application = ref<Partial<Application>>({})
+const application = ref<Partial<Application<Object, Object, Partial<Answer>>>>({ answers: [] })
 const job = ref<Job<Object, Company, Object, Object, Object, Question> | null>(null)
 
 const jobStore = useJobStore()
 const authStore = useAuthStore()
 
-const profileAddress = computed(() => {
-  let addressStr = ''
-  if (authUser.value && authUser.value.profile && authUser.value.profile.address) {
-    addressStr = Object.values(authUser.value.profile.address).slice(0, -2).join(', ')
-  }
+const onSubmitApplication = async () => {
+  const res = await userStore.submitApplication(application.value)
 
-  return addressStr
-})
-
-const jobAddress = computed(() => {
-  let addressStr = ''
-  if (currentCompany.value && currentCompany.value.address) {
-    addressStr = Object.values(currentCompany.value.address).slice(0, -2).join(', ')
-  }
-
-  return addressStr
-})
-
-const workType = computed(() => {
-  let workTypeStr = ''
-  if (job.value && job.value.work_type) {
-    workTypeStr = job.value.work_type.map((type) => WorkTypeMap[type].text).join(', ')
-  }
-
-  return workTypeStr
-})
-
-const workSetup = computed(() => {
-  let workSetupStr = ''
-  if (job.value && job.value.work_setup) {
-    workSetupStr = job.value.work_setup.map((type) => WorkSetupMap[type].text).join(', ')
-  }
-  return workSetupStr
-})
+  // TODO: After a successful submission, navigate to the application page
+  // Next is it will create a notification for the providers
+}
 
 onMounted(async () => {
   if (route.params.job_id) {
+    await jobStore.fetchJobById(parseInt(route.params.job_id as string))
     job.value = await jobStore.getJobById(parseInt(route.params.job_id as string))
 
     if (job.value && job.value.company) {
@@ -210,6 +185,25 @@ onMounted(async () => {
   }
 
   authUser.value = await authStore.getAuthUser()
+
+  if (job.value) {
+    application.value.job_id = job.value.id
+
+    // add answers
+    if (job.value.questions) {
+      job.value.questions.forEach((question) => {
+        let ans: Partial<Answer> = {
+          question_id: question.id
+        }
+        application.value.answers?.push(ans)
+      })
+    }
+  }
+
+  // assigning of the application values
+  application.value.job_id = job.value?.id
+  application.value.profile_id = authUser.value?.profile?.id
+  application.value.status = ApplicationStatus.UNREVIEWED
 })
 </script>
 

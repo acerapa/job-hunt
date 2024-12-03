@@ -1,6 +1,10 @@
 <template>
+  <div class="wrap flex justify-between mb-4">
+    <p class="text-lg font-semibold">Profile Page</p>
+    <button class="btn-outline" @click="router.back()">&longleftarrow; Back</button>
+  </div>
   <div class="flex gap-4" v-if="authUser">
-    <div class="max-w-[350px] w-full h-fit sticky top-[102px] flex flex-col gap-4">
+    <div class="max-w-[350px] w-full h-fit sticky top-[70px] flex flex-col gap-4">
       <div class="wrap !px-8 !py-6 !bg-green-bright text-white">
         <div class="flex gap-3 items-center">
           <img
@@ -342,7 +346,9 @@ import { computed, onMounted, reactive, ref } from 'vue'
 import { useAuthStore } from '@/stores/auth-store'
 import { Gender, type Address, type Profile, type User } from '@shared/pack'
 import { useUserStore } from '@/stores/user-store'
+import { useRouter } from 'vue-router'
 
+const router = useRouter()
 const authUser = ref<User<Profile> | null>()
 const authStore = useAuthStore()
 const userStore = useUserStore()

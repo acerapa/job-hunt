@@ -74,20 +74,3 @@ GET http://localhost:3000/api/auth/authenticated
 ###
 GET http://localhost:3000/api/auth/sign-out
 
-
-#Test Create job endpoint
-###
-POST http://localhost:3000/api/users/company/1/jobs/create
-Accept: application/json
-Content-Type: application/json
-
-{
-  "job": {},
-  "address": {}
-}
-
-# Testing to get the company shifts
-###
-GET http://localhost:3000/api/settings/company/8/shifts
-Content-Type: application/json
-Accept: application/json
