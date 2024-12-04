@@ -51,6 +51,7 @@ export class Company extends BaseEntity implements ICompany<User, Job, Shift> {
   type: CompanyType
 
   @Column({
+    type: 'text',
     comment: 'Company descriptions'
   })
   description: string

@@ -54,6 +54,16 @@ export default <RouteRecordRaw[]>[
         path: 'profile',
         name: 'profile',
         component: () => import('@/views/job-hunter/ProfilePage.vue')
+      },
+      {
+        path: 'job-details/:id',
+        name: 'job-details',
+        component: () => import('@/views/job-hunter/JobPage.vue')
+      },
+      {
+        path: 'company-details/:id/:current_tab',
+        name: 'company-details',
+        component: () => import('@/views/job-hunter/CompanyPage.vue')
       }
     ] as RouteRecordRaw[]
   }

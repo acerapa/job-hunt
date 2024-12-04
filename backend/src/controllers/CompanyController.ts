@@ -86,6 +86,24 @@ export const updateCreateCompanyAddress = async (req: Request, res: Response) =>
   }
 }
 
+export const getById = async (req: Request, res: Response) => {
+  try {
+    const company = await Company.findOneOrFail({
+      where: {
+        id: parseInt(req.params.id)
+      },
+      relations: {
+        jobs: true
+      }
+    })
+
+    res.sendSuccess({ data: company, message: 'Successfully fetched' })
+  } catch (error) {
+    const { name, message } = error as Error
+    res.sendError({ message: `${name}: ${message}` })
+  }
+}
+
 // shifts related
 export const registerShift = async (req: Request, res: Response) => {
   try {

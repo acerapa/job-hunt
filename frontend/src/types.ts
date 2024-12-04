@@ -14,20 +14,6 @@ export interface Job {
   tags: string[]
 }
 
-export enum JobViewStatus {
-  ACTIVE = 'active',
-  CLOSE = 'close'
-}
-
-export interface JobView {
-  title: string
-  hunters: number
-  status: JobViewStatus
-  added_on: Date
-}
-
-export interface Company {}
-
 export interface Activity {
   type: string
   status: string
@@ -47,4 +33,20 @@ export interface Applicant {
   name: string
   applied_on: Date
   status: ApplicantStatus
+}
+
+export enum CompanyDetailsNav {
+  OVERVIEW = 'overview',
+  ABOUT = 'about',
+  JOBS = 'jobs',
+  SHIFTS = 'shifts',
+  REVIEWS = 'reviews'
+}
+
+export const CompanyDetailsNavMap = {
+  [CompanyDetailsNav.OVERVIEW]: 'Overview',
+  [CompanyDetailsNav.ABOUT]: 'About',
+  [CompanyDetailsNav.JOBS]: 'Jobs',
+  [CompanyDetailsNav.SHIFTS]: 'Shifts',
+  [CompanyDetailsNav.REVIEWS]: 'Reviews'
 }

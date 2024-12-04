@@ -4,6 +4,7 @@ import { defineStore } from 'pinia'
 import { ref } from 'vue'
 
 export const useCompanyStore = defineStore('company', () => {
+  const company = ref<Company | null>(null)
   const shifts = ref<Shift<Job, Company>[]>([])
   const shift = ref<Shift | null>(null)
 
@@ -22,6 +23,23 @@ export const useCompanyStore = defineStore('company', () => {
     await api(`users/company/update/${id}/address`, Method.POST, address)
   }
 
+  const fetchCompanyById = async (id: number) => {
+    const res: ApiResponse<Company> = await api(`users/company/${id}`)
+
+    if (res.status < 400) {
+      company.value = res.data
+    }
+  }
+
+  const getCompanyById = async (id: number) => {
+    if (!company.value || company.value.id != id) {
+      await fetchCompanyById(id)
+    }
+
+    return company.value
+  }
+
+  // shifts
   const fetchCompanyShifts = async (company_id: number) => {
     const res: ApiResponse<Shift<Job, Company>[]> = await api(
       `settings/company/${company_id}/shifts`
@@ -55,7 +73,7 @@ export const useCompanyStore = defineStore('company', () => {
   const fetchCompanyShiftById = async (id: number) => {
     const res: ApiResponse<Shift> = await api(`settings/company/shifts/${id}`)
 
-    if (res.status == 200) {
+    if (res.status < 400) {
       shift.value = res.data
     }
   }
@@ -82,8 +100,10 @@ export const useCompanyStore = defineStore('company', () => {
     getShiftById,
     updateCompany,
     registerShift,
+    getCompanyById,
     registerCompany,
     getCompanyShifts,
+    fetchCompanyById,
     fetchCompanyShifts,
     updateComapnyAddress,
     fetchCompanyShiftById
