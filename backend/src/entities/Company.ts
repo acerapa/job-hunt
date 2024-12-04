@@ -59,6 +59,12 @@ export class Company extends BaseEntity implements ICompany<User, Job, Shift> {
   @Column({ nullable: true })
   employee_range: string
 
+  @Column({ type: 'text', nullable: true })
+  mission: string
+
+  @Column({ type: 'text', nullable: true })
+  vision: string
+
   @Column({ nullable: true })
   ratings: number
 

@@ -1,4 +1,4 @@
-import { QuestionType, WorkSetup, WorkType } from './enums'
+import { CompanyType, QuestionType, WorkSetup, WorkType } from './enums'
 
 export const WorkTypeMap = {
   [WorkType.FULLTIME]: {
@@ -39,4 +39,27 @@ export const QuestionMap = {
   [QuestionType.DATE]: 'Date',
   [QuestionType.TIME]: 'Time',
   [QuestionType.NUMBER]: 'Number'
+}
+
+export const CompanyTypeMap = {
+  [CompanyType.STARTUP]: {
+    text: 'Startup',
+    value: CompanyType.STARTUP
+  },
+  [CompanyType.CORPORATION]: {
+    text: 'Corporation',
+    value: CompanyType.CORPORATION
+  },
+  [CompanyType.NON_PROFIT]: {
+    text: 'Non-profit',
+    value: CompanyType.NON_PROFIT
+  },
+  [CompanyType.GOVERNMENT]: {
+    text: 'Government',
+    value: CompanyType.GOVERNMENT
+  },
+  [CompanyType.OTHERS]: {
+    text: 'Others',
+    value: CompanyType.OTHERS
+  }
 }

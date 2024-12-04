@@ -47,7 +47,9 @@ export const enum ApplicationStatus {
 export const enum CompanyType {
   STARTUP = 'startup',
   CORPORATION = 'corporation',
-  NON_PROFIT = 'non-profit'
+  NON_PROFIT = 'non-profit',
+  GOVERNMENT = 'government',
+  OTHERS = 'others'
 }
 
 export const enum QuestionType {

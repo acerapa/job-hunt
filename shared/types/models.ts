@@ -63,6 +63,8 @@ export interface Company<User = Object, Job = Object, Shift = Object> {
   address?: Address
   address_id?: number
   jobs?: Job[]
+  mission: string
+  vision: string
   shifts?: Shift[]
   ratings: number
   industry: Industry
@@ -157,7 +159,7 @@ export interface Like {
 }
 
 export interface Industry<Company = Object> {
-  id: number
+  id?: number
   name: string
   companies?: Company[]
   created_at?: Date

@@ -1,11 +1,12 @@
 import { api, authenticatedApi, Method } from '@/api'
-import type { Address, ApiResponse, Company, Job, Shift } from '@shared/pack'
+import type { Address, ApiResponse, Company, Industry, Job, Shift, User } from '@shared/pack'
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 
 export const useCompanyStore = defineStore('company', () => {
   const company = ref<Company | null>(null)
   const shifts = ref<Shift<Job, Company>[]>([])
+  const industries = ref<Industry[]>([])
   const shift = ref<Shift | null>(null)
 
   const registerCompany = async (
@@ -24,7 +25,7 @@ export const useCompanyStore = defineStore('company', () => {
   }
 
   const fetchCompanyById = async (id: number) => {
-    const res: ApiResponse<Company> = await api(`users/company/${id}`)
+    const res: ApiResponse<Company<Job, User>> = await api(`users/company/${id}`)
 
     if (res.status < 400) {
       company.value = res.data
@@ -93,15 +94,35 @@ export const useCompanyStore = defineStore('company', () => {
     return res.status
   }
 
+  // industries
+  const fetchIndustries = async () => {
+    const res: ApiResponse<Industry[]> = await api(`users/company/industry/all`)
+
+    if (res.status < 400) {
+      industries.value = res.data
+    }
+  }
+
+  const getIndustries = async () => {
+    if (!industries.value.length) {
+      await fetchIndustries()
+    }
+
+    return industries.value
+  }
+
   return {
     shifts,
+    industries,
     updateShift,
     deleteShift,
     getShiftById,
     updateCompany,
     registerShift,
+    getIndustries,
     getCompanyById,
     registerCompany,
+    fetchIndustries,
     getCompanyShifts,
     fetchCompanyById,
     fetchCompanyShifts,

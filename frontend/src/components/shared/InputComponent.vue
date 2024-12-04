@@ -30,7 +30,7 @@
       :placeholder="props.placeholder"
       :rows="props.rows"
       :cols="props.cols"
-      v-model="value as string"
+      v-model="value"
       @input="onTextAreaInput"
       :disabled="props.disabled"
     ></textarea>
@@ -47,7 +47,9 @@
       v-model="value"
       :disabled="props.disabled"
     >
-      <option v-if="props.placeholder" value="" hidden>{{ props.placeholder }}</option>
+      <option v-if="props.placeholder" :value="undefined" disabled :selected="true">
+        {{ props.placeholder }}
+      </option>
       <option v-for="(opt, ndx) in props.options" :value="opt.value" :key="ndx">
         {{ opt.text }}
       </option>
@@ -88,7 +90,7 @@ const props = withDefaults(defineProps<Props>(), {
   disabled: false
 })
 
-const value = defineModel()
+const value = defineModel<any>()
 
 const input = ref<HTMLElement>()
 const errorMsgTop = ref<number>()
