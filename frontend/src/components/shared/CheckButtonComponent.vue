@@ -1,11 +1,16 @@
 <template>
-  <label :for="props.id" class="relative cursor-pointer">
+  <label
+    :for="props.id"
+    class="relative cursor-pointer"
+    :class="props.disabled ? 'opacity-50 pointer-events-none' : ''"
+  >
     <input
       :id="props.id"
       type="checkbox"
       v-model="model"
       :name="props.name"
       :value="props.value"
+      :disabled="props.disabled"
       class="peer top-0 absolute z-0 invisible"
     />
     <div class="font-bold px-2 py-1">
@@ -25,9 +30,12 @@ interface Props {
   name: string
   label: string
   value: string | number
+  disabled?: boolean
 }
 
-const props = defineProps<Props>()
+const props = withDefaults(defineProps<Props>(), {
+  disabled: false
+})
 const model = defineModel()
 </script>
 

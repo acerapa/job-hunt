@@ -3,6 +3,7 @@ import { Company } from '../entities/Company'
 import { User } from '../entities/User'
 import { Address } from '../entities/Address'
 import { Shift } from '../entities/Shift'
+import { Industry } from '../entities/Industry'
 
 export const register = async (req: Request, res: Response) => {
   try {
@@ -40,10 +41,7 @@ export const update = async (req: Request, res: Response) => {
   try {
     await Company.update(
       {
-        id: parseInt(req.params.id),
-        user: {
-          id: parseInt(req.params.user_id)
-        }
+        id: parseInt(req.params.id)
       },
       req.validated
     )
@@ -93,7 +91,9 @@ export const getById = async (req: Request, res: Response) => {
         id: parseInt(req.params.id)
       },
       relations: {
-        jobs: true
+        jobs: true,
+        user: true,
+        industry: true
       }
     })
 
@@ -123,5 +123,20 @@ export const registerShift = async (req: Request, res: Response) => {
   } catch (error) {
     const { name, message } = error as Error
     res.sendError({ message: `${name}: ${message}` })
+  }
+}
+
+// Industry
+export const getIndustries = async (req: Request, res: Response) => {
+  try {
+    const industries = await Industry.find({
+      relations: {
+        companies: true
+      }
+    })
+    res.sendSuccess({ data: industries, message: 'Successfully fetched industries' })
+  } catch (error) {
+    const { name, message, stack } = error as Error
+    res.sendError({ message: `${name}: ${message} ${stack}` })
   }
 }

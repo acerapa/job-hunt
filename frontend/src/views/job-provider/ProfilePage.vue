@@ -38,7 +38,7 @@
         </div>
       </div>
       <div class="mt-4 flex gap-10">
-        <div class="flex flex-col gap-3">
+        <div class="flex flex-col gap-3 flex-1">
           <InputComponent
             type="text"
             name="company_name"
@@ -46,41 +46,29 @@
             placeholder="Ex. ABC Company"
             label-css="text-sm font-medium"
             v-model="companyModel.name"
+            :disabled="!sectionFormState.basic"
           />
           <InputComponent
             type="select"
-            :options="[]"
             name="company_type"
             label="Company Type"
+            :options="companyTypeOptions"
             placeholder="Ex. ABC Company"
             label-css="text-sm font-medium"
             v-model="companyModel.type"
+            :disabled="!sectionFormState.basic"
           />
-          <div class="flex flex-col gap-0">
-            <p class="text-sm font-medium">Industry</p>
-            <div class="flex gap-4 flex-wrap">
-              <CheckButtonComponent
-                id="information_technology"
-                name="information_technology"
-                value="information_technology"
-                label="Information Technology"
-              />
-              <CheckButtonComponent
-                id="software_development"
-                name="software_development"
-                label="Software Development"
-                value="software_development"
-              />
-              <CheckButtonComponent
-                id="robotics"
-                name="robotics"
-                label="Robotics"
-                value="robotics"
-              />
-            </div>
-          </div>
+          <InputComponent
+            type="select"
+            :options="industryOptions"
+            name="industry"
+            label="Industry"
+            label-css="text-sm font-medium"
+            v-model="companyModel.industry"
+            :disabled="!sectionFormState.basic"
+          />
         </div>
-        <div class="flex flex-col gap-3">
+        <div class="flex flex-col gap-3 flex-1">
           <div class="flex flex-col gap-1">
             <p class="text-sm font-medium">Employee Range</p>
             <div class="flex gap-3 items-center">
@@ -90,6 +78,7 @@
                 class="max-w-28"
                 placeholder="Min"
                 v-model="min"
+                :disabled="!sectionFormState.basic"
               />
               <span>to</span>
               <InputComponent
@@ -98,6 +87,7 @@
                 class="max-w-28"
                 placeholder="Max"
                 v-model="max"
+                :disabled="!sectionFormState.basic"
               />
             </div>
           </div>
@@ -109,7 +99,7 @@
                 src="@/assets/images/default.png"
                 class="w-14 h-14 rounded-full bg-gray-700"
               />
-              <input type="file" />
+              <input type="file" :disabled="!sectionFormState.basic" />
             </div>
           </div>
           <div class="flex flex-col gap-1">
@@ -120,7 +110,7 @@
                 src="@/assets/images/default.png"
                 class="w-14 h-14 rounded-full bg-gray-700"
               />
-              <input type="file" />
+              <input type="file" :disabled="!sectionFormState.basic" />
             </div>
           </div>
         </div>
@@ -146,12 +136,23 @@
         :model-errors="{}"
         v-model="addressModel"
         class="address-component"
+        :disabled="!sectionFormState.address"
       />
     </div>
     <div class="wrap">
       <div class="flex justify-between items-center">
         <p class="font-semibold text-main tracking-wide">Overview</p>
-        <button class="btn-outline">Edit</button>
+        <button
+          class="btn-outline"
+          v-if="!sectionFormState.overview"
+          @click="sectionFormState.overview = true"
+        >
+          Edit
+        </button>
+        <div class="flex gap-3" v-if="sectionFormState.overview">
+          <button class="btn-outline" @click="sectionFormState.overview = false">Cancel</button>
+          <button class="btn" @click="onUpdateCompany()">Save</button>
+        </div>
       </div>
       <div class="flex flex-col gap-4">
         <InputComponent
@@ -161,20 +162,25 @@
           placeholder="Description"
           label-css="text-sm font-medium"
           v-model="companyModel.description"
+          :disabled="!sectionFormState.overview"
         />
         <InputComponent
           type="textarea"
           name="mission"
           label="Mission"
           placeholder="Mission"
+          v-model="companyModel.mission"
           label-css="text-sm font-medium"
+          :disabled="!sectionFormState.overview"
         />
         <InputComponent
           type="textarea"
           name="vision"
           label="Vision"
           placeholder="Vision"
+          v-model="companyModel.vision"
           label-css="text-sm font-medium"
+          :disabled="!sectionFormState.overview"
         />
       </div>
     </div>
@@ -183,8 +189,8 @@
 
 <script setup lang="ts">
 import { useAuthStore } from '@/stores/auth-store'
-import type { Address, Company, Profile, User } from '@shared/pack'
-import { onMounted, ref } from 'vue'
+import { CompanyTypeMap, type Address, type Company, type Profile, type User } from '@shared/pack'
+import { computed, onMounted, ref } from 'vue'
 import InputComponent from '@/components/shared/InputComponent.vue'
 import AddressComponent from '@/components/shared/AddressComponent.vue'
 import CheckButtonComponent from '@/components/shared/CheckButtonComponent.vue'
@@ -214,7 +220,27 @@ const onUpdateAddress = async () => {
   sectionFormState.value.address = false
 }
 
+const employeeRange = computed(() => {
+  return [min.value, max.value].join(' - ')
+})
+
+const companyTypeOptions = computed(() => {
+  return Object.values(CompanyTypeMap)
+})
+
+const industryOptions = computed(() => {
+  return companyStore.industries.map((i) => {
+    return {
+      text: i.name,
+      value: i.id as number
+    }
+  })
+})
+
 const onUpdateCompany = async () => {
+  // minimal modifications
+  companyModel.value.employee_range = employeeRange.value
+
   if (authUser.value && authUser.value.company) {
     await companyStore.updateCompany(companyModel.value, authUser.value.company.id)
   }
@@ -223,11 +249,19 @@ const onUpdateCompany = async () => {
 onMounted(async () => {
   authUser.value = await authStore.getAuthUser()
 
+  // get industries
+  await companyStore.getIndustries()
+
   if (authUser.value && authUser.value.company) {
     companyModel.value = authUser.value.company
     if (authUser.value.company.address) {
       addressModel.value = authUser.value.company.address
     }
+
+    // few modifications
+    const [minValue, maxValue] = authUser.value.company.employee_range.split(' - ')
+    min.value = parseInt(minValue)
+    max.value = parseInt(maxValue)
   }
 })
 </script>

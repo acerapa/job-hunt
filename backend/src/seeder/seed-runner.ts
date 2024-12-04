@@ -37,7 +37,10 @@ if (args.length) {
       await runSeeds(seeders)
     } else if (arg.startsWith('--seed=')) {
       const seedStr = arg.replace('--seed=', '')
-      const seeds = seedStr.split(',').filter((seed) => seed)
+      const seeds = seedStr
+        .split(',')
+        .filter((seed) => seed)
+        .map((seed) => `${seed.trim()}.seeder.ts`)
       await runSeeds(seeds)
     } else if (arg == '--seed-reset-all') {
       // to be added

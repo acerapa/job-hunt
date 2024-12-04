@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col gap-4">
+  <div class="flex flex-col gap-4 pb-10">
     <div class="wrap flex justify-between">
       <p class="text-lg font-semibold">Company Details</p>
       <button class="btn-outline" @click="router.back()">&longleftarrow; Back</button>
@@ -53,12 +53,52 @@
           </RouterLink>
         </div>
 
-        <div v-if="CompanyDetailsNav.OVERVIEW">
+        <div
+          class="flex flex-col gap-3"
+          v-if="CompanyDetailsNav.OVERVIEW == route.params.current_tab"
+        >
           <p class="font-semibold">Company Overview</p>
+
+          <div class="grid grid-rows-2 gap-3 w-fit my-5">
+            <div class="flex gap-20 ring-2 ring-blue-lt px-3 py-0.5 rounded justify-between">
+              <p class="font-normal text-base text-main">Jobs</p>
+              <p class="text-base text-blue-bright font-medium">{{ company.jobs?.length }}</p>
+            </div>
+            <div class="flex gap-20 ring-2 ring-blue-lt px-3 py-0.5 rounded justify-between">
+              <p class="font-normal text-base text-main">Company Size</p>
+              <p class="text-base text-blue-bright font-medium">{{ company.employee_range }}</p>
+            </div>
+            <div
+              class="flex gap-20 ring-2 ring-blue-lt px-3 py-0.5 rounded justify-between"
+              v-if="company.industry"
+            >
+              <p class="font-normal text-base text-main">Industry</p>
+              <p class="text-base text-blue-bright font-medium">{{ company.industry.name }}</p>
+            </div>
+          </div>
+
+          <div>
+            <p class="font-medium">Description</p>
+            <p class="text-gray-strong indent-4">{{ company.description }}</p>
+          </div>
+
+          <div v-if="company.mission">
+            <p class="font-medium">Mission</p>
+            <p class="text-gray-strong indent-4 italic">{{ company.mission }}</p>
+          </div>
+
+          <div v-if="company.vision">
+            <p class="font-medium">Vision</p>
+            <p class="text-gray-strong indent-4 italic">{{ company.vision }}</p>
+          </div>
         </div>
-        <div v-if="CompanyDetailsNav.ABOUT == route.params.current_tab">
-          <p class="font-semibold">About the company</p>
-          <p class="indent-5 mt-3">{{ company.description }}</p>
+
+        <div v-if="CompanyDetailsNav.JOBS == route.params.current_tab">
+          <p class="font-semibold">Open Jobs</p>
+        </div>
+
+        <div v-if="CompanyDetailsNav.REVIEWS == route.params.current_tab">
+          <p class="font-semibold">Reviews</p>
         </div>
       </div>
     </div>
@@ -92,7 +132,7 @@ onMounted(async () => {
 <style scoped>
 .active-nav {
   box-shadow: 0px 2px 0px white;
-  @apply border-2 !border-main !border-b-white font-bold;
+  @apply border-2 !border-main !border-b-white font-medium;
 }
 
 .company-nav {

@@ -37,16 +37,12 @@ export interface Applicant {
 
 export enum CompanyDetailsNav {
   OVERVIEW = 'overview',
-  ABOUT = 'about',
   JOBS = 'jobs',
-  SHIFTS = 'shifts',
   REVIEWS = 'reviews'
 }
 
 export const CompanyDetailsNavMap = {
   [CompanyDetailsNav.OVERVIEW]: 'Overview',
-  [CompanyDetailsNav.ABOUT]: 'About',
   [CompanyDetailsNav.JOBS]: 'Jobs',
-  [CompanyDetailsNav.SHIFTS]: 'Shifts',
   [CompanyDetailsNav.REVIEWS]: 'Reviews'
 }

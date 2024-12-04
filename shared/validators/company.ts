@@ -7,10 +7,20 @@ export const CompanySchema = z.object({
   description: z.string().min(1, 'Description is required!'),
   employee_range: z.string().optional(),
   website: z.string().optional(),
-  type: z.enum([CompanyType.STARTUP, CompanyType.CORPORATION, CompanyType.NON_PROFIT]).optional(),
-  logo: z.string().optional(),
+  type: z
+    .enum([
+      CompanyType.STARTUP,
+      CompanyType.CORPORATION,
+      CompanyType.NON_PROFIT,
+      CompanyType.GOVERNMENT,
+      CompanyType.OTHERS
+    ])
+    .optional(),
+  logo: z.string().nullable().optional(),
   address_id: z.number().optional(),
-  industry: z.string().optional()
+  industry: z.union([z.string(), z.number()]).optional(),
+  mission: z.string().optional(),
+  vision: z.string().optional()
 })
 
 export const CompanyUpdateSchema = CompanySchema.partial()
