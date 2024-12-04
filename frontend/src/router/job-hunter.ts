@@ -61,7 +61,7 @@ export default <RouteRecordRaw[]>[
         component: () => import('@/views/job-hunter/JobPage.vue')
       },
       {
-        path: 'company-details/:id',
+        path: 'company-details/:id/:current_tab',
         name: 'company-details',
         component: () => import('@/views/job-hunter/CompanyPage.vue')
       }

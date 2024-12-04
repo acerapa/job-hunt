@@ -112,6 +112,7 @@ import { useRoute, useRouter } from 'vue-router'
 
 // temporary
 import battlePng from '@/assets/images/battle.png'
+import { CompanyDetailsNav } from '@/types'
 
 const route = useRoute()
 const router = useRouter()
@@ -122,7 +123,7 @@ const job = ref<Job<Object, Company> | null>()
 const onMoreDetails = () => {
   router.push({
     name: 'company-details',
-    params: { id: job.value?.company.id }
+    params: { id: job.value?.company.id, current_tab: CompanyDetailsNav.OVERVIEW }
   })
 }
 

@@ -1,5 +1,6 @@
 import { Router } from 'express'
 import {
+  getById,
   register,
   registerShift,
   update,
@@ -15,6 +16,7 @@ import {
 
 const router = Router()
 
+router.get('/company/:id', getById)
 router.post('/:user_id/company/register', validateBody(CompanyCreateSchema), register)
 router.post('/company/update/:id', validateBody(CompanyUpdateSchema), update)
 router.post(
