@@ -59,7 +59,7 @@
         >
           <p class="font-semibold">Company Overview</p>
 
-          <div class="grid grid-rows-2 gap-3 w-fit">
+          <div class="grid grid-rows-2 gap-3 w-fit my-5">
             <div class="flex gap-20 ring-2 ring-blue-lt px-3 py-0.5 rounded justify-between">
               <p class="font-normal text-base text-main">Jobs</p>
               <p class="text-base text-blue-bright font-medium">{{ company.jobs?.length }}</p>
@@ -79,17 +79,17 @@
 
           <div>
             <p class="font-medium">Description</p>
-            <p class="text-gray-strong">{{ company.description }}</p>
+            <p class="text-gray-strong indent-4">{{ company.description }}</p>
           </div>
 
           <div v-if="company.mission">
             <p class="font-medium">Mission</p>
-            <p class="text-gray-strong italic">{{ company.mission }}</p>
+            <p class="text-gray-strong indent-4 italic">{{ company.mission }}</p>
           </div>
 
           <div v-if="company.vision">
             <p class="font-medium">Vision</p>
-            <p class="text-gray-strong italic">{{ company.vision }}</p>
+            <p class="text-gray-strong indent-4 italic">{{ company.vision }}</p>
           </div>
         </div>
 
