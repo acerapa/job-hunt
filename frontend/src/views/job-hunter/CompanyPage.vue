@@ -2,7 +2,9 @@
   <div class="flex flex-col gap-4 pb-10">
     <div class="wrap flex justify-between">
       <p class="text-lg font-semibold">Company Details</p>
-      <button class="btn-outline" @click="router.back()">&longleftarrow; Back</button>
+      <button class="btn-outline" @click="router.push({ name: 'job-list' })">
+        &longleftarrow; Back
+      </button>
     </div>
     <div class="wrap flex flex-col" v-if="company">
       <div class="w-full h-60">
@@ -54,26 +56,26 @@
         </div>
 
         <div
-          class="flex flex-col gap-3"
+          class="flex flex-col gap-3 mt-4"
           v-if="CompanyDetailsNav.OVERVIEW == route.params.current_tab"
         >
           <p class="font-semibold">Company Overview</p>
 
           <div class="grid grid-rows-2 gap-3 w-fit my-5">
-            <div class="flex gap-20 ring-2 ring-blue-lt px-3 py-0.5 rounded justify-between">
-              <p class="font-normal text-base text-main">Jobs</p>
-              <p class="text-base text-blue-bright font-medium">{{ company.jobs?.length }}</p>
+            <div class="flex gap-16 ring-2 ring-blue-lt px-3 py-0.5 rounded justify-between">
+              <p class="font-normal text-sm text-main">Jobs</p>
+              <p class="text-sm text-blue-bright font-medium">{{ company.jobs?.length }}</p>
             </div>
-            <div class="flex gap-20 ring-2 ring-blue-lt px-3 py-0.5 rounded justify-between">
-              <p class="font-normal text-base text-main">Company Size</p>
-              <p class="text-base text-blue-bright font-medium">{{ company.employee_range }}</p>
+            <div class="flex gap-16 ring-2 ring-blue-lt px-3 py-0.5 rounded justify-between">
+              <p class="font-normal text-sm text-main">Company Size</p>
+              <p class="text-sm text-blue-bright font-medium">{{ company.employee_range }}</p>
             </div>
             <div
-              class="flex gap-20 ring-2 ring-blue-lt px-3 py-0.5 rounded justify-between"
+              class="flex gap-16 ring-2 ring-blue-lt px-3 py-0.5 rounded justify-between"
               v-if="company.industry"
             >
-              <p class="font-normal text-base text-main">Industry</p>
-              <p class="text-base text-blue-bright font-medium">{{ company.industry.name }}</p>
+              <p class="font-normal text-sm text-main">Industry</p>
+              <p class="text-sm text-blue-bright font-medium">{{ company.industry.name }}</p>
             </div>
           </div>
 
@@ -91,16 +93,29 @@
             <p class="font-medium">Vision</p>
             <p class="text-gray-strong indent-4 italic">{{ company.vision }}</p>
           </div>
+
+          <div class="mt-5" v-if="company.jobs">
+            <p class="font-semibold">Jobs</p>
+          </div>
+
+          <div class="mt-5">
+            <p class="font-semibold">Reviews</p>
+          </div>
         </div>
 
-        <div v-if="CompanyDetailsNav.JOBS == route.params.current_tab">
+        <div class="mt-4" v-if="CompanyDetailsNav.JOBS == route.params.current_tab">
           <p class="font-semibold">Open Jobs</p>
         </div>
 
-        <div v-if="CompanyDetailsNav.REVIEWS == route.params.current_tab">
+        <div class="mt-4" v-if="CompanyDetailsNav.REVIEWS == route.params.current_tab">
           <p class="font-semibold">Reviews</p>
         </div>
       </div>
+    </div>
+
+    <div class="wrap">
+      <p class="text-lg font-semibold">Similar Companies</p>
+      <p>No data to show for now</p>
     </div>
   </div>
 </template>
@@ -112,10 +127,10 @@ import battlePng from '@/assets/images/battle.png'
 
 import { onMounted, ref } from 'vue'
 import { useCompanyStore } from '@/stores/company-store'
-import type { Company } from '@shared/pack'
+import type { Company, Industry, Job } from '@shared/pack'
 import { CompanyDetailsNav, CompanyDetailsNavMap } from '@/types'
 
-const company = ref<Company | null>()
+const company = ref<Company<Object, Job, Object, Industry> | null>()
 
 const route = useRoute()
 const router = useRouter()

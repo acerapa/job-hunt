@@ -60,11 +60,12 @@
           />
           <InputComponent
             type="select"
+            v-if="companyModel.industry"
             :options="industryOptions"
             name="industry"
             label="Industry"
             label-css="text-sm font-medium"
-            v-model="companyModel.industry"
+            v-model="companyModel.industry.id"
             :disabled="!sectionFormState.basic"
           />
         </div>
@@ -189,11 +190,18 @@
 
 <script setup lang="ts">
 import { useAuthStore } from '@/stores/auth-store'
-import { CompanyTypeMap, type Address, type Company, type Profile, type User } from '@shared/pack'
+import {
+  CompanyTypeMap,
+  type Address,
+  type Company,
+  type Industry,
+  type Job,
+  type Profile,
+  type User
+} from '@shared/pack'
 import { computed, onMounted, ref } from 'vue'
 import InputComponent from '@/components/shared/InputComponent.vue'
 import AddressComponent from '@/components/shared/AddressComponent.vue'
-import CheckButtonComponent from '@/components/shared/CheckButtonComponent.vue'
 import { useCompanyStore } from '@/stores/company-store'
 
 const min = ref<number>()
@@ -208,7 +216,9 @@ const authStore = useAuthStore()
 const companyStore = useCompanyStore()
 const authUser = ref<User<Profile, Company> | null>(null)
 
-const companyModel = ref<Partial<Company>>({})
+const companyModel = ref<Partial<Company<Object, Job, Object, Partial<Industry>>>>({
+  industry: { id: 0 }
+})
 
 const addressModel = ref<Partial<Address>>({})
 
@@ -253,15 +263,22 @@ onMounted(async () => {
   await companyStore.getIndustries()
 
   if (authUser.value && authUser.value.company) {
-    companyModel.value = authUser.value.company
-    if (authUser.value.company.address) {
-      addressModel.value = authUser.value.company.address
-    }
+    let company = await companyStore.getCompanyById(authUser.value.company.id)
+    if (company) {
+      companyModel.value = company
 
-    // few modifications
-    const [minValue, maxValue] = authUser.value.company.employee_range.split(' - ')
-    min.value = parseInt(minValue)
-    max.value = parseInt(maxValue)
+      if (company.address) {
+        addressModel.value = company.address
+      }
+      // few modifications
+      const [minValue, maxValue] = company.employee_range.split(' - ')
+      min.value = parseInt(minValue)
+      max.value = parseInt(maxValue)
+
+      if (company.industry) {
+        companyModel.value.industry = company.industry
+      }
+    }
   }
 })
 </script>

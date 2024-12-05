@@ -18,7 +18,7 @@ import { Industry } from './Industry'
 import { Shift } from './Shift'
 
 @Entity('companies')
-export class Company extends BaseEntity implements ICompany<User, Job, Shift> {
+export class Company extends BaseEntity implements ICompany<User, Job, Shift, Industry, Address> {
   @PrimaryGeneratedColumn()
   id: number
 

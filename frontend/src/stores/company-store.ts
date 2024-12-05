@@ -4,7 +4,7 @@ import { defineStore } from 'pinia'
 import { ref } from 'vue'
 
 export const useCompanyStore = defineStore('company', () => {
-  const company = ref<Company | null>(null)
+  const company = ref<Company<User, Job, Shift, Industry> | null>(null)
   const shifts = ref<Shift<Job, Company>[]>([])
   const industries = ref<Industry[]>([])
   const shift = ref<Shift | null>(null)
@@ -25,7 +25,7 @@ export const useCompanyStore = defineStore('company', () => {
   }
 
   const fetchCompanyById = async (id: number) => {
-    const res: ApiResponse<Company<Job, User>> = await api(`users/company/${id}`)
+    const res: ApiResponse<Company<User, Job, Shift, Industry>> = await api(`users/company/${id}`)
 
     if (res.status < 400) {
       company.value = res.data
