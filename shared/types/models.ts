@@ -50,7 +50,13 @@ export interface Skill<Profile = Object> {
   profiles?: Profile[]
 }
 
-export interface Company<User = Object, Job = Object, Shift = Object> {
+export interface Company<
+  User = Object,
+  Job = Object,
+  Shift = Object,
+  Industry = Object,
+  Address = Object
+> {
   id: number
   name: string
   user_id?: number

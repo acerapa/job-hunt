@@ -93,7 +93,8 @@ export const getById = async (req: Request, res: Response) => {
       relations: {
         jobs: true,
         user: true,
-        industry: true
+        industry: true,
+        address: true
       }
     })
 
