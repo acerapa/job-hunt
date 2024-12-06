@@ -89,7 +89,7 @@ export interface Job<
   id: number
   company_id?: number
   title: string
-  description: string
+  description: object
   salary_range: string
   show_salary_range: boolean
   posted_on: Date
@@ -101,7 +101,7 @@ export interface Job<
   skills?: Skill[]
   shifts?: Shift[]
   applications?: Application[]
-  responsibilities: string
+  responsibilities: object
   qualifications: string
   what_we_offer: string
   application_url: string

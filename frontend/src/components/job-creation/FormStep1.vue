@@ -136,7 +136,7 @@
       <!-- TODO: need to add a wysiwyg editor -->
       <p class="font-medium">Job Description</p>
       <InputComponent
-        type="textarea"
+        type="wysiwyg"
         name="description"
         input-class="text-sm"
         v-model="jobModel.description"
@@ -166,7 +166,8 @@ import { useCompanyStore } from '@/stores/company-store'
 
 const showSalary = ref<boolean>(true)
 const jobModel = defineModel<Partial<Job<Skill, Partial<Address>>>>()
-const modelErrors = defineModel<Partial<Job & Address>>('modelErrors')
+const modelErrors =
+  defineModel<Partial<Omit<Job, 'description'> & { description: string } & Address>>('modelErrors')
 const min = ref<number>(0)
 const max = ref<number>(0)
 

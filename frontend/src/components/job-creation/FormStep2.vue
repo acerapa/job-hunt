@@ -1,12 +1,13 @@
 <template>
   <div class="flex flex-col gap-3" v-if="jobModel && modelErrors">
     <InputComponent
-      type="textarea"
+      type="wysiwyg"
+      class="mt-3"
       label-css="font-medium"
       name="key-responsibility"
       label="Key Responsibility"
       v-model="jobModel.responsibilities"
-      placeholder="Enter key responsibility"
+      placeholder="Enter key responsibilities"
       :error-message="modelErrors.responsibilities"
     />
 
@@ -47,5 +48,6 @@ import type { Job } from '@shared/pack'
 import InputComponent from '../shared/InputComponent.vue'
 
 const jobModel = defineModel<Partial<Job>>()
-const modelErrors = defineModel<Partial<Job>>('modelErrors')
+const modelErrors =
+  defineModel<Partial<Omit<Job, 'responsibilities'> & { responsibilities: string }>>('modelErrors')
 </script>

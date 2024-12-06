@@ -5,7 +5,7 @@ import { QuestionSchema } from './question'
 
 export const JobSchema = z.object({
   title: z.string().min(1, 'Title is required!'),
-  description: z.string().min(1, 'Description is required!'),
+  description: z.object({}).catchall(z.unknown()),
   salary_range: z.string().optional(),
   posted_on: z.string().optional(),
   status: z.enum([JobStatus.CLOSED, JobStatus.ACTIVE, JobStatus.DRAFT]),
@@ -15,7 +15,7 @@ export const JobSchema = z.object({
   shifts: z.array(z.number()).optional(),
   is_flex: z.boolean().optional(),
   show_salary_range: z.boolean().optional(),
-  responsibilities: z.string().min(1, 'Responsibilities is required!'),
+  responsibilities: z.object({}).catchall(z.unknown()),
   qualifications: z.string().min(1, 'Qualifications is required!'),
   what_we_offer: z.string().min(1, 'What we offer is required!'),
   application_url: z.string().nullable().optional(),

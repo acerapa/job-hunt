@@ -8,7 +8,7 @@
       ref="input"
       :type="props.type"
       :name="props.name"
-      v-if="props.type != 'textarea' && props.type != 'select'"
+      v-if="props.type != 'textarea' && props.type != 'select' && props.type != 'wysiwyg'"
       :id="props.id ? props.id : props.name"
       :placeholder="props.placeholder"
       :min="props.min"
@@ -54,6 +54,14 @@
         {{ opt.text }}
       </option>
     </select>
+
+    <WysiwygInputComponent
+      v-model="value"
+      :readonly="props.readonly"
+      v-if="props.type == 'wysiwyg'"
+      :placeholder="props.placeholder"
+    />
+
     <small class="text-red-400 absolute w-full block -bottom-4" v-if="props.errorMessage">
       {{ props.errorMessage }}
     </small>
@@ -61,7 +69,8 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
+import WysiwygInputComponent from './WysiwygInputComponent.vue'
 
 export interface Props {
   errorMessage?: string
@@ -81,13 +90,15 @@ export interface Props {
   label?: string
   labelCss?: string
   disabled?: boolean
+  readonly?: boolean
 }
 
 const emit = defineEmits(['input'])
 const props = withDefaults(defineProps<Props>(), {
   rows: 4,
   cols: 0,
-  disabled: false
+  disabled: false,
+  readonly: false
 })
 
 const value = defineModel<any>()

@@ -111,13 +111,14 @@
         Join Now
       </button>
     </div>
-    <div class="py-20 bg-main w-full"></div>
+    <div class="bg-white w-full mb-20"></div>
   </div>
 </template>
 <script setup lang="ts">
 import SliderComponent from '@/components/shared/SliderComponent.vue'
 import JobComponent from '@/components/shared/JobComponent.vue'
 import UserReviewComponent from '@/components/reviews/UserReviewComponent.vue'
+
 const jobs = [
   {
     title: 'PHP Developer',

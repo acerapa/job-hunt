@@ -15,12 +15,12 @@ import { Tag } from './Tag'
 import { Skill } from './Skill'
 import { Shift } from './Shift'
 import { Company } from './Company'
-import { Address } from './Address'
 import { Application } from './Application'
 import { JobToSkill } from './junctions/JobToSkill'
 import { JobToTag } from './junctions/JobToTag'
 import { JobToShift } from './junctions/JobToShift'
 import { Question } from './Question'
+
 @Entity('jobs')
 export class Job
   extends BaseEntity
@@ -33,9 +33,9 @@ export class Job
   title: string
 
   @Column({
-    type: 'text'
+    type: 'json'
   })
-  description: string
+  description: object
 
   @Column({
     nullable: true
@@ -75,8 +75,10 @@ export class Job
   })
   show_salary_range: boolean
 
-  @Column()
-  responsibilities: string
+  @Column({
+    type: 'json'
+  })
+  responsibilities: object
 
   @Column()
   qualifications: string
