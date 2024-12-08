@@ -8,6 +8,7 @@
           type="search"
           input-class="!rounded-full"
           placeholder="Search conversations"
+          @focus="sendMessage('Search is focused')"
           :disabled="!messageStore.conversations.length"
         />
       </div>
@@ -96,8 +97,11 @@
 import ConversationComponent from '@/components/messages/ConversationComponent.vue'
 import MessageComponent from '@/components/messages/MessageComponent.vue'
 import InputComponent from '@/components/shared/InputComponent.vue'
+import { useSocket } from '@/composable/useSocket'
 import { useMessageStore } from '@/stores/messages'
 import { ref } from 'vue'
+
+const { sendMessage } = useSocket()
 
 const messageStore = useMessageStore()
 

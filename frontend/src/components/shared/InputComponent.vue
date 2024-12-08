@@ -15,6 +15,7 @@
       :max="props.max"
       class="input w-full"
       @input="emit('input')"
+      @focus="emit('focus')"
       :class="[props.inputClass, props.errorMessage ? '!border-red-400' : '']"
       v-model="value"
       :disabled="props.disabled"
@@ -32,6 +33,7 @@
       :cols="props.cols"
       v-model="value"
       @input="onTextAreaInput"
+      @focus="emit('focus')"
       :disabled="props.disabled"
     ></textarea>
 
@@ -44,6 +46,7 @@
       class="input w-full"
       :class="[props.inputClass, props.errorMessage ? '!border-red-400' : '']"
       @change="emit('input')"
+      @focus="emit('focus')"
       v-model="value"
       :disabled="props.disabled"
     >
@@ -83,7 +86,7 @@ export interface Props {
   disabled?: boolean
 }
 
-const emit = defineEmits(['input'])
+const emit = defineEmits(['input', 'focus'])
 const props = withDefaults(defineProps<Props>(), {
   rows: 4,
   cols: 0,

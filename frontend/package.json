@@ -16,6 +16,7 @@
   "dependencies": {
     "@shared/pack": "file:../shared",
     "pinia": "^2.1.7",
+    "socket.io-client": "^4.8.1",
     "vue": "^3.4.21",
     "vue-router": "^4.3.0"
   },
