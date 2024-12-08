@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col gap-5">
+  <div class="flex flex-col gap-5 pb-10">
     <div class="wrap flex flex-col gap-3">
       <div class="flex justify-between items-start">
         <p class="font-bold text-lg text-green-bright">Job your applying for:</p>
@@ -129,12 +129,28 @@
           label-css="text-sm font-semibold"
         />
       </div>
+      <div v-else>
+        <p class="text-blue-bright">
+          Employer did not specified specific questions. You can submit the application right away
+          instead!
+        </p>
+      </div>
     </div>
   </div>
+
   <!-- // TODO: -->
   <code>
     <input type="checkbox" disabled />
     <code class="ml-3">Need to figure out the title specified in Job hunters</code>
+    <br />
+    <input type="checkbox" disabled />
+    <code class="ml-3"
+      >Need to add more infos about the hunter, it's work experience, projects and even educational
+      background</code
+    >
+    <br />
+    <input type="checkbox" disabled />
+    <code class="ml-3">Able to update the cover letter and upload a resume is even better</code>
     <br />
   </code>
 </template>

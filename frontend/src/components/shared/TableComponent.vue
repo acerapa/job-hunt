@@ -40,7 +40,7 @@
         <slot name="table-header"></slot>
       </div>
     </div>
-    <div class="mt-1">
+    <div class="mt-1" v-if="props.data && props.data.length">
       <div v-if="props.row">
         <component
           v-for="row in props.data"
@@ -52,6 +52,9 @@
       <div v-else>
         <slot name="table-body"></slot>
       </div>
+    </div>
+    <div v-else>
+      <p class="text-center">No Data!</p>
     </div>
     <div class="mt-1 border-t-2 border-green-theme pt-3" v-if="props.hasPagination">
       <div v-if="props.pagination">

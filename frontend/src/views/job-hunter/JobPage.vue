@@ -48,7 +48,7 @@
           <button>
             <img src="@/assets/icons/favorite.svg" alt="favorite.svg" />
           </button>
-          <button class="btn-success">Apply now</button>
+          <button class="btn-success" @click="onApply">Apply now</button>
         </div>
       </div>
 
@@ -125,6 +125,15 @@ const onMoreDetails = () => {
     name: 'company-details',
     params: { id: job.value?.company.id, current_tab: CompanyDetailsNav.OVERVIEW }
   })
+}
+
+const onApply = () => {
+  if (job.value) {
+    router.push({
+      name: 'application-form',
+      params: { job_id: job.value.id }
+    })
+  }
 }
 
 onMounted(async () => {

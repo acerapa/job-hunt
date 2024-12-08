@@ -173,6 +173,12 @@ export const getJobById = async (req: Request, res: Response) => {
         questions: true,
         job_shifts: {
           shift: true
+        },
+        applications: {
+          profile: {
+            user: true
+          },
+          answers: true
         }
       }
     })
