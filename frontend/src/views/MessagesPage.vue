@@ -9,21 +9,18 @@
           input-class="!rounded-full"
           placeholder="Search conversations"
           @focus="sendMessage('Search is focused')"
-          :disabled="!messageStore.conversations.length"
+          :disabled="!convoDisplay.length"
         />
       </div>
-      <div v-if="messageStore.conversations.length">
+      <div v-if="convoDisplay.length">
         <ConversationComponent
-          v-for="(convo, ndx) in messageStore.conversations"
-          :key="ndx"
+          v-for="convo in convoDisplay"
+          :key="convo.id"
           :convo="convo"
-          @click="onSelectConvo(ndx)"
+          @click="onSelectConvo(convo.id)"
         />
       </div>
-      <div
-        v-if="!messageStore.conversations.length"
-        class="flex justify-center items-center flex-1"
-      >
+      <div v-if="!convoDisplay.length" class="flex justify-center items-center flex-1">
         <div>
           <p class="text-center text-base font-semibold">Nothing to show, no contacts yet.</p>
           <p class="text-xs text-center font-semibold text-gray-strong w-72">
@@ -72,9 +69,9 @@
       </div>
       <div class="px-4 -mx-4 border-t-2 border-green-theme py-3 flex gap-2 items-start">
         <InputComponent
+          class="flex-1"
           type="textarea"
           name="message-box"
-          class="flex-1"
           input-class="!rounded-md"
           placeholder="Type a message..."
         />
@@ -100,28 +97,41 @@ import InputComponent from '@/components/shared/InputComponent.vue'
 import { useSocket } from '@/composable/useSocket'
 import { useMessageStore } from '@/stores/messages'
 import { useConversationStore } from '@/stores/conversation-store'
-import { onMounted, ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
+import type { Convo } from '@/types'
+import { useAuthStore } from '@/stores/auth-store'
+import type { User } from '@shared/pack'
 
 const { sendMessage } = useSocket()
 
+const authStore = useAuthStore()
 const messageStore = useMessageStore()
 const conversationStore = useConversationStore()
 
 const conversation = ref()
+const authUser = ref<User | null>()
 
-const onSelectConvo = (ndx: number) => {
-  messageStore.conversations = messageStore.conversations.map((convo) => {
-    convo.active_convo = false
-    return convo
+const convoDisplay = computed(() => {
+  return conversationStore.conversations.map((convo): Convo => {
+    return {
+      id: convo.id,
+      is_pinned: convo.is_pinned,
+      receviers: convo.members.filter((member) => member.id !== authUser.value?.id),
+      sender: convo.members.find((member) => member.id !== authUser.value?.id) as User,
+      last_message: convo.messages ? convo.messages[convo.messages.length - 1] : undefined,
+      unread_messages: convo.messages ? convo.messages.filter((msg) => !msg.is_seen).length : 0
+    }
   })
+})
 
-  conversation.value = messageStore.conversations[ndx]
-  conversation.value.active_convo = true
+const onSelectConvo = (id: number) => {
+  conversationStore.getConversationById(id)
+
+  conversation.value = messageStore.conversations[0]
 }
 
 onMounted(async () => {
   await conversationStore.fetchConversations()
-
-  console.log(conversationStore.conversations)
+  authUser.value = await authStore.getAuthUser()
 })
 </script>

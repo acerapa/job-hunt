@@ -3,7 +3,7 @@ import type { ApiResponse, Conversation, Message, User } from '@shared/pack'
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 
-export const useConversationStore = defineStore('message', () => {
+export const useConversationStore = defineStore('conversation', () => {
   const conversation = ref<Conversation<User, Message> | null>()
   const conversations = ref<Conversation<User, Message>[]>([])
 
@@ -50,12 +50,22 @@ export const useConversationStore = defineStore('message', () => {
     return conversation.value
   }
 
+  const getConversationById = async (id: number) => {
+    if (!conversation.value || conversation.value.id !== id) {
+      await fetchConversations()
+      conversation.value = conversations.value.find((convo) => convo.id === id)
+    }
+
+    return conversation.value
+  }
+
   return {
     conversation,
     conversations,
     getConversations,
     startConversation,
     fetchConversations,
+    getConversationById,
     getConversationByMembers
   }
 })
