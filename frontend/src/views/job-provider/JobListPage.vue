@@ -1,7 +1,14 @@
 <template>
-  <div>
+  <div class="flex flex-col gap-4">
+    <div class="wrap flex justify-between">
+      <p class="text-lg font-semibold">Jobs</p>
+      <button class="btn-outline" @click="router.push({ name: 'job-list' })">
+        &longleftarrow; Back
+      </button>
+    </div>
     <TableComponent
-      title="List of Jobs"
+      title="Job list"
+      title-style="text-sm"
       :has-pagination="true"
       :data="data"
       :row="PJobListRow"

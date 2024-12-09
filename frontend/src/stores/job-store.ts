@@ -6,51 +6,27 @@ import type {
   Application,
   Company,
   Job,
+  Profile,
   Question,
   Shift,
   Skill,
-  Tag
+  Tag,
+  User
 } from '@shared/pack'
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 
 export const useJobStore = defineStore('job', function () {
   const jobs = ref<Job<Application>[]>([])
-  const job = ref<Job<Skill, Company, Shift, Application, Tag, Question> | null>(null)
+  const job = ref<Job<
+    Skill,
+    Company,
+    Shift,
+    Application<object, Profile<User>>,
+    Tag,
+    Question
+  > | null>(null)
   const publishedJobs = ref<Job<Skill, Company, Application>[]>([])
-
-  const applicants = ref<Applicant[]>([
-    {
-      name: 'John Doe',
-      job: 'PHP Developer',
-      status: ApplicantStatus.PENDING,
-      applied_on: new Date()
-    },
-    {
-      name: 'Jane Doe',
-      job: 'Frontend Developer',
-      status: ApplicantStatus.REVIEWED,
-      applied_on: new Date()
-    },
-    {
-      name: 'Tim Scott',
-      job: 'Backend Developer',
-      status: ApplicantStatus.INTERVIEWING,
-      applied_on: new Date()
-    },
-    {
-      name: 'Bob Smith',
-      job: 'Backend Developer',
-      status: ApplicantStatus.DECLINED,
-      applied_on: new Date()
-    },
-    {
-      name: 'Jack  Smith',
-      job: 'Fullstack Developer',
-      status: ApplicantStatus.OFFERED,
-      applied_on: new Date()
-    }
-  ])
 
   const createJob = async (job: Partial<Job<Skill, Partial<Address>>>, company_id: number) => {
     const res = await api(`users/company/${company_id}/jobs/create`, Method.POST, job)
@@ -97,9 +73,9 @@ export const useJobStore = defineStore('job', function () {
   }
 
   const fetchJobById = async (job_id: number) => {
-    const res: ApiResponse<Job<Skill, Company, Shift, Application, Tag, Question>> = await api(
-      `users/company/jobs/${job_id}`
-    )
+    const res: ApiResponse<
+      Job<Skill, Company, Shift, Application<object, Profile<User>>, Tag, Question>
+    > = await api(`users/company/jobs/${job_id}`)
 
     if (res.status === 200) {
       job.value = res.data
@@ -108,7 +84,14 @@ export const useJobStore = defineStore('job', function () {
 
   const getJobById = async (
     job_id: number
-  ): Promise<Job<Skill, Company, Shift, Application, Tag, Question> | null> => {
+  ): Promise<Job<
+    Skill,
+    Company,
+    Shift,
+    Application<object, Profile<User>>,
+    Tag,
+    Question
+  > | null> => {
     if (!job.value) {
       await fetchJobById(job_id)
     }
@@ -117,8 +100,8 @@ export const useJobStore = defineStore('job', function () {
   }
 
   return {
+    job,
     jobs,
-    applicants,
     publishedJobs,
 
     getJobs,

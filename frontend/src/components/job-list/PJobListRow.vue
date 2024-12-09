@@ -31,10 +31,17 @@
         v-if="isRowFocused && isShowMenu"
       >
         <RouterLink
-          class="py-1 font-bold hover:bg-blue-50 px-4"
+          class="py-1 font-medium hover:bg-blue-50 px-4"
           :to="{ name: 'provider-jobs-edit', params: { id: props.row.id } }"
         >
           Edit Job
+        </RouterLink>
+        <RouterLink
+          v-if="props.row.applications"
+          class="py-1 font-medium hover:bg-blue-50 px-4"
+          :to="{ name: 'provider-jobs-applicants', params: { id: props.row.id } }"
+        >
+          Applicants
         </RouterLink>
         <button class="py-1 text-red-500 font-bold hover:bg-blue-50 px-4">Close Job</button>
       </div>
