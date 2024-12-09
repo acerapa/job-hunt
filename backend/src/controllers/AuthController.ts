@@ -63,6 +63,9 @@ export const authUser = async (req: Request, res: Response) => {
           },
           company: {
             address: true
+          },
+          user_conversations: {
+            conversation: true
           }
         }
       })

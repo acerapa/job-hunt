@@ -6,16 +6,20 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   OneToOne,
-  BeforeInsert
+  BeforeInsert,
+  OneToMany,
+  AfterLoad
 } from 'typeorm'
 import { Gender, UserType, User as IUser } from '@shared/pack'
 import { Profile } from './Profile'
 import { Company } from './Company'
 import { hash } from 'bcryptjs'
 import { Exclude } from 'class-transformer'
+import { Conversation } from './Conversation'
+import { UserToConversation } from './junctions/UserToConversation'
 
 @Entity('users')
-export class User extends BaseEntity implements IUser<Profile, Company> {
+export class User extends BaseEntity implements IUser<Profile, Company, Conversation> {
   @PrimaryGeneratedColumn()
   id: number
 
@@ -45,6 +49,9 @@ export class User extends BaseEntity implements IUser<Profile, Company> {
   })
   username: string
 
+  @Column({ default: false })
+  is_active: boolean
+
   @Column()
   @Exclude({ toClassOnly: true })
   password: string
@@ -60,16 +67,31 @@ export class User extends BaseEntity implements IUser<Profile, Company> {
   })
   phone: string
 
+  conversations: Conversation[]
+  fullName: string
+
   @BeforeInsert()
   async hashPassword() {
     this.password = await hash(this.password, 10)
   }
+
+  @OneToMany(() => UserToConversation, (userToConversation) => userToConversation.user)
+  user_conversations: UserToConversation[]
 
   @OneToOne(() => Profile, (profile) => profile.user, { cascade: ['remove'] })
   profile: Profile
 
   @OneToOne(() => Company, (company) => company.user, { cascade: ['remove'] })
   company: Company
+
+  @AfterLoad()
+  async populateProperties() {
+    this.conversations = this.user_conversations
+      ? this.user_conversations.map((userToConversation) => userToConversation.conversation)
+      : []
+
+    this.fullName = `${this.first_name} ${this.last_name}`
+  }
 
   @CreateDateColumn()
   created_at: Date

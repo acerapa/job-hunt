@@ -216,7 +216,6 @@ onMounted(async () => {
       }
 
       if (job.shifts && job.shifts.length) {
-        console.log(job.shifts)
         jobModel.value.shifts = job.shifts.map((shift) => shift.id) as number[]
       }
     }

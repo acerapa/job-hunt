@@ -99,11 +99,13 @@ import MessageComponent from '@/components/messages/MessageComponent.vue'
 import InputComponent from '@/components/shared/InputComponent.vue'
 import { useSocket } from '@/composable/useSocket'
 import { useMessageStore } from '@/stores/messages'
-import { ref } from 'vue'
+import { useConversationStore } from '@/stores/conversation-store'
+import { onMounted, ref } from 'vue'
 
 const { sendMessage } = useSocket()
 
 const messageStore = useMessageStore()
+const conversationStore = useConversationStore()
 
 const conversation = ref()
 
@@ -116,4 +118,10 @@ const onSelectConvo = (ndx: number) => {
   conversation.value = messageStore.conversations[ndx]
   conversation.value.active_convo = true
 }
+
+onMounted(async () => {
+  await conversationStore.fetchConversations()
+
+  console.log(conversationStore.conversations)
+})
 </script>
