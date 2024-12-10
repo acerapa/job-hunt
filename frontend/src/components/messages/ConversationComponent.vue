@@ -17,11 +17,15 @@
     </div>
     <div class="flex flex-col gap-0 flex-1">
       <div class="flex justify-between items-center">
-        <p class="text-sm font-bold">{{ props.convo.receviers[0].first_name }}</p>
+        <p class="text-sm font-bold">
+          {{ `${props.convo.receviers[0].first_name} ${props.convo.receviers[0].last_name}` }}
+        </p>
         <span class="text-gray-strong font-bold text-xs">12 min ago</span>
       </div>
       <div class="flex justify-between items-center">
-        <span class="text-sm italic text-gray-strong">You: This is a sample message</span>
+        <span class="text-sm italic text-gray-strong" v-if="props.convo.last_message">
+          You: This is a sample message
+        </span>
         <div class="flex gap-1 items-center">
           <span
             v-if="props.convo.unread_messages"

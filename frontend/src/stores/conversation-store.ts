@@ -4,6 +4,7 @@ import { defineStore } from 'pinia'
 import { ref } from 'vue'
 
 export const useConversationStore = defineStore('conversation', () => {
+  const messages = ref<Message<Object, User>[]>([])
   const conversation = ref<Conversation<User, Message> | null>()
   const conversations = ref<Conversation<User, Message>[]>([])
 
@@ -52,16 +53,37 @@ export const useConversationStore = defineStore('conversation', () => {
 
   const getConversationById = async (id: number) => {
     if (!conversation.value || conversation.value.id !== id) {
-      await fetchConversations()
-      conversation.value = conversations.value.find((convo) => convo.id === id)
+      const convo = conversations.value.find((convo) => convo.id === id)
+      if (convo) {
+        conversation.value = convo
+      } else {
+        await fetchConversations()
+        conversation.value = conversations.value.find((convo) => convo.id === id)
+      }
     }
 
     return conversation.value
   }
 
+  const fetchMessages = async (conversation_id: number) => {
+    const res: ApiResponse<Message<Object, User>[]> = await api(
+      `conversations/${conversation_id}/messages`
+    )
+
+    if (res.status < 400) {
+      messages.value = res.data
+
+      if (conversation.value && conversation.value.id !== conversation_id) {
+        conversation.value.messages = res.data
+      }
+    }
+  }
+
   return {
+    messages,
     conversation,
     conversations,
+    fetchMessages,
     getConversations,
     startConversation,
     fetchConversations,

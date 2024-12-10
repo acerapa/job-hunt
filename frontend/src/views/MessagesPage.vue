@@ -8,7 +8,7 @@
           type="search"
           input-class="!rounded-full"
           placeholder="Search conversations"
-          @focus="sendMessage('Search is focused')"
+          @focus="onFocus"
           :disabled="!convoDisplay.length"
         />
       </div>
@@ -32,6 +32,7 @@
     <div v-if="conversation" class="wrap flex flex-col !py-0 flex-1 h-[calc(100vh_-_134px)]">
       <div
         class="py-4 px-4 -mx-4 border-b-2 border-green-theme flex items-center justify-between sticky top-0"
+        v-if="receviers"
       >
         <div class="flex gap-3 items-center">
           <img
@@ -41,7 +42,7 @@
           />
           <div class="flex flex-col gap-0">
             <span class="font-semibold text-base leading-tight">
-              {{ conversation.receiver.name }}
+              {{ `${receviers[0].first_name} ${receviers[0].last_name}` }}
             </span>
             <span class="font-semibold text-xs text-green-bright">Active Now</span>
           </div>
@@ -61,9 +62,8 @@
       </div>
       <div class="flex flex-col gap-4 mt-3 flex-1">
         <MessageComponent
-          :sender="conversation.receiver"
-          v-for="message in conversation.messages"
-          :key="message"
+          v-for="message in conversationStore.messages"
+          :key="message.id"
           :message="message"
         />
       </div>
@@ -111,6 +111,12 @@ const conversationStore = useConversationStore()
 const conversation = ref()
 const authUser = ref<User | null>()
 
+const receviers = computed(() => {
+  return conversationStore.conversation?.members.filter(
+    (member) => member.id !== authUser.value?.id
+  )
+})
+
 const convoDisplay = computed(() => {
   return conversationStore.conversations.map((convo): Convo => {
     return {
@@ -124,10 +130,21 @@ const convoDisplay = computed(() => {
   })
 })
 
-const onSelectConvo = (id: number) => {
+const onSelectConvo = async (id: number) => {
   conversationStore.getConversationById(id)
 
+  await conversationStore.fetchMessages(conversationStore.conversation?.id as number)
+
   conversation.value = messageStore.conversations[0]
+}
+
+const onFocus = () => {
+  sendMessage({
+    conversation_id: conversationStore.conversation?.id,
+    message: 'Search input is focused',
+    is_seen: false,
+    sender_id: authUser.value?.id
+  })
 }
 
 onMounted(async () => {

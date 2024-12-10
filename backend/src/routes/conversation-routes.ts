@@ -1,12 +1,16 @@
 import { Router } from 'express'
-import { createConversation, getConversations } from '../controllers/ConversationController'
+import {
+  createConversation,
+  getConversations,
+  getMessages
+} from '../controllers/ConversationController'
 import { validateBody } from '../middlewares/request-validators'
 import { ConversationSchema } from '@shared/pack/dist'
 
 const router = Router()
 
 router.get('/all', getConversations)
-// TODO: add middleware to check if data is valid
+router.get('/:conversation_id/messages', getMessages)
 router.post('/create', validateBody(ConversationSchema), createConversation)
 
 export default router

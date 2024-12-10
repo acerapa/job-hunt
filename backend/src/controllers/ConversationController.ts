@@ -3,6 +3,7 @@ import { Conversation } from '../entities/Conversation'
 import { User } from '../entities/User'
 import { UserToConversation } from '../entities/junctions/UserToConversation'
 import { In } from 'typeorm'
+import { Message } from '../entities/Message'
 
 export const createConversation = async (req: Request, res: Response) => {
   try {
@@ -64,4 +65,25 @@ export const updateConversation = async (req: Request, res: Response) => {
 }
 export const deleteConversation = async (req: Request, res: Response) => {
   // TODO: Implement conversation deletion logic
+}
+
+export const getMessages = async (req: Request, res: Response) => {
+  try {
+    // TODO: Implement skip an take logic here
+    const messages = await Message.findAndCount({
+      where: {
+        conversation: {
+          id: parseInt(req.params.conversation_id)
+        }
+      },
+      relations: {
+        sender: true
+      }
+    })
+
+    res.sendSuccess({ data: messages[0], message: 'Messages fetched successfully' })
+  } catch (error) {
+    const { message, name, stack } = error as Error
+    res.sendError({ message: `${name} ${message} ${stack}` })
+  }
 }

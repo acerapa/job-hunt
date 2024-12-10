@@ -5,8 +5,11 @@ import { checkConnection } from './src/database'
 import cookieParser from 'cookie-parser'
 import { getEnv } from './src/helpers/env-helpers'
 import { shorthandResponse } from './src/middlewares/response'
+import { startSocket } from './socket'
 import { Server } from 'socket.io'
 import { createServer } from 'http'
+
+import { instrument } from '@socket.io/admin-ui'
 
 dotenv.config()
 
@@ -14,21 +17,11 @@ dotenv.config()
 checkConnection()
 
 const app: Application = express()
-const server = createServer(app)
-const io = new Server(server, {
-  cors: {
-    origin: 'http://localhost:5173',
-    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE'
-  }
-})
+const { server, io } = startSocket(app)
 
-// socket io events
-io.on('connection', (socket) => {
-  console.log('a user connected')
-
-  socket.on('message', (message) => {
-    console.log('message: ', message)
-  })
+// socket io admin ui
+instrument(io, {
+  auth: false
 })
 
 // implement shorthand response

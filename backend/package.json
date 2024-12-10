@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@shared/pack": "file:../shared",
+    "@socket.io/admin-ui": "^0.5.1",
     "@types/bcryptjs": "^2.4.6",
     "@types/cors": "^2.8.17",
     "@types/jsonwebtoken": "^9.0.6",

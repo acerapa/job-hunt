@@ -1,5 +1,6 @@
 import {
   BaseEntity,
+  Column,
   CreateDateColumn,
   Entity,
   JoinColumn,
@@ -9,9 +10,10 @@ import {
 } from 'typeorm'
 import type { Message as IMessage } from '@shared/pack/dist'
 import { Conversation } from './Conversation'
+import { User } from './User'
 
 @Entity('messages')
-export class Message extends BaseEntity implements IMessage {
+export class Message extends BaseEntity implements IMessage<Conversation, User> {
   @PrimaryGeneratedColumn()
   id: number
 
@@ -19,8 +21,16 @@ export class Message extends BaseEntity implements IMessage {
   @JoinColumn({ name: 'conversation_id' })
   conversation: Conversation
 
-  sender_id: number
+  @ManyToOne(() => User)
+  @JoinColumn({ name: 'sender_id' })
+  sender: User
+
+  @Column()
   message: string
+
+  @Column({
+    default: false
+  })
   is_seen: boolean
 
   @CreateDateColumn()

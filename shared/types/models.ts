@@ -206,11 +206,12 @@ export interface Conversation<User = Object, Message = Object> {
   updated_at: Date
 }
 
-export interface Message<Conversation = Object> {
+export interface Message<Conversation = Object, User = Object> {
   id: number
   conversation_id?: number
   conversation?: Conversation
-  sender_id: number
+  sender_id?: number
+  sender: User
   message: string
   is_seen: boolean
   created_at: Date
