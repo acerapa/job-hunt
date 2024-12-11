@@ -4,7 +4,7 @@ import { defineStore } from 'pinia'
 import { ref } from 'vue'
 
 export const useConversationStore = defineStore('conversation', () => {
-  const messages = ref<Message<Object, User>[]>([])
+  const messages = ref<Partial<Message<Object, User>[]>>([])
   const conversation = ref<Conversation<User, Message> | null>()
   const conversations = ref<Conversation<User, Message>[]>([])
 
@@ -79,10 +79,31 @@ export const useConversationStore = defineStore('conversation', () => {
     }
   }
 
+  const saveMessage = async (message: Partial<Message>) => {
+    const res: ApiResponse<Message<Object, User>> = await api(
+      `conversations/messages/create`,
+      Method.POST,
+      message
+    )
+
+    let msg: Message<Object, User> | null = null
+
+    if (res.status < 400) {
+      msg = res.data
+      messages.value.push(msg)
+    }
+
+    return msg
+  }
+
   return {
+    // state
     messages,
     conversation,
     conversations,
+
+    // actions
+    saveMessage,
     fetchMessages,
     getConversations,
     startConversation,

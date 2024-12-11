@@ -214,8 +214,8 @@ export interface Message<Conversation = Object, User = Object> {
   sender: User
   message: string
   is_seen: boolean
-  created_at: Date
-  updated_at: Date
+  created_at?: Date
+  updated_at?: Date
 }
 
 export interface Files {

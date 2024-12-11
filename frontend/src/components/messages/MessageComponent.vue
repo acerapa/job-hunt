@@ -11,7 +11,7 @@
     >
       <p class="tracking-wide">{{ props.message.message }}</p>
       <small class="text-[10px] font-semibold absolute bottom-2 right-2 text-gray-strong">
-        {{ props.message.created_at.toLocaleTimeString() }} &nbsp;&nbsp;
+        {{ new Date(props.message.created_at ?? '').toLocaleTimeString() }} &nbsp;&nbsp;
         <span class="font-bold">&check;</span>
       </small>
     </div>
@@ -33,7 +33,8 @@ const authUser = ref<User | null>()
 const props = defineProps<Props>()
 
 const isCurrent = computed(() => {
-  return props.message.sender.id == authUser.value?.id
+  const sender_id = props.message?.sender_id || props.message.sender.id
+  return sender_id == authUser.value?.id
 })
 
 onMounted(async () => {

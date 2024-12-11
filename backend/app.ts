@@ -17,12 +17,6 @@ dotenv.config()
 checkConnection()
 
 const app: Application = express()
-const { server, io } = startSocket(app)
-
-// socket io admin ui
-instrument(io, {
-  auth: false
-})
 
 // implement shorthand response
 app.use(shorthandResponse())
@@ -42,5 +36,13 @@ import apiRoutes from './src/routes/api-routes'
 app.use('/api', apiRoutes)
 
 const port = process.env.PORT || 3000
+
+// Setting up socket io server
+const { server, io } = startSocket(app)
+
+// socket io admin ui
+instrument(io, {
+  auth: false
+})
 
 server.listen(port, () => console.log(`Listening on port ${port}`))

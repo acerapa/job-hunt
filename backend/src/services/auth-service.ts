@@ -1,6 +1,9 @@
 import { sign } from 'jsonwebtoken'
 import { User } from '../entities/User'
 import { getEnv } from '../helpers/env-helpers'
+import { FindOptionsRelations, FindOptionsWhere } from 'typeorm'
+import { isEmail } from '@shared/pack/dist'
+import { compare } from 'bcryptjs'
 
 type Param = {
   id: number
@@ -22,5 +25,55 @@ export const generateAccessAndRefreshToken = (user: User | Param) => {
   return {
     access: accessToken,
     refresh: refreshToken
+  }
+}
+
+export const getUserConversation = async (user_id: number) => {
+  const user = await User.findOneOrFail({
+    where: {
+      id: user_id
+    },
+    relations: {
+      user_conversations: {
+        conversation: {
+          user_conversations: {
+            user: true
+          }
+        }
+      }
+    }
+  })
+
+  return user.conversations
+}
+
+export const authenticateUser = async (
+  usercred: string,
+  password: string,
+  isIncludeRelations: boolean = false
+): Promise<{ user: User | null; isMatched: boolean }> => {
+  let isMatched = false
+  const relations: Partial<FindOptionsRelations<User>> = {}
+  const condition: Partial<FindOptionsWhere<User>> = {}
+
+  if (isIncludeRelations) {
+    relations.user_conversations = {
+      conversation: true
+    }
+  }
+
+  isEmail(usercred) ? (condition.email = usercred) : (condition.username = usercred)
+  const user = await User.findOne({
+    where: condition,
+    relations: relations
+  })
+
+  if (user) {
+    isMatched = await compare(password, user.password)
+  }
+
+  return {
+    user,
+    isMatched
   }
 }

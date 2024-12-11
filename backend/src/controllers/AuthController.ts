@@ -5,33 +5,23 @@ import { formatResponse } from '../middlewares/response'
 import { isEmail } from '@shared/pack/dist'
 import { User } from './../entities/User'
 import { type User as IUser, type Profile as IProfile } from '@shared/pack'
-import { generateAccessAndRefreshToken } from '../services/auth-service'
+import { authenticateUser, generateAccessAndRefreshToken } from '../services/auth-service'
 import { setCookie } from '../helpers/set-cookies'
 import { instanceToInstance } from 'class-transformer'
 
 export const authenticate = async (req: Request, res: Response) => {
   try {
     const { usercred, password } = req.body
-    const condition: Partial<FindOptionsWhere<User>> = {}
+    const { user, isMatched } = await authenticateUser(usercred, password)
+    if (isMatched && user) {
+      const { refresh, access } = generateAccessAndRefreshToken(user)
 
-    // verify if the parameter is an email or not
-    isEmail(usercred) ? (condition.email = usercred) : (condition.username = usercred)
-    const user = await User.findOne({
-      where: condition
-    })
+      // set cookies and token
+      req.authUser = user.id
+      setCookie(res, 'access', access)
+      setCookie(res, 'refresh', refresh, { maxAge: 2 * 24 * 60 * 60 * 1000 })
 
-    if (user) {
-      const isMatched = await compare(password, user.password)
-      if (isMatched) {
-        const { refresh, access } = generateAccessAndRefreshToken(user)
-
-        // set cookies and token
-        req.authUser = user.id
-        setCookie(res, 'access', access)
-        setCookie(res, 'refresh', refresh, { maxAge: 2 * 24 * 60 * 60 * 1000 })
-
-        return res.sendSuccess({ message: 'Successfully login' })
-      }
+      return res.sendSuccess({ message: 'Successfully login' })
     }
 
     res.sendError({ message: 'Invalid credentials', status: 401 })

@@ -57,15 +57,15 @@ export const getConversations = async (req: Request, res: Response) => {
   }
 }
 
-export const getConversation = async (req: Request, res: Response) => {
-  // TODO: Implement conversation retrieval logic
-}
-export const updateConversation = async (req: Request, res: Response) => {
-  // TODO: Implement conversation update logic
-}
-export const deleteConversation = async (req: Request, res: Response) => {
-  // TODO: Implement conversation deletion logic
-}
+// export const getConversation = async (req: Request, res: Response) => {
+//   // TODO: Implement conversation retrieval logic
+// }
+// export const updateConversation = async (req: Request, res: Response) => {
+//   // TODO: Implement conversation update logic
+// }
+// export const deleteConversation = async (req: Request, res: Response) => {
+//   // TODO: Implement conversation deletion logic
+// }
 
 export const getMessages = async (req: Request, res: Response) => {
   try {
@@ -82,6 +82,28 @@ export const getMessages = async (req: Request, res: Response) => {
     })
 
     res.sendSuccess({ data: messages[0], message: 'Messages fetched successfully' })
+  } catch (error) {
+    const { message, name, stack } = error as Error
+    res.sendError({ message: `${name} ${message} ${stack}` })
+  }
+}
+
+export const createMessage = async (req: Request, res: Response) => {
+  try {
+    const message = Message.create()
+    const conversation = Conversation.create()
+    conversation.id = req.validated.conversation_id
+    message.conversation = conversation
+
+    const sender = User.create()
+    sender.id = req.validated.sender_id
+    message.sender = sender
+
+    message.message = req.validated.message
+
+    await message.save()
+
+    res.sendSuccess({ data: message, message: 'Message created successfully' })
   } catch (error) {
     const { message, name, stack } = error as Error
     res.sendError({ message: `${name} ${message} ${stack}` })
