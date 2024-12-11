@@ -62,7 +62,7 @@
           </button>
         </div>
       </div>
-      <div class="flex flex-col gap-4 mt-3 flex-1 overflow-y-auto">
+      <div class="flex flex-col gap-4 my-3 flex-1 overflow-y-auto thin-scrollbar">
         <MessageComponent v-for="message in messages" :key="message?.id" :message="message" />
       </div>
       <div class="px-4 -mx-4 border-t-2 border-green-theme py-3 flex gap-2 items-start">
