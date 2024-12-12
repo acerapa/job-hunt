@@ -113,6 +113,7 @@ export const useCompanyStore = defineStore('company', () => {
 
   return {
     shifts,
+    company,
     industries,
     updateShift,
     deleteShift,

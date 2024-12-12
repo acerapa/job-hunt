@@ -1,38 +1,9 @@
-export interface Job {
-  title: string
-  company: {
-    name: string
-    image: string
-    rating: number
-    address: string
-  }
-  description: string
-  work_type: string
-  exp_level: string
-  work_setup: string
-  posted_on: string
-  tags: string[]
-}
+import type { Message, User } from '@shared/pack'
 
 export interface Activity {
   type: string
   status: string
   description: string
-}
-
-export enum ApplicantStatus {
-  PENDING = 1,
-  REVIEWED = 2,
-  INTERVIEWING = 3,
-  OFFERED = 4,
-  DECLINED = 5
-}
-
-export interface Applicant {
-  job: string
-  name: string
-  applied_on: Date
-  status: ApplicantStatus
 }
 
 export enum CompanyDetailsNav {
@@ -45,4 +16,20 @@ export const CompanyDetailsNavMap = {
   [CompanyDetailsNav.OVERVIEW]: 'Overview',
   [CompanyDetailsNav.JOBS]: 'Jobs',
   [CompanyDetailsNav.REVIEWS]: 'Reviews'
+}
+
+export interface Convo {
+  id: number
+  is_pinned: boolean
+  sender: ConvoMember
+  receviers: ConvoMember[]
+  last_message?: Message
+  unread_messages: number
+}
+
+export interface ConvoMember {
+  user?: User
+  user_id: number
+  full_name: string
+  is_active: boolean
 }

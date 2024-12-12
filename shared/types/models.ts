@@ -10,7 +10,7 @@ import {
 } from '.'
 import { SkillType } from '.'
 
-export interface User<Profile = Object, Company = Object> {
+export interface User<Profile = Object, Company = Object, Conversation = Object> {
   id: number
   phone: string
   email: string
@@ -24,6 +24,8 @@ export interface User<Profile = Object, Company = Object> {
   company?: Company
   last_name: string
   first_name: string
+  is_active: boolean
+  conversations?: Conversation[]
 }
 
 export interface Profile<User = Object, Skill = Object, Application = Object> {
@@ -193,4 +195,32 @@ export interface Answer<Question = Object, Application = Object> {
   application_id?: number
   created_at?: Date
   updated_at?: Date
+}
+
+export interface Conversation<User = Object, Message = Object> {
+  id: number
+  members: User[]
+  is_pinned: boolean
+  messages: Message[]
+  created_at: Date
+  updated_at: Date
+}
+
+export interface Message<Conversation = Object, User = Object> {
+  id: number
+  conversation_id?: number
+  conversation?: Conversation
+  sender_id?: number
+  sender: User
+  message: string
+  is_seen: boolean
+  created_at?: Date
+  updated_at?: Date
+}
+
+export interface Files {
+  id: number
+  file: string
+  created_at: Date
+  updated_at: Date
 }

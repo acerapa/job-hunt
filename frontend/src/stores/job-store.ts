@@ -1,5 +1,4 @@
 import { api, Method } from '@/api'
-import { type Applicant, ApplicantStatus } from '@/types'
 import type {
   Address,
   ApiResponse,

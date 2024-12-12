@@ -13,10 +13,10 @@ const yellow = '\x1b[33m'
 const green = '\x1b[32m'
 const reset = '\x1b[0m'
 
-import { checkConnection } from '../database'
+import { initializeDataSource } from '../database'
 
 const runSeeds = async (seeds: string[]) => {
-  await checkConnection()
+  await initializeDataSource()
   seeds.forEach(async (seed: string) => {
     try {
       const md = await import(`${currentDir}/${seed}`)

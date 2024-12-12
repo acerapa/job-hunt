@@ -5,7 +5,6 @@
         <p class="font-bold text-lg text-green-bright">Job your applying for:</p>
         <div class="flex gap-3">
           <button class="w-fit btn-outline" @click="router.back()">&longleftarrow; Back</button>
-          <button class="btn-success whitespace-nowrap">More Details</button>
         </div>
       </div>
 
@@ -117,7 +116,10 @@
     <div class="wrap flex flex-col gap-4">
       <p class="font-bold text-lg text-green-bright">Employer Specific questions</p>
 
-      <div class="flex flex-col gap-4 mt-5 px-4 max-w-[60%]" v-if="job?.questions?.length">
+      <div
+        class="flex flex-col gap-4 mt-5 px-4 max-w-[60%]"
+        v-if="job?.questions?.length && application && application.answers?.length"
+      >
         <InputComponent
           v-for="question in job.questions"
           :key="question.id"
@@ -125,6 +127,7 @@
           :type="question.type"
           placeholder="Ans"
           class="flex-1"
+          v-model="application.answers[question.id].answer"
           :label="`${question.question} ${question.is_required ? '*' : ''}`"
           label-css="text-sm font-semibold"
         />
@@ -184,6 +187,9 @@ const jobStore = useJobStore()
 const authStore = useAuthStore()
 
 const onSubmitApplication = async () => {
+  // few answer modifications
+  application.value.answers = application.value.answers?.filter((answer) => answer.answer)
+
   const res = await userStore.submitApplication(application.value)
 
   // TODO: After a successful submission, navigate to the application page
@@ -211,7 +217,10 @@ onMounted(async () => {
         let ans: Partial<Answer> = {
           question_id: question.id
         }
-        application.value.answers?.push(ans)
+
+        if (application.value.answers) {
+          application.value.answers[question.id] = ans
+        }
       })
     }
   }

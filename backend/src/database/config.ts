@@ -13,7 +13,8 @@ const config: DataSourceOptions = {
   password: getEnv('DB_PASSWORD', 'password'),
   database: getEnv('DB_NAME', 'job_hunt_db'),
   synchronize: true, // development mode,
-  entities: [path.dirname(__dirname) + '/entities/**/*.ts']
+  entities: [path.dirname(__dirname) + '/entities/**/*.ts'],
+  logging: ['error']
 }
 
 export default config

@@ -2,6 +2,7 @@ import { defineStore } from 'pinia'
 import { ref } from 'vue'
 import type { ApiResponse, Application, Company, Profile, User, UserCred } from '@shared/pack'
 import { api, Method } from '@/api'
+import { SocketService } from '@/socket'
 
 export const useAuthStore = defineStore('auth', function () {
   const authUser = ref<User<Profile<Object, Object, Application>, Company> | null>(null)
@@ -15,6 +16,13 @@ export const useAuthStore = defineStore('auth', function () {
   }
 
   const signOut = async () => {
+    // TODO: disconnect active socket connection
+    await getAuthUser()
+    if (authUser.value) {
+      const socket = new SocketService(authUser.value.id)
+      socket.getSocket().disconnect()
+    }
+
     return await api(`auth/sign-out`)
   }
 

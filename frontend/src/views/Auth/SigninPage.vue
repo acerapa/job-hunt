@@ -116,6 +116,7 @@ import {
 import { ref } from 'vue'
 import InputComponent from '@/components/shared/InputComponent.vue'
 import { useRouter } from 'vue-router'
+import { useSocket } from '@/composable/useSocket'
 
 const showPassword = ref(false)
 const invalidCredential = ref(false)
@@ -123,6 +124,7 @@ const model = ref<Partial<UserCred>>({})
 const modelErrors = ref<Partial<UserCred>>({})
 const router = useRouter()
 
+const socket = useSocket()
 const authStore = useAuthStore()
 
 const onSignin = async () => {
@@ -135,6 +137,9 @@ const onSignin = async () => {
   await authStore.signIn(model.value as UserCred)
   const authUser: User | null = await authStore.getAuthUser()
   if (authUser) {
+    // connect to socket and initialize socket service
+    socket.connect(authUser.id)
+
     if (authUser.type == UserType.HUNTER) {
       router.push({
         name: 'hunter'
