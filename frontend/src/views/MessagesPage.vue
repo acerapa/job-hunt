@@ -8,18 +8,21 @@
           type="search"
           input-class="!rounded-full"
           placeholder="Search conversations"
-          :disabled="!convoDisplay.length"
+          :disabled="!conversationStore.convoDisplays.length"
         />
       </div>
-      <div v-if="convoDisplay.length">
+      <div v-if="conversationStore.convoDisplays.length">
         <ConversationComponent
-          v-for="convo in convoDisplay"
+          v-for="convo in conversationStore.convoDisplays"
           :key="convo.id"
           :convo="convo"
           @click="onSelectConvo(convo.id)"
         />
       </div>
-      <div v-if="!convoDisplay.length" class="flex justify-center items-center flex-1">
+      <div
+        v-if="!conversationStore.convoDisplays.length"
+        class="flex justify-center items-center flex-1"
+      >
         <div>
           <p class="text-center text-base font-semibold">Nothing to show, no contacts yet.</p>
           <p class="text-xs text-center font-semibold text-gray-strong w-72">
@@ -46,7 +49,12 @@
             <span class="font-semibold text-base leading-tight">
               {{ `${receviers[0].first_name} ${receviers[0].last_name}` }}
             </span>
-            <span class="font-semibold text-xs text-green-bright">Active Now</span>
+            <span
+              class="font-semibold text-xs"
+              :class="receviers[0].is_active ? 'text-green-bright' : 'text-gray-strong'"
+            >
+              {{ receviers[0].is_active ? 'Active Now' : 'Offline' }}
+            </span>
           </div>
         </div>
         <div class="flex gap-6">
@@ -62,7 +70,7 @@
           </button>
         </div>
       </div>
-      <div class="flex flex-col gap-4 my-3 flex-1 overflow-y-auto thin-scrollbar">
+      <div class="flex flex-col-reverse gap-4 my-3 flex-1 overflow-y-auto thin-scrollbar">
         <MessageComponent v-for="message in messages" :key="message?.id" :message="message" />
       </div>
       <div class="px-4 -mx-4 border-t-2 border-green-theme py-3 flex gap-2 items-start">
@@ -96,7 +104,6 @@ import InputComponent from '@/components/shared/InputComponent.vue'
 import { useSocket } from '@/composable/useSocket'
 import { useConversationStore } from '@/stores/conversation-store'
 import { computed, onMounted, ref } from 'vue'
-import type { Convo } from '@/types'
 import { useAuthStore } from '@/stores/auth-store'
 import type { Message, User } from '@shared/pack'
 
@@ -113,19 +120,6 @@ const receviers = computed(() => {
   return conversationStore.conversation?.members.filter(
     (member) => member.id !== authUser.value?.id
   )
-})
-
-const convoDisplay = computed(() => {
-  return conversationStore.conversations.map((convo): Convo => {
-    return {
-      id: convo.id,
-      is_pinned: convo.is_pinned,
-      receviers: convo.members.filter((member) => member.id !== authUser.value?.id),
-      sender: convo.members.find((member) => member.id !== authUser.value?.id) as User,
-      last_message: convo.messages ? convo.messages[convo.messages.length - 1] : undefined,
-      unread_messages: convo.messages ? convo.messages.filter((msg) => !msg.is_seen).length : 0
-    }
-  })
 })
 
 const onSelectConvo = async (id: number) => {
@@ -154,6 +148,7 @@ onMounted(async () => {
 
   if (authUser.value) {
     connect(authUser.value.id)
+    conversationStore.getConvoDisplays(authUser.value.id)
   }
 })
 </script>

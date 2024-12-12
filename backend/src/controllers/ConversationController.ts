@@ -76,6 +76,9 @@ export const getMessages = async (req: Request, res: Response) => {
           id: parseInt(req.params.conversation_id)
         }
       },
+      order: {
+        created_at: 'DESC'
+      },
       relations: {
         sender: true
       }

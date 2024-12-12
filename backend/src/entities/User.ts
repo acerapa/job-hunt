@@ -39,6 +39,12 @@ export class User extends BaseEntity implements IUser<Profile, Company, Conversa
   type: UserType
 
   @Column({
+    default: false,
+    nullable: true
+  })
+  is_active: boolean
+
+  @Column({
     nullable: true
   })
   gender: Gender
@@ -48,9 +54,6 @@ export class User extends BaseEntity implements IUser<Profile, Company, Conversa
     nullable: false
   })
   username: string
-
-  @Column({ default: false })
-  is_active: boolean
 
   @Column()
   @Exclude({ toClassOnly: true })

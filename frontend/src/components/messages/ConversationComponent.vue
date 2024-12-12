@@ -13,12 +13,15 @@
         src="https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?q=80&w=1480&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
         alt="receiver_image"
       />
-      <div class="active-indicator"></div>
+      <div
+        class="status-indicator"
+        :class="props.convo.receviers[0].is_active ? 'active-user' : 'inactive-user'"
+      ></div>
     </div>
     <div class="flex flex-col gap-0 flex-1">
       <div class="flex justify-between items-center">
         <p class="text-sm font-bold">
-          {{ `${props.convo.receviers[0].first_name} ${props.convo.receviers[0].last_name}` }}
+          {{ props.convo.receviers[0].full_name }}
         </p>
         <span class="text-gray-strong font-bold text-xs">12 min ago</span>
       </div>
@@ -53,7 +56,15 @@ const conversationStore = useConversationStore()
 </script>
 
 <style scoped>
-.active-indicator {
+.status-indicator {
   @apply w-3 h-3 bg-green-bright border border-white rounded-full absolute bottom-0 right-0;
+}
+
+.active-user {
+  @apply bg-green-bright;
+}
+
+.inactive-user {
+  @apply bg-gray-strong;
 }
 </style>

@@ -1,20 +1,18 @@
 import express, { Application } from 'express'
 import cors from 'cors'
 import dotenv from 'dotenv'
-import { checkConnection } from './src/database'
+import { initializeDataSource } from './src/database'
 import cookieParser from 'cookie-parser'
 import { getEnv } from './src/helpers/env-helpers'
 import { shorthandResponse } from './src/middlewares/response'
 import { startSocket } from './socket'
-import { Server } from 'socket.io'
-import { createServer } from 'http'
 
 import { instrument } from '@socket.io/admin-ui'
 
 dotenv.config()
 
 // check connection
-checkConnection()
+initializeDataSource()
 
 const app: Application = express()
 

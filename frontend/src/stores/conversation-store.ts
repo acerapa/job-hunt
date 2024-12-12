@@ -1,12 +1,15 @@
 import { api, Method } from '@/api'
+import type { Convo, ConvoMember } from '@/types'
 import type { ApiResponse, Conversation, Message, User } from '@shared/pack'
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 
 export const useConversationStore = defineStore('conversation', () => {
   const messages = ref<Partial<Message<Object, User>[]>>([])
-  const conversation = ref<Conversation<User, Message> | null>()
   const conversations = ref<Conversation<User, Message>[]>([])
+  const conversation = ref<Conversation<User, Message> | null>()
+
+  const convoDisplays = ref<Convo[]>([])
 
   const startConversation = async (convo: Partial<Conversation>) => {
     const res: ApiResponse<Conversation<User, Message>> = await api(
@@ -36,6 +39,45 @@ export const useConversationStore = defineStore('conversation', () => {
     }
 
     return conversations.value
+  }
+
+  const getConvoDisplays = (sender_id: number) => {
+    convoDisplays.value = conversations.value.map((convo): Convo => {
+      const convoMembers: ConvoMember[] = convo.members.map((member): ConvoMember => {
+        return {
+          user: member,
+          user_id: member.id,
+          full_name: `${member.first_name} ${member.last_name}`,
+          is_active: member.is_active
+        }
+      })
+
+      const receivers = convoMembers.filter((member) => member.user_id !== sender_id)
+      const sender = convoMembers.find((member) => member.user_id === sender_id)
+
+      return {
+        id: convo.id,
+        receviers: receivers,
+        is_pinned: convo.is_pinned,
+        sender: sender as ConvoMember,
+        last_message: convo.messages && convo.messages.length ? convo.messages[0] : undefined,
+        unread_messages:
+          convo.messages && convo.messages.length
+            ? convo.messages.filter((msg) => !msg.is_seen).length
+            : 0
+      }
+    })
+  }
+
+  const setActiveStatus = (convo_id: number, user_id: number, is_active: boolean) => {
+    if (!convoDisplays.value.length) return
+    const convo = convoDisplays.value.find((c: Convo) => c.id == convo_id)
+    if (convo) {
+      const ndx = convo.receviers.findIndex((r) => r.user_id == user_id)
+      if (ndx > -1) {
+        convo.receviers[ndx].is_active = is_active
+      }
+    }
   }
 
   const getConversationByMembers = (members: number[]) => {
@@ -90,7 +132,6 @@ export const useConversationStore = defineStore('conversation', () => {
 
     if (res.status < 400) {
       msg = res.data
-      messages.value.push(msg)
     }
 
     return msg
@@ -101,11 +142,14 @@ export const useConversationStore = defineStore('conversation', () => {
     messages,
     conversation,
     conversations,
+    convoDisplays,
 
     // actions
     saveMessage,
     fetchMessages,
+    setActiveStatus,
     getConversations,
+    getConvoDisplays,
     startConversation,
     fetchConversations,
     getConversationById,

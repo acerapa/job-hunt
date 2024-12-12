@@ -20,9 +20,16 @@ export const CompanyDetailsNavMap = {
 
 export interface Convo {
   id: number
-  sender: User
   is_pinned: boolean
-  receviers: User[]
+  sender: ConvoMember
+  receviers: ConvoMember[]
   last_message?: Message
   unread_messages: number
+}
+
+export interface ConvoMember {
+  user?: User
+  user_id: number
+  full_name: string
+  is_active: boolean
 }

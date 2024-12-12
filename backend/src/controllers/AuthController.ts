@@ -5,7 +5,7 @@ import { formatResponse } from '../middlewares/response'
 import { isEmail } from '@shared/pack/dist'
 import { User } from './../entities/User'
 import { type User as IUser, type Profile as IProfile } from '@shared/pack'
-import { authenticateUser, generateAccessAndRefreshToken } from '../services/auth-service'
+import { authenticateUser, generateAccessAndRefreshToken } from '../services/auth.service'
 import { setCookie } from '../helpers/set-cookies'
 import { instanceToInstance } from 'class-transformer'
 

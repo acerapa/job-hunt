@@ -4,6 +4,7 @@ import { getEnv } from '../helpers/env-helpers'
 import { FindOptionsRelations, FindOptionsWhere } from 'typeorm'
 import { isEmail } from '@shared/pack/dist'
 import { compare } from 'bcryptjs'
+import AppDataSource, { checkConnection, initializeDataSource } from '../database'
 
 type Param = {
   id: number
@@ -29,6 +30,10 @@ export const generateAccessAndRefreshToken = (user: User | Param) => {
 }
 
 export const getUserConversation = async (user_id: number) => {
+  let status = await checkConnection(AppDataSource)
+  if (!status) {
+    await initializeDataSource()
+  }
   const user = await User.findOneOrFail({
     where: {
       id: user_id

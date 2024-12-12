@@ -3,6 +3,7 @@ import type { Message, User } from '@shared/pack'
 import { Socket } from 'socket.io-client'
 import { ref } from 'vue'
 import { SocketService } from '@/socket'
+import type { Convo } from '@/types'
 
 export function useSocket() {
   const socket = ref<Socket | null>(null)
@@ -16,9 +17,20 @@ export function useSocket() {
       console.error(err)
     })
 
+    // remove listener and add new one
+    socket.value.off('message')
     socket.value.on('message', (msg: Message<Object, User>) => {
-      console.log(msg)
-      conversationStore.messages.push(msg)
+      conversationStore.messages.unshift(msg)
+    })
+
+    socket.value.off('user-connected')
+    socket.value.on('user-connected', (data) => {
+      conversationStore.setActiveStatus(data.convo_id, data.user_id, true)
+    })
+
+    socket.value.off('user-disconnected')
+    socket.value.on('user-disconnected', (data) => {
+      conversationStore.setActiveStatus(data.convo_id, data.user_id, false)
     })
   }
 

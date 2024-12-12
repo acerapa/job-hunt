@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express'
 import { verify, JwtPayload, TokenExpiredError, JsonWebTokenError } from 'jsonwebtoken'
 import { getEnv } from '../helpers/env-helpers'
-import { generateAccessAndRefreshToken } from '../services/auth-service'
+import { generateAccessAndRefreshToken } from '../services/auth.service'
 import { setCookie } from '../helpers/set-cookies'
 
 export const validateAccessRefreshToken = (req: Request, res: Response, next: NextFunction) => {
