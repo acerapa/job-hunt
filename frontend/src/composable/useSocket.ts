@@ -1,9 +1,8 @@
 import { useConversationStore } from '@/stores/conversation-store'
-import type { Message, User } from '@shared/pack'
+import type { Conversation, Message, User } from '@shared/pack'
 import { Socket } from 'socket.io-client'
 import { ref } from 'vue'
 import { SocketService } from '@/socket'
-import type { Convo } from '@/types'
 
 export function useSocket() {
   const socket = ref<Socket | null>(null)
@@ -19,8 +18,14 @@ export function useSocket() {
 
     // remove listener and add new one
     socket.value.off('message')
-    socket.value.on('message', (msg: Message<Object, User>) => {
-      conversationStore.messages.unshift(msg)
+    socket.value.on('message', (msg: Message<Conversation, User>) => {
+      const convoIndex = conversationStore.convoDisplays.findIndex(
+        (c) => c.id == msg.conversation?.id
+      )
+      if (convoIndex > -1) {
+        conversationStore.convoDisplays[convoIndex].messages.unshift(msg)
+        conversationStore.convoDisplays[convoIndex].last_message = msg
+      }
     })
 
     socket.value.off('user-connected')

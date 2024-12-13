@@ -10,6 +10,7 @@ export const useConversationStore = defineStore('conversation', () => {
   const conversation = ref<Conversation<User, Message> | null>()
 
   const convoDisplays = ref<Convo[]>([])
+  const convoDisplay = ref<Convo | null>(null)
 
   const startConversation = async (convo: Partial<Conversation>) => {
     const res: ApiResponse<Conversation<User, Message>> = await api(
@@ -60,13 +61,22 @@ export const useConversationStore = defineStore('conversation', () => {
         receviers: receivers,
         is_pinned: convo.is_pinned,
         sender: sender as ConvoMember,
-        last_message: convo.messages && convo.messages.length ? convo.messages[0] : undefined,
+        messages: convo.messages as Message<Object, User>[],
+        last_message:
+          convo.messages && convo.messages.length
+            ? (convo.messages[0] as Message<Object, User>)
+            : undefined,
         unread_messages:
           convo.messages && convo.messages.length
             ? convo.messages.filter((msg) => !msg.is_seen).length
             : 0
       }
     })
+  }
+
+  const getConvoDisplayById = (convo_id: number) => {
+    convoDisplay.value = convoDisplays.value.find((c) => c.id == convo_id) as Convo
+    return convoDisplay.value
   }
 
   const setActiveStatus = (convo_id: number, user_id: number, is_active: boolean) => {
@@ -141,6 +151,7 @@ export const useConversationStore = defineStore('conversation', () => {
     // state
     messages,
     conversation,
+    convoDisplay,
     conversations,
     convoDisplays,
 
@@ -153,6 +164,7 @@ export const useConversationStore = defineStore('conversation', () => {
     startConversation,
     fetchConversations,
     getConversationById,
+    getConvoDisplayById,
     getConversationByMembers
   }
 })

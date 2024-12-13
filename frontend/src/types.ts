@@ -23,7 +23,8 @@ export interface Convo {
   is_pinned: boolean
   sender: ConvoMember
   receviers: ConvoMember[]
-  last_message?: Message
+  last_message?: Message<Object, User>
+  messages: Message<Object, User>[]
   unread_messages: number
 }
 

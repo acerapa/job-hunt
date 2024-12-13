@@ -29,11 +29,18 @@ export const generateAccessAndRefreshToken = (user: User | Param) => {
   }
 }
 
-export const getUserConversation = async (user_id: number) => {
-  let status = await checkConnection(AppDataSource)
-  if (!status) {
-    await initializeDataSource()
+export const getUserConversation = async (
+  user_id: number,
+  isIncludeMessages: boolean = false,
+  shouldCheckConnection: boolean = true
+) => {
+  if (shouldCheckConnection) {
+    let status = await checkConnection(AppDataSource)
+    if (!status) {
+      await initializeDataSource()
+    }
   }
+
   const user = await User.findOneOrFail({
     where: {
       id: user_id
@@ -43,7 +50,19 @@ export const getUserConversation = async (user_id: number) => {
         conversation: {
           user_conversations: {
             user: true
-          }
+          },
+          messages: isIncludeMessages ? { sender: true } : isIncludeMessages
+        }
+      }
+    },
+    order: {
+      user_conversations: {
+        conversation: {
+          messages: isIncludeMessages
+            ? {
+                created_at: 'DESC'
+              }
+            : undefined
         }
       }
     }
