@@ -32,12 +32,12 @@
       </div>
     </div>
     <div
-      v-if="conversationStore.conversation"
+      v-if="conversationStore.convoDisplays && conversationStore.convoDisplay"
       class="wrap flex flex-col min-w-[562px] !py-0 flex-1 h-[calc(100vh_-_134px)]"
     >
       <div
         class="py-4 px-4 -mx-4 border-b-2 border-green-theme flex items-center justify-between sticky top-0"
-        v-if="receviers"
+        v-if="conversationStore.convoDisplay.receviers"
       >
         <div class="flex gap-3 items-center">
           <img
@@ -47,13 +47,17 @@
           />
           <div class="flex flex-col gap-0">
             <span class="font-semibold text-base leading-tight">
-              {{ `${receviers[0].first_name} ${receviers[0].last_name}` }}
+              {{ conversationStore.convoDisplay.receviers[0].full_name }}
             </span>
             <span
               class="font-semibold text-xs"
-              :class="receviers[0].is_active ? 'text-green-bright' : 'text-gray-strong'"
+              :class="
+                conversationStore.convoDisplay.receviers[0].is_active
+                  ? 'text-green-bright'
+                  : 'text-gray-strong'
+              "
             >
-              {{ receviers[0].is_active ? 'Active Now' : 'Offline' }}
+              {{ conversationStore.convoDisplay.receviers[0].is_active ? 'Active Now' : 'Offline' }}
             </span>
           </div>
         </div>
@@ -71,7 +75,11 @@
         </div>
       </div>
       <div class="flex flex-col-reverse gap-4 my-3 flex-1 overflow-y-auto thin-scrollbar">
-        <MessageComponent v-for="message in messages" :key="message?.id" :message="message" />
+        <MessageComponent
+          v-for="message in conversationStore.convoDisplay.messages"
+          :key="message.id"
+          :message="message"
+        />
       </div>
       <div class="px-4 -mx-4 border-t-2 border-green-theme py-3 flex gap-2 items-start">
         <InputComponent
@@ -86,7 +94,7 @@
       </div>
     </div>
     <div
-      v-if="!conversationStore.conversation"
+      v-if="!conversationStore.convoDisplays || !conversationStore.convoDisplay"
       class="h-[calc(100vh_-_134px)] flex justify-center items-center flex-1"
     >
       <div class="flex flex-col items-center justify-center">
@@ -103,7 +111,7 @@ import MessageComponent from '@/components/messages/MessageComponent.vue'
 import InputComponent from '@/components/shared/InputComponent.vue'
 import { useSocket } from '@/composable/useSocket'
 import { useConversationStore } from '@/stores/conversation-store'
-import { computed, onMounted, ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import { useAuthStore } from '@/stores/auth-store'
 import type { Message, User } from '@shared/pack'
 
@@ -113,19 +121,10 @@ const authStore = useAuthStore()
 const conversationStore = useConversationStore()
 
 const message = ref<string>()
-const messages = computed(() => conversationStore.messages as Message<Object, User>[])
 const authUser = ref<User | null>()
 
-const receviers = computed(() => {
-  return conversationStore.conversation?.members.filter(
-    (member) => member.id !== authUser.value?.id
-  )
-})
-
-const onSelectConvo = async (id: number) => {
-  conversationStore.getConversationById(id)
-
-  await conversationStore.fetchMessages(conversationStore.conversation?.id as number)
+const onSelectConvo = (id: number) => {
+  conversationStore.getConvoDisplayById(id)
 }
 
 const onSendMessage = async () => {
@@ -133,13 +132,15 @@ const onSendMessage = async () => {
     is_seen: false,
     message: message.value,
     sender_id: authUser.value?.id,
-    conversation_id: conversationStore.conversation?.id
+    conversation_id: conversationStore.convoDisplay ? conversationStore.convoDisplay.id : 0
   }
   const msg = await conversationStore.saveMessage(data)
 
   if (msg) {
     sendMessage(msg)
   }
+
+  message.value = ''
 }
 
 onMounted(async () => {

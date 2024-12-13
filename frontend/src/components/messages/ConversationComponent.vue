@@ -2,7 +2,7 @@
   <div
     class="px-3 py-2 cursor-pointer flex gap-3 items-center hover:bg-green-theme"
     :class="
-      conversationStore.conversation && props.convo.id == conversationStore.conversation.id
+      conversationStore.convoDisplay && props.convo.id == conversationStore.convoDisplay.id
         ? 'bg-green-theme'
         : ''
     "
@@ -27,7 +27,11 @@
       </div>
       <div class="flex justify-between items-center">
         <span class="text-sm italic text-gray-strong" v-if="props.convo.last_message">
-          You: This is a sample message
+          {{
+            authUser && authUser.id == props.convo.receviers[0].user_id
+              ? 'You'
+              : props.convo.receviers[0].full_name.split(' ')[0]
+          }}: {{ props.convo.last_message.message }}
         </span>
         <div class="flex gap-1 items-center">
           <span
@@ -43,8 +47,11 @@
 </template>
 
 <script lang="ts" setup>
+import { useAuthStore } from '@/stores/auth-store'
 import { useConversationStore } from '@/stores/conversation-store'
 import type { Convo } from '@/types'
+import type { User } from '@shared/pack'
+import { onMounted, ref } from 'vue'
 
 interface Props {
   convo: Convo
@@ -52,7 +59,14 @@ interface Props {
 
 const props = defineProps<Props>()
 
+const authStore = useAuthStore()
 const conversationStore = useConversationStore()
+
+const authUser = ref<User | null>(null)
+
+onMounted(async () => {
+  authUser.value = await authStore.getAuthUser()
+})
 </script>
 
 <style scoped>
