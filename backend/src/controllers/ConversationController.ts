@@ -40,7 +40,6 @@ export const getConversations = async (req: Request, res: Response) => {
     res.sendSuccess({ data: conversations, message: 'Conversations fetched successfully' })
   } catch (error) {
     const { message, name, stack } = error as Error
-    console.log(`${name} ${message} ${stack}`)
     res.sendError({ message: `${name} ${message} ${stack}` })
   }
 }
