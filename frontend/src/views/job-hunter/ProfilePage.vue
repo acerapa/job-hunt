@@ -279,31 +279,92 @@
       <div class="wrap flex flex-col gap-3">
         <div class="flex justify-between">
           <p class="font-bold text-main">Technical Skills</p>
-          <button class="btn-outline">Edit</button>
+          <button
+            class="btn-outline"
+            v-if="!sectionFormState.technicalSkill"
+            @click="sectionFormState.technicalSkill = true"
+          >
+            Edit
+          </button>
+          <div class="flex gap-3" v-if="sectionFormState.technicalSkill">
+            <button class="btn-outline" @click="sectionFormState.technicalSkill = false">
+              Cancel
+            </button>
+            <button
+              class="btn"
+              v-if="sectionFormState.technicalSkill"
+              @click="
+                () => {
+                  sectionFormState.technicalSkill = false
+                }
+              "
+            >
+              Save
+            </button>
+          </div>
         </div>
 
-        <div class="flex gap-3 mt-3 flex-wrap">
-          <TagComponent text="HTML" />
-          <TagComponent text="CSS3" />
-          <TagComponent text="Python" />
-          <TagComponent text="JavaScript" />
-          <TagComponent text="MySQL" />
-          <TagComponent text="MSSQL" />
+        <div
+          class="flex gap-3 mt-3 flex-wrap"
+          :class="sectionFormState.technicalSkill ? '' : 'pointer-events-none'"
+        >
+          <TagComponent :disabled="true" text="HTML" />
+          <TagComponent :disabled="true" text="CSS3" />
+          <TagComponent :disabled="true" text="Python" />
+          <TagComponent :disabled="true" text="JavaScript" />
+          <TagComponent :disabled="true" text="MySQL" />
+          <TagComponent :disabled="true" text="MSSQL" />
         </div>
+
+        <InputComponent
+          name="tech-skill"
+          type="select"
+          :options="techSkillOption"
+          placeholder="Technical Skills"
+        />
       </div>
       <div class="wrap flex flex-col gap-3">
         <div class="flex justify-between">
           <p class="font-bold text-main">Soft Skills</p>
-          <button class="btn-outline">Edit</button>
+          <button
+            class="btn-outline"
+            v-if="!sectionFormState.softSkill"
+            @click="sectionFormState.softSkill = true"
+          >
+            Edit
+          </button>
+          <div class="flex gap-3" v-if="sectionFormState.softSkill">
+            <button class="btn-outline" @click="sectionFormState.softSkill = false">Cancel</button>
+            <button
+              class="btn"
+              v-if="sectionFormState.softSkill"
+              @click="
+                () => {
+                  sectionFormState.softSkill = false
+                }
+              "
+            >
+              Save
+            </button>
+          </div>
         </div>
-        <div class="flex gap-3 mt-3 flex-wrap">
-          <TagComponent text="English Proficiency" />
-          <TagComponent text="Communication" />
-          <TagComponent text="Time Management" />
-          <TagComponent text="Problem Solving" />
-          <TagComponent text="Creativity" />
-          <TagComponent text="Teamwork" />
+        <div
+          class="flex gap-3 mt-3 flex-wrap"
+          :class="sectionFormState.softSkill ? '' : 'pointer-events-none'"
+        >
+          <TagComponent :disabled="true" text="English Proficiency" />
+          <TagComponent :disabled="true" text="Communication" />
+          <TagComponent :disabled="true" text="Time Management" />
+          <TagComponent :disabled="true" text="Problem Solving" />
+          <TagComponent :disabled="true" text="Creativity" />
+          <TagComponent :disabled="true" text="Teamwork" />
         </div>
+        <InputComponent
+          name="soft-skill"
+          type="select"
+          :options="softSkillOption"
+          placeholder="Soft Skills"
+        />
       </div>
       <div class="wrap flex flex-col gap-3">
         <div class="flex justify-between items-center">
@@ -344,14 +405,16 @@ import TagComponent from '@/components/shared/TagComponent.vue'
 import InputComponent from '@/components/shared/InputComponent.vue'
 import { computed, onMounted, reactive, ref } from 'vue'
 import { useAuthStore } from '@/stores/auth-store'
-import { Gender, type Address, type Profile, type User } from '@shared/pack'
+import { Gender, SkillType, type Address, type Profile, type User } from '@shared/pack'
 import { useUserStore } from '@/stores/user-store'
 import { useRouter } from 'vue-router'
+import { useSkillStore } from '@/stores/skill-store'
 
 const router = useRouter()
 const authUser = ref<User<Profile> | null>()
 const authStore = useAuthStore()
 const userStore = useUserStore()
+const skillStore = useSkillStore()
 
 const sectionFormState = reactive<{
   technicalSkill: boolean
@@ -406,8 +469,31 @@ const onUpdateProfileAddress = async () => {
   }
 }
 
+const techSkillOption = computed(() => {
+  return skillStore.skills
+    .filter((skill) => skill.type == SkillType.TECHNICAL)
+    .map((skill) => {
+      return {
+        text: skill.name,
+        value: skill.id
+      }
+    })
+})
+
+const softSkillOption = computed(() => {
+  return skillStore.skills
+    .filter((skill) => skill.type == SkillType.SOFT)
+    .map((skill) => {
+      return {
+        text: skill.name,
+        value: skill.id
+      }
+    })
+})
+
 onMounted(async () => {
   authUser.value = await authStore.getAuthUser()
+  await skillStore.getSkills()
 
   if (authUser.value) {
     userModel.value = authUser.value

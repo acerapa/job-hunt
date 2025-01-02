@@ -41,8 +41,12 @@ export class Skill extends BaseEntity implements ISkill<Profile> {
 
   @AfterLoad()
   populateProperties() {
-    this.profiles = this.profile_skills.map((profileToSkill) => profileToSkill.profile)
-    this.jobs = this.job_skills.map((jobToSkill) => jobToSkill.job)
+    this.profiles =
+      this.profile_skills && this.profile_skills.length
+        ? this.profile_skills.map((profileToSkill) => profileToSkill.profile)
+        : []
+    this.jobs =
+      this.job_skills && this.job_skills ? this.job_skills.map((jobToSkill) => jobToSkill.job) : []
   }
 
   @CreateDateColumn()
