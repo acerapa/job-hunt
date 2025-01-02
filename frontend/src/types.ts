@@ -25,7 +25,8 @@ export interface Convo {
   receviers: ConvoMember[]
   last_message?: Message<Object, User>
   messages: Message<Object, User>[]
-  unread_messages: number
+  unread_messages_number: number
+  unread_messages: Message<Object, User>[]
 }
 
 export interface ConvoMember {

@@ -44,16 +44,6 @@ export const getConversations = async (req: Request, res: Response) => {
   }
 }
 
-// export const getConversation = async (req: Request, res: Response) => {
-//   // TODO: Implement conversation retrieval logic
-// }
-// export const updateConversation = async (req: Request, res: Response) => {
-//   // TODO: Implement conversation update logic
-// }
-// export const deleteConversation = async (req: Request, res: Response) => {
-//   // TODO: Implement conversation deletion logic
-// }
-
 export const getMessages = async (req: Request, res: Response) => {
   try {
     // TODO: Implement skip an take logic here
@@ -94,6 +84,17 @@ export const createMessage = async (req: Request, res: Response) => {
     await message.save()
 
     res.sendSuccess({ data: message, message: 'Message created successfully' })
+  } catch (error) {
+    const { message, name, stack } = error as Error
+    res.sendError({ message: `${name} ${message} ${stack}` })
+  }
+}
+
+export const updateMessage = async (req: Request, res: Response) => {
+  try {
+    await Message.update(req.params.message_id, req.validated)
+
+    res.sendSuccess({ message: 'Message updated successfully' })
   } catch (error) {
     const { message, name, stack } = error as Error
     res.sendError({ message: `${name} ${message} ${stack}` })

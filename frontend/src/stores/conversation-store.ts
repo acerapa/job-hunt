@@ -3,6 +3,7 @@ import type { Convo, ConvoMember } from '@/types'
 import type { ApiResponse, Conversation, Message, User } from '@shared/pack'
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
+import { useAuthStore } from './auth-store'
 
 export const useConversationStore = defineStore('conversation', () => {
   const messages = ref<Partial<Message<Object, User>[]>>([])
@@ -42,7 +43,10 @@ export const useConversationStore = defineStore('conversation', () => {
     return conversations.value
   }
 
-  const getConvoDisplays = (sender_id: number) => {
+  const getConvoDisplays = async (sender_id: number) => {
+    const authStore = useAuthStore()
+    const authUser = await authStore.getAuthUser()
+
     convoDisplays.value = conversations.value.map((convo): Convo => {
       const convoMembers: ConvoMember[] = convo.members.map((member): ConvoMember => {
         return {
@@ -68,7 +72,15 @@ export const useConversationStore = defineStore('conversation', () => {
             : undefined,
         unread_messages:
           convo.messages && convo.messages.length
-            ? convo.messages.filter((msg) => !msg.is_seen).length
+            ? (convo.messages as Message<Object, User>[]).filter(
+                (msg) => !msg.is_seen && msg.sender.id !== authUser?.id
+              )
+            : [],
+        unread_messages_number:
+          convo.messages && convo.messages.length
+            ? (convo.messages as Message<Object, User>[]).filter(
+                (msg) => !msg.is_seen && msg.sender.id !== authUser?.id
+              ).length
             : 0
       }
     })
@@ -147,6 +159,21 @@ export const useConversationStore = defineStore('conversation', () => {
     return msg
   }
 
+  const updateMessage = async (message_id: number, message: Partial<Message>) => {
+    const res: ApiResponse<Message<Object, User>> = await api(
+      `conversations/messages/${message_id}/update`,
+      Method.POST,
+      message
+    )
+
+    return res.status < 400
+  }
+
+  const readMessages = async () => {
+    const messages = convoDisplay.value?.unread_messages || []
+    await Promise.all(messages.map(async (msg) => updateMessage(msg.id, { is_seen: true })))
+  }
+
   return {
     // state
     messages,
@@ -157,6 +184,8 @@ export const useConversationStore = defineStore('conversation', () => {
 
     // actions
     saveMessage,
+    readMessages,
+    updateMessage,
     fetchMessages,
     setActiveStatus,
     getConversations,
