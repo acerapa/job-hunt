@@ -15,9 +15,12 @@
       :class="isCurrent ? '!bg-pale-green' : '!bg-pale-blue'"
     >
       <p class="tracking-wide">{{ props.message.message }}</p>
-      <small class="text-[10px] font-semibold absolute bottom-2 right-2 text-gray-strong">
+      <small class="text-[10px] flex font-semibold absolute bottom-2 right-2 text-gray-strong">
         {{ new Date(props.message.created_at ?? '').toLocaleTimeString() }} &nbsp;&nbsp;
-        <span class="font-bold">&check;</span>
+        <div>
+          <span class="font-bold">&check;</span>
+          <span class="font-bold -ml-1" v-if="props.message.is_seen">&check;</span>
+        </div>
       </small>
     </div>
   </div>
