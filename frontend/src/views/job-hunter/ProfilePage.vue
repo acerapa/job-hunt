@@ -296,6 +296,7 @@
               @click="
                 () => {
                   sectionFormState.technicalSkill = false
+                  onUpdateProfileSkills()
                 }
               "
             >
@@ -305,22 +306,33 @@
         </div>
 
         <div
+          v-if="techSkill.length"
           class="flex gap-3 mt-3 flex-wrap"
           :class="sectionFormState.technicalSkill ? '' : 'pointer-events-none'"
         >
-          <TagComponent :disabled="true" text="HTML" />
-          <TagComponent :disabled="true" text="CSS3" />
-          <TagComponent :disabled="true" text="Python" />
-          <TagComponent :disabled="true" text="JavaScript" />
-          <TagComponent :disabled="true" text="MySQL" />
-          <TagComponent :disabled="true" text="MSSQL" />
+          <div class="relative" v-for="skill in techSkill" :key="skill.id">
+            <TagComponent :disabled="true" :text="skill.name" />
+            <button
+              v-if="sectionFormState.technicalSkill"
+              @click="removeSkill(skill.id)"
+              class="absolute -top-1 -right-1 w-4 h-4 flex items-center justify-center rounded-full bg-gray-200 text-red-500"
+            >
+              <span>&times;</span>
+            </button>
+          </div>
         </div>
+        <p v-if="!techSkill.length && !sectionFormState.technicalSkill" class="text-gray-600">
+          Please add some skills
+        </p>
 
         <InputComponent
-          name="tech-skill"
           type="select"
+          name="tech-skill"
+          v-model="dispo_tech"
           :options="techSkillOption"
           placeholder="Technical Skills"
+          @change="addSkill(SkillType.TECHNICAL)"
+          v-if="sectionFormState.technicalSkill"
         />
       </div>
       <div class="wrap flex flex-col gap-3">
@@ -341,6 +353,7 @@
               @click="
                 () => {
                   sectionFormState.softSkill = false
+                  onUpdateProfileSkills()
                 }
               "
             >
@@ -349,21 +362,32 @@
           </div>
         </div>
         <div
+          v-if="softSkill.length"
           class="flex gap-3 mt-3 flex-wrap"
           :class="sectionFormState.softSkill ? '' : 'pointer-events-none'"
         >
-          <TagComponent :disabled="true" text="English Proficiency" />
-          <TagComponent :disabled="true" text="Communication" />
-          <TagComponent :disabled="true" text="Time Management" />
-          <TagComponent :disabled="true" text="Problem Solving" />
-          <TagComponent :disabled="true" text="Creativity" />
-          <TagComponent :disabled="true" text="Teamwork" />
+          <div class="relative" v-for="skill in softSkill" :key="skill.id">
+            <TagComponent :disabled="true" :text="skill.name" />
+            <button
+              v-if="sectionFormState.technicalSkill"
+              @click="removeSkill(skill.id)"
+              class="absolute -top-1 -right-1 w-4 h-4 flex items-center justify-center rounded-full bg-gray-200 text-red-500"
+            >
+              <span>&times;</span>
+            </button>
+          </div>
         </div>
+        <p v-if="!softSkill.length && !sectionFormState.softSkill" class="text-gray-600">
+          Please add some skills
+        </p>
         <InputComponent
-          name="soft-skill"
           type="select"
-          :options="softSkillOption"
+          name="soft-skill"
+          v-model="dispo_soft"
           placeholder="Soft Skills"
+          :options="softSkillOption"
+          v-if="sectionFormState.softSkill"
+          @change="addSkill(SkillType.SOFT)"
         />
       </div>
       <div class="wrap flex flex-col gap-3">
@@ -405,7 +429,7 @@ import TagComponent from '@/components/shared/TagComponent.vue'
 import InputComponent from '@/components/shared/InputComponent.vue'
 import { computed, onMounted, reactive, ref } from 'vue'
 import { useAuthStore } from '@/stores/auth-store'
-import { Gender, SkillType, type Address, type Profile, type User } from '@shared/pack'
+import { Gender, SkillType, type Address, type Profile, type Skill, type User } from '@shared/pack'
 import { useUserStore } from '@/stores/user-store'
 import { useRouter } from 'vue-router'
 import { useSkillStore } from '@/stores/skill-store'
@@ -432,9 +456,14 @@ const sectionFormState = reactive<{
   jobHunter: false
 })
 
+// disposable variables
+const dispo_tech = ref<number>()
+const dispo_soft = ref<number>()
+
 const userModel = ref<Partial<User>>({})
 const profileModel = ref<Partial<Profile>>({})
 const addressModel = ref<Partial<Address>>({})
+const skills = ref<Skill[]>([])
 
 const stringAddress = computed(() => {
   let addressStr = ''
@@ -469,8 +498,13 @@ const onUpdateProfileAddress = async () => {
   }
 }
 
+const onUpdateProfileSkills = async () => {
+  // TODO: update profile skills
+}
+
 const techSkillOption = computed(() => {
   return skillStore.skills
+    .filter((skill) => !skills.value.map((s) => s.id).includes(skill.id))
     .filter((skill) => skill.type == SkillType.TECHNICAL)
     .map((skill) => {
       return {
@@ -491,6 +525,34 @@ const softSkillOption = computed(() => {
     })
 })
 
+const softSkill = computed(() => {
+  return skills.value.filter((skill) => skill.type == SkillType.SOFT)
+})
+
+const techSkill = computed(() => {
+  return skills.value.filter((skill) => skill.type == SkillType.TECHNICAL)
+})
+
+const removeSkill = (skill_id: number) => {
+  // TODO: Remove skill
+}
+
+const addSkill = (type: SkillType) => {
+  const skill_id = type == SkillType.TECHNICAL ? dispo_tech.value : dispo_soft.value
+  if (skill_id) {
+    const index = skillStore.skills.findIndex((skill) => skill.id == skill_id)
+    if (index > -1) {
+      skills.value.push(skillStore.skills[index])
+    }
+  }
+
+  if (type == SkillType.TECHNICAL) {
+    dispo_tech.value = undefined
+  } else {
+    dispo_soft.value = undefined
+  }
+}
+
 onMounted(async () => {
   authUser.value = await authStore.getAuthUser()
   await skillStore.getSkills()
@@ -499,6 +561,7 @@ onMounted(async () => {
     userModel.value = authUser.value
     if (authUser.value.profile) {
       profileModel.value = authUser.value.profile
+      skills.value = authUser.value.profile.skills as Skill[]
 
       if (authUser.value.profile.address) {
         addressModel.value = authUser.value.profile.address
