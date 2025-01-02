@@ -5,6 +5,7 @@ export * from './company.js'
 export * from './job.js'
 export * from './application.js'
 export * from './conversation.js'
+export * from './skill.js'
 
 export const isEmail = (email: string): boolean => {
   const EmailSchema = z.string().email()

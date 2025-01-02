@@ -9,8 +9,8 @@ export const enum AlertStatus {
 }
 
 export const enum SkillType {
-  TECHNICAL = 1,
-  SOFT = 2
+  TECHNICAL = 'technical',
+  SOFT = 'soft'
 }
 
 export const enum Gender {

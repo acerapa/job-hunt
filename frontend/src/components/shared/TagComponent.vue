@@ -1,5 +1,9 @@
 <template>
-  <button class="tag">
+  <button
+    :disabled="props.disabled"
+    :class="props.disabled ? 'pointer-events-none' : ''"
+    class="tag"
+  >
     <p>{{ props.text }}</p>
   </button>
 </template>
@@ -7,9 +11,12 @@
 <script setup lang="ts">
 interface Props {
   text: string
+  disabled?: boolean
 }
 
-const props = defineProps<Props>()
+const props = withDefaults(defineProps<Props>(), {
+  disabled: false
+})
 </script>
 
 <style scoped>
