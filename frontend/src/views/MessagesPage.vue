@@ -114,17 +114,27 @@ import { useConversationStore } from '@/stores/conversation-store'
 import { onMounted, ref } from 'vue'
 import { useAuthStore } from '@/stores/auth-store'
 import type { Message, User } from '@shared/pack'
+import { useRoute, useRouter } from 'vue-router'
 
-const { sendMessage, connect } = useSocket()
-
+const route = useRoute()
+const router = useRouter()
 const authStore = useAuthStore()
+const { sendMessage, connect } = useSocket()
 const conversationStore = useConversationStore()
 
 const message = ref<string>()
 const authUser = ref<User | null>()
 
 const onSelectConvo = (id: number) => {
+  router.push({
+    name: 'messages',
+    query: { id }
+  })
+
   conversationStore.getConvoDisplayById(id)
+
+  // get unread messages and set read to true
+  conversationStore.readMessages()
 }
 
 const onSendMessage = async () => {
@@ -150,6 +160,10 @@ onMounted(async () => {
   if (authUser.value) {
     connect(authUser.value.id)
     conversationStore.getConvoDisplays(authUser.value.id)
+  }
+
+  if (route.query.id) {
+    conversationStore.getConvoDisplayById(parseInt(route.query.id as string))
   }
 })
 </script>

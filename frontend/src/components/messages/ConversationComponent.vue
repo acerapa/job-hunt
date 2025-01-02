@@ -26,18 +26,27 @@
         <span class="text-gray-strong font-bold text-xs">12 min ago</span>
       </div>
       <div class="flex justify-between items-center">
-        <span class="text-sm italic text-gray-strong" v-if="props.convo.last_message">
+        <span
+          class="text-sm italic text-gray-strong line-clamp-2"
+          :class="
+            props.convo.unread_messages_number &&
+            authUser?.id !== props.convo?.last_message.sender.id
+              ? 'font-bold'
+              : 'font-normal'
+          "
+          v-if="props.convo.last_message"
+        >
           {{
-            authUser && authUser.id == props.convo.receviers[0].user_id
+            authUser && authUser.id === props.convo.last_message.sender.id
               ? 'You'
               : props.convo.receviers[0].full_name.split(' ')[0]
           }}: {{ props.convo.last_message.message }}
         </span>
         <div class="flex gap-1 items-center">
           <span
-            v-if="props.convo.unread_messages"
+            v-if="props.convo.unread_messages_number"
             class="text-xs px-1.5 font-bold rounded-md text-white bg-main"
-            >{{ props.convo.unread_messages }}</span
+            >{{ props.convo.unread_messages_number }}</span
           >
           <img v-if="props.convo.is_pinned" src="@/assets/icons/push-pin.png" alt="push-pin.png" />
         </div>

@@ -1,5 +1,10 @@
 <template>
-  <div class="flex gap-3 items-end" :class="isCurrent ? 'flex-row-reverse' : ''" v-if="authUser">
+  <div
+    class="flex gap-3 items-end"
+    :class="isCurrent ? 'flex-row-reverse' : ''"
+    v-if="authUser"
+    ref="msg"
+  >
     <img
       src="https://images.unsplash.com/photo-1611200945005-403b70229452?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
       alt="sender_profile_pic"
@@ -37,6 +42,7 @@ const isCurrent = computed(() => {
   return sender_id == authUser.value?.id
 })
 
+const msg = ref()
 onMounted(async () => {
   authUser.value = await authStore.getAuthUser()
 })
