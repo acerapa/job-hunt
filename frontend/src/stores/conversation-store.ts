@@ -174,6 +174,7 @@ export const useConversationStore = defineStore('conversation', () => {
     await Promise.all(messages.map(async (msg) => updateMessage(msg.id, { is_seen: true })))
     await fetchConversations()
     await getConvoDisplays(sender_id)
+    await getConversationById(convoDisplay.value?.id || 0)
   }
 
   return {

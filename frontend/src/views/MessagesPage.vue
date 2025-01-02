@@ -161,11 +161,11 @@ onMounted(async () => {
 
   if (authUser.value) {
     connect(authUser.value.id)
-    conversationStore.getConvoDisplays(authUser.value.id)
+    await conversationStore.getConvoDisplays(authUser.value.id)
   }
 
   if (route.query.id) {
-    conversationStore.getConvoDisplayById(parseInt(route.query.id as string))
+    onSelectConvo(Number(route.query.id))
   }
 })
 </script>

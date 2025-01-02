@@ -22,9 +22,17 @@ export function useSocket() {
       const convoIndex = conversationStore.convoDisplays.findIndex(
         (c) => c.id == msg.conversation?.id
       )
+
       if (convoIndex > -1) {
         conversationStore.convoDisplays[convoIndex].messages.unshift(msg)
         conversationStore.convoDisplays[convoIndex].last_message = msg
+        const convo = conversationStore.convoDisplays[convoIndex]
+
+        // re assign the convo display in the store if the conversation_id
+        // matches the conversation_id of the message
+        if (convo.id == conversationStore.convoDisplay?.id) {
+          conversationStore.convoDisplay = conversationStore.convoDisplays[convoIndex]
+        }
       }
     })
 
