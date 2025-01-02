@@ -169,9 +169,11 @@ export const useConversationStore = defineStore('conversation', () => {
     return res.status < 400
   }
 
-  const readMessages = async () => {
+  const readMessages = async (sender_id: number) => {
     const messages = convoDisplay.value?.unread_messages || []
     await Promise.all(messages.map(async (msg) => updateMessage(msg.id, { is_seen: true })))
+    await fetchConversations()
+    await getConvoDisplays(sender_id)
   }
 
   return {

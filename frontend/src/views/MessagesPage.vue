@@ -134,7 +134,9 @@ const onSelectConvo = (id: number) => {
   conversationStore.getConvoDisplayById(id)
 
   // get unread messages and set read to true
-  conversationStore.readMessages()
+  if (authUser.value) {
+    conversationStore.readMessages(authUser.value?.id)
+  }
 }
 
 const onSendMessage = async () => {
