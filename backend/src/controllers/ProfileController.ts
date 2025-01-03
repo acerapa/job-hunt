@@ -2,6 +2,7 @@ import { Request, Response } from 'express'
 import { Profile } from '../entities/Profile'
 import { Address } from '../entities/Address'
 import { Skill } from '../entities/Skill'
+import { ProfileToSkill } from '../entities/junctions/ProfileToSkill'
 
 export const updateProfile = async (req: Request, res: Response) => {
   try {
@@ -23,8 +24,43 @@ export const updateSkills = async (req: Request, res: Response) => {
     })
 
     if (profile) {
-      const skills = req.validated.skills
-      profile.skills = skills.map((skill: number) => Skill.create({ id: skill }))
+      const currentProfileSkills = (
+        await ProfileToSkill.find({
+          where: {
+            profile: {
+              id: profile.id
+            }
+          },
+          relations: {
+            skill: true
+          }
+        })
+      ).map((profileToSkill) => profileToSkill.skill.id)
+
+      const newSkills = req.validated.skills.filter((skill: number) => {
+        return !currentProfileSkills.includes(skill)
+      })
+
+      const skillsToRemove = currentProfileSkills.filter((skill: number) => {
+        return !req.validated.skills.includes(skill)
+      })
+
+      await Promise.all([
+        ...newSkills.map((skill: number) => {
+          const profileToSkill = ProfileToSkill.create({
+            profile,
+            skill: { id: skill }
+          })
+
+          return profileToSkill.save()
+        }),
+        ...skillsToRemove.map((skill: number) => {
+          return ProfileToSkill.delete({
+            profile: { id: profile.id },
+            skill: { id: skill }
+          })
+        })
+      ])
     }
 
     res.sendSuccess({ message: 'Successfully updated profile' })

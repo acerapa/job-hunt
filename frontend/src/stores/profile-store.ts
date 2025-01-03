@@ -1,4 +1,4 @@
-import { api } from '@/api'
+import { api, Method } from '@/api'
 import type { ApiResponse, Application, Profile } from '@shared/pack'
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
@@ -14,8 +14,15 @@ export const useProfileStore = defineStore('profile', () => {
     }
   }
 
+  const updateProfileSkill = async (id: number, skills: number[]) => {
+    const res = await api(`profile/${id}/skills`, Method.POST, { skills })
+
+    return res.status < 400
+  }
+
   return {
     profile,
-    fetchProfileById
+    fetchProfileById,
+    updateProfileSkill
   }
 })

@@ -49,7 +49,10 @@ export const authUser = async (req: Request, res: Response) => {
         },
         relations: {
           profile: {
-            address: true
+            address: true,
+            profile_skills: {
+              skill: true
+            }
           },
           company: {
             address: true
