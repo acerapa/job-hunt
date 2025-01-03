@@ -369,7 +369,7 @@
           <div class="relative" v-for="skill in softSkill" :key="skill.id">
             <TagComponent :disabled="true" :text="skill.name" />
             <button
-              v-if="sectionFormState.technicalSkill"
+              v-if="sectionFormState.softSkill"
               @click="removeSkill(skill.id)"
               class="absolute -top-1 -right-1 w-4 h-4 flex items-center justify-center rounded-full bg-gray-200 text-red-500"
             >
@@ -433,12 +433,14 @@ import { Gender, SkillType, type Address, type Profile, type Skill, type User } 
 import { useUserStore } from '@/stores/user-store'
 import { useRouter } from 'vue-router'
 import { useSkillStore } from '@/stores/skill-store'
+import { useProfileStore } from '@/stores/profile-store'
 
 const router = useRouter()
 const authUser = ref<User<Profile> | null>()
 const authStore = useAuthStore()
 const userStore = useUserStore()
 const skillStore = useSkillStore()
+const profileStore = useProfileStore()
 
 const sectionFormState = reactive<{
   technicalSkill: boolean
@@ -499,7 +501,12 @@ const onUpdateProfileAddress = async () => {
 }
 
 const onUpdateProfileSkills = async () => {
-  // TODO: update profile skills
+  if (authUser.value && authUser.value.profile) {
+    await profileStore.updateProfileSkill(
+      authUser.value.profile.id,
+      skills.value.map((skill) => skill.id)
+    )
+  }
 }
 
 const techSkillOption = computed(() => {
@@ -516,6 +523,7 @@ const techSkillOption = computed(() => {
 
 const softSkillOption = computed(() => {
   return skillStore.skills
+    .filter((skill) => !skills.value.map((s) => s.id).includes(skill.id))
     .filter((skill) => skill.type == SkillType.SOFT)
     .map((skill) => {
       return {
@@ -534,7 +542,10 @@ const techSkill = computed(() => {
 })
 
 const removeSkill = (skill_id: number) => {
-  // TODO: Remove skill
+  const index = skills.value.findIndex((skill) => skill.id == skill_id)
+  if (index > -1) {
+    skills.value.splice(index, 1)
+  }
 }
 
 const addSkill = (type: SkillType) => {
