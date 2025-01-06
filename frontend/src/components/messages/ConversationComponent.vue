@@ -20,7 +20,7 @@
     </div>
     <div class="flex flex-col gap-0 flex-1">
       <div class="flex justify-between items-center">
-        <p class="text-sm font-bold">
+        <p class="text-sm font-bold text-ellipsis overflow-hidden text-nowrap">
           {{ props.convo.receviers[0].full_name }}
         </p>
         <span class="text-gray-strong font-bold text-xs">12 min ago</span>

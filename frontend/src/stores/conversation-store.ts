@@ -44,6 +44,10 @@ export const useConversationStore = defineStore('conversation', () => {
   }
 
   const getConvoDisplays = async (sender_id: number) => {
+    if (!conversations.value.length) {
+      await fetchConversations()
+    }
+
     const authStore = useAuthStore()
     const authUser = await authStore.getAuthUser()
 
