@@ -29,7 +29,7 @@
         <span
           class="text-sm italic text-gray-strong line-clamp-2"
           :class="
-            props.convo.unread_messages_number &&
+            !props.convo.last_message.is_seen &&
             authUser?.id !== props.convo?.last_message.sender.id
               ? 'font-bold'
               : 'font-normal'

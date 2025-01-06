@@ -76,7 +76,10 @@
           </button>
         </div>
       </div>
-      <div class="flex flex-col-reverse gap-4 my-3 flex-1 overflow-y-auto thin-scrollbar">
+      <div
+        class="flex flex-col-reverse gap-4 my-3 flex-1 overflow-y-auto thin-scrollbar"
+        ref="messagesCont"
+      >
         <MessageComponent
           v-for="message in conversationStore.convoDisplay.messages"
           :key="message.id"
@@ -89,6 +92,7 @@
           type="textarea"
           v-model="message"
           name="message-box"
+          @input="onInputMessage"
           input-class="!rounded-md"
           placeholder="Type a message..."
         />
@@ -113,7 +117,7 @@ import MessageComponent from '@/components/messages/MessageComponent.vue'
 import InputComponent from '@/components/shared/InputComponent.vue'
 import { useSocket } from '@/composable/useSocket'
 import { useConversationStore } from '@/stores/conversation-store'
-import { onMounted, ref } from 'vue'
+import { onMounted, provide, ref } from 'vue'
 import { useAuthStore } from '@/stores/auth-store'
 import type { Message, User } from '@shared/pack'
 import { useRoute, useRouter } from 'vue-router'
@@ -141,6 +145,16 @@ const onSelectConvo = (id: number) => {
   }
 }
 
+let timeout: number
+const onInputMessage = () => {
+  // send typing event to socket server
+
+  clearTimeout(timeout)
+  timeout = setTimeout(() => {
+    // send typing event to socket server
+  }, 1000)
+}
+
 const onSendMessage = async () => {
   let data: Partial<Message<Object, User>> = {
     is_seen: false,
@@ -157,6 +171,8 @@ const onSendMessage = async () => {
   message.value = ''
 }
 
+const messagesCont = ref<HTMLElement>()
+provide('messagesCont', messagesCont)
 onMounted(async () => {
   await conversationStore.fetchConversations()
   authUser.value = await authStore.getAuthUser()

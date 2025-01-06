@@ -25,7 +25,14 @@ export function useSocket() {
 
       if (convoIndex > -1) {
         conversationStore.convoDisplays[convoIndex].messages.unshift(msg)
+
+        const unread_messages = conversationStore.convoDisplays[convoIndex].messages.filter(
+          (m) => !m.is_seen
+        )
+
         conversationStore.convoDisplays[convoIndex].last_message = msg
+        conversationStore.convoDisplays[convoIndex].unread_messages = unread_messages
+        conversationStore.convoDisplays[convoIndex].unread_messages_number = unread_messages.length
         const convo = conversationStore.convoDisplays[convoIndex]
 
         // re assign the convo display in the store if the conversation_id
@@ -45,6 +52,19 @@ export function useSocket() {
     socket.value.on('user-disconnected', (data) => {
       conversationStore.setActiveStatus(data.convo_id, data.user_id, false)
     })
+
+    socket.value.off('seen')
+    socket.value.on('seen', (msg) => {
+      console.log('Message seen', msg)
+    })
+  }
+
+  const sendSeen = (message: Message) => {
+    if (!socket.value) {
+      console.log('Lost connection to the server')
+      return
+    }
+    socket.value.emit('seen', message)
   }
 
   const sendMessage = (message: Partial<Message>) => {
@@ -61,6 +81,7 @@ export function useSocket() {
 
   return {
     connect,
+    sendSeen,
     disconnect,
     sendMessage
   }
