@@ -27,9 +27,12 @@
 </template>
 
 <script lang="ts" setup>
+import { useCheckVisibility } from '@/composable/useCheckVisibility'
+import { useSocket } from '@/composable/useSocket'
 import { useAuthStore } from '@/stores/auth-store'
+import { useConversationStore } from '@/stores/conversation-store'
 import type { Message, User } from '@shared/pack'
-import { computed, onMounted, ref } from 'vue'
+import { computed, inject, onMounted, ref, type Ref } from 'vue'
 
 interface Props {
   message: Message<Object, User>
@@ -37,6 +40,9 @@ interface Props {
 
 const authStore = useAuthStore()
 const authUser = ref<User | null>()
+const { sendSeen, connect } = useSocket()
+const { startObserver } = useCheckVisibility()
+const conversationStore = useConversationStore()
 
 const props = defineProps<Props>()
 
@@ -46,8 +52,23 @@ const isCurrent = computed(() => {
 })
 
 const msg = ref()
+const messagesCont = inject('messagesCont') as Ref<HTMLElement>
 onMounted(async () => {
   authUser.value = await authStore.getAuthUser()
+  if (authUser.value) {
+    connect(authUser.value.id)
+  }
+
+  setTimeout(() => {
+    if (messagesCont.value && msg.value) {
+      startObserver(messagesCont.value, msg.value, async (is_seen: boolean) => {
+        if (is_seen && !props.message.is_seen) {
+          await conversationStore.updateMessage(props.message.id, { is_seen: true })
+          sendSeen(props.message)
+        }
+      })
+    }
+  }, 100)
 })
 </script>
 

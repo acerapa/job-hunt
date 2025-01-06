@@ -20,7 +20,7 @@
     </div>
     <div class="flex flex-col gap-0 flex-1">
       <div class="flex justify-between items-center">
-        <p class="text-sm font-bold">
+        <p class="text-sm font-bold text-ellipsis overflow-hidden text-nowrap">
           {{ props.convo.receviers[0].full_name }}
         </p>
         <span class="text-gray-strong font-bold text-xs">12 min ago</span>
@@ -29,7 +29,7 @@
         <span
           class="text-sm italic text-gray-strong line-clamp-2"
           :class="
-            props.convo.unread_messages_number &&
+            !props.convo.last_message.is_seen &&
             authUser?.id !== props.convo?.last_message.sender.id
               ? 'font-bold'
               : 'font-normal'

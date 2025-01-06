@@ -18,7 +18,30 @@ export default <RouteRecordRaw[]>[
       {
         path: '/messages',
         name: 'messages',
-        component: () => import('@/views/MessagesPage.vue')
+        component: () => import('@/views/MessagesPage.vue'),
+        beforeEnter: (to, from, next) => {
+          if (window.screen.width <= 600) {
+            if (to.query.id) {
+              next()
+            } else {
+              next({ name: 'convos' })
+            }
+          } else {
+            next()
+          }
+        }
+      },
+      {
+        path: '/convos',
+        name: 'convos',
+        component: () => import('@/views/ConvosPage.vue'),
+        beforeEnter: (to, from, next) => {
+          if (window.screen.width > 600) {
+            next({ name: 'messages' })
+          } else {
+            next()
+          }
+        }
       }
     ]
   }

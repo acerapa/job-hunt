@@ -75,6 +75,14 @@ export const startSocket = (app: Application) => {
       io.to(encryptConvoRoom(msg.conversation.id)).emit('message', msg)
     })
 
+    socket.on('seen', (msg) => {
+      io.to(encryptConvoRoom(msg.conversation.id)).emit('seen', msg)
+    })
+
+    socket.on('typing', (data) => {
+      io.to(encryptConvoRoom(data.convo_id)).emit('typing', data.sender)
+    })
+
     socket.on('disconnect', async () => {
       await updateUser(socket.data.user_id, {
         is_active: false

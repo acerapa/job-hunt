@@ -97,7 +97,7 @@ const gotoConversation = async () => {
     router.push({
       name: 'messages',
       query: {
-        convo_id: conversationStore.conversation.id
+        id: conversationStore.conversation.id
       }
     })
   }

@@ -1,6 +1,8 @@
 <template>
   <div class="flex gap-2">
-    <div class="wrap !p-0 w-full flex-1 flex flex-col max-w-[350px] h-[calc(100vh_-_134px)]">
+    <div
+      class="wrap !p-0 w-full flex-1 flex flex-col max-w-[350px] h-[calc(100vh_-_134px)] max-[600px]:hidden"
+    >
       <div class="py-7 px-3 flex flex-col gap-4 stick top-0">
         <p class="font-semibold">Messages</p>
         <InputComponent
@@ -33,7 +35,7 @@
     </div>
     <div
       v-if="conversationStore.convoDisplays && conversationStore.convoDisplay"
-      class="wrap flex flex-col min-w-[562px] !py-0 flex-1 h-[calc(100vh_-_134px)]"
+      class="wrap flex flex-col max-[600px]:min-w-0 lg:min-w-[562px] md:min-w-[450px] flex-1 !py-0 h-[calc(100vh_-_134px)]"
     >
       <div
         class="py-4 px-4 -mx-4 border-b-2 border-green-theme flex items-center justify-between sticky top-0"
@@ -74,7 +76,10 @@
           </button>
         </div>
       </div>
-      <div class="flex flex-col-reverse gap-4 my-3 flex-1 overflow-y-auto thin-scrollbar">
+      <div
+        class="flex flex-col-reverse gap-4 my-3 flex-1 overflow-y-auto thin-scrollbar"
+        ref="messagesCont"
+      >
         <MessageComponent
           v-for="message in conversationStore.convoDisplay.messages"
           :key="message.id"
@@ -87,6 +92,7 @@
           type="textarea"
           v-model="message"
           name="message-box"
+          @input="onInputMessage"
           input-class="!rounded-md"
           placeholder="Type a message..."
         />
@@ -111,7 +117,7 @@ import MessageComponent from '@/components/messages/MessageComponent.vue'
 import InputComponent from '@/components/shared/InputComponent.vue'
 import { useSocket } from '@/composable/useSocket'
 import { useConversationStore } from '@/stores/conversation-store'
-import { onMounted, ref } from 'vue'
+import { onMounted, provide, ref } from 'vue'
 import { useAuthStore } from '@/stores/auth-store'
 import type { Message, User } from '@shared/pack'
 import { useRoute, useRouter } from 'vue-router'
@@ -139,6 +145,16 @@ const onSelectConvo = (id: number) => {
   }
 }
 
+let timeout: number
+const onInputMessage = () => {
+  // send typing event to socket server
+
+  clearTimeout(timeout)
+  timeout = setTimeout(() => {
+    // send typing event to socket server
+  }, 1000)
+}
+
 const onSendMessage = async () => {
   let data: Partial<Message<Object, User>> = {
     is_seen: false,
@@ -155,6 +171,8 @@ const onSendMessage = async () => {
   message.value = ''
 }
 
+const messagesCont = ref<HTMLElement>()
+provide('messagesCont', messagesCont)
 onMounted(async () => {
   await conversationStore.fetchConversations()
   authUser.value = await authStore.getAuthUser()
