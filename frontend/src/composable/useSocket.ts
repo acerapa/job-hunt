@@ -25,19 +25,45 @@ export function useSocket() {
 
       if (convoIndex > -1) {
         conversationStore.convoDisplays[convoIndex].messages.unshift(msg)
-
-        const unread_messages = conversationStore.convoDisplays[convoIndex].messages.filter(
-          (m) => !m.is_seen
-        )
-
         conversationStore.convoDisplays[convoIndex].last_message = msg
-        conversationStore.convoDisplays[convoIndex].unread_messages = unread_messages
-        conversationStore.convoDisplays[convoIndex].unread_messages_number = unread_messages.length
+
         const convo = conversationStore.convoDisplays[convoIndex]
 
         // re assign the convo display in the store if the conversation_id
         // matches the conversation_id of the message
         if (convo.id == conversationStore.convoDisplay?.id) {
+          conversationStore.convoDisplay = conversationStore.convoDisplays[convoIndex]
+        }
+      }
+    })
+
+    socket.value.off('seen')
+    socket.value.on('seen', (msg) => {
+      console.log('Message seen', msg)
+    })
+
+    socket.value.off('typing')
+    socket.value.on('typing', (payload) => {
+      const convoIndex = conversationStore.convoDisplays.findIndex(
+        (c) => c.id == payload.data.convo_id
+      )
+
+      if (convoIndex > -1) {
+        if (conversationStore.convoDisplays[convoIndex].sender.user_id == payload.data.sender_id) {
+          console.log('the typing user is the sender')
+          return
+        }
+
+        const receiverIndex = conversationStore.convoDisplays[convoIndex].receviers.findIndex(
+          (r) => r.user_id == payload.data.sender_id
+        )
+        if (receiverIndex > -1) {
+          conversationStore.convoDisplays[convoIndex].receviers[receiverIndex].is_typing =
+            payload.is_typing
+        }
+
+        console.log(conversationStore.convoDisplay?.id, payload.data.convo_id)
+        if (conversationStore.convoDisplay?.id == payload.data.convo_id) {
           conversationStore.convoDisplay = conversationStore.convoDisplays[convoIndex]
         }
       }
@@ -51,11 +77,6 @@ export function useSocket() {
     socket.value.off('user-disconnected')
     socket.value.on('user-disconnected', (data) => {
       conversationStore.setActiveStatus(data.convo_id, data.user_id, false)
-    })
-
-    socket.value.off('seen')
-    socket.value.on('seen', (msg) => {
-      console.log('Message seen', msg)
     })
   }
 
@@ -79,10 +100,19 @@ export function useSocket() {
     socket.value?.disconnect()
   }
 
+  const sendTyping = (data: { convo_id: number; sender_id: number }, is_typing: boolean) => {
+    if (!socket.value) {
+      console.log('Lost connection to the server')
+      return
+    }
+    socket.value.emit('typing', { data, is_typing })
+  }
+
   return {
     connect,
     sendSeen,
     disconnect,
+    sendTyping,
     sendMessage
   }
 }

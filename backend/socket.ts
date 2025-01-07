@@ -79,8 +79,8 @@ export const startSocket = (app: Application) => {
       io.to(encryptConvoRoom(msg.conversation.id)).emit('seen', msg)
     })
 
-    socket.on('typing', (data) => {
-      io.to(encryptConvoRoom(data.convo_id)).emit('typing', data.sender)
+    socket.on('typing', (payload) => {
+      io.to(encryptConvoRoom(payload.data.convo_id)).emit('typing', payload)
     })
 
     socket.on('disconnect', async () => {

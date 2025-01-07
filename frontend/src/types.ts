@@ -34,4 +34,5 @@ export interface ConvoMember {
   user_id: number
   full_name: string
   is_active: boolean
+  is_typing?: boolean
 }
