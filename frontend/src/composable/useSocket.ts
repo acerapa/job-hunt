@@ -39,7 +39,24 @@ export function useSocket() {
 
     socket.value.off('seen')
     socket.value.on('seen', (msg) => {
-      console.log('Message seen', msg)
+      const convoIndex = conversationStore.convoDisplays.findIndex(
+        (c) => c.id == msg.conversation.id
+      )
+      if (convoIndex > -1) {
+        const msgIndex = conversationStore.convoDisplays[convoIndex].messages.findIndex(
+          (m) => m.id == msg.id
+        )
+
+        if (msgIndex > -1) {
+          conversationStore.convoDisplays[convoIndex].messages[msgIndex].is_seen = true
+        }
+
+        // re assign the convo display in the store if the conversation_id
+        // matches the conversation_id of the message
+        if (msg.conversation.id == conversationStore.convoDisplay?.id) {
+          conversationStore.convoDisplay = conversationStore.convoDisplays[convoIndex]
+        }
+      }
     })
 
     socket.value.off('typing')
@@ -62,7 +79,6 @@ export function useSocket() {
             payload.is_typing
         }
 
-        console.log(conversationStore.convoDisplay?.id, payload.data.convo_id)
         if (conversationStore.convoDisplay?.id == payload.data.convo_id) {
           conversationStore.convoDisplay = conversationStore.convoDisplays[convoIndex]
         }
