@@ -59,16 +59,18 @@ onMounted(async () => {
     connect(authUser.value.id)
   }
 
-  setTimeout(() => {
-    if (messagesCont.value && msg.value) {
-      startObserver(messagesCont.value, msg.value, async (is_seen: boolean) => {
-        if (is_seen && !props.message.is_seen) {
-          await conversationStore.updateMessage(props.message.id, { is_seen: true })
-          sendSeen(props.message)
-        }
-      })
-    }
-  }, 100)
+  if (authUser.value?.id != props.message.sender.id) {
+    setTimeout(() => {
+      if (messagesCont.value && msg.value) {
+        startObserver(messagesCont.value, msg.value, async (is_seen: boolean) => {
+          if (is_seen && !props.message.is_seen) {
+            await conversationStore.updateMessage(props.message.id, { is_seen: true })
+            sendSeen(props.message)
+          }
+        })
+      }
+    }, 100)
+  }
 })
 </script>
 
