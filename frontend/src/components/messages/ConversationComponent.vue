@@ -44,9 +44,9 @@
         </span>
         <div class="flex gap-1 items-center">
           <span
-            v-if="props.convo.unread_messages_number"
+            v-if="unread_messages.length"
             class="text-xs px-1.5 font-bold rounded-md text-white bg-main"
-            >{{ props.convo.unread_messages_number }}</span
+            >{{ unread_messages.length }}</span
           >
           <img v-if="props.convo.is_pinned" src="@/assets/icons/push-pin.png" alt="push-pin.png" />
         </div>
@@ -60,7 +60,7 @@ import { useAuthStore } from '@/stores/auth-store'
 import { useConversationStore } from '@/stores/conversation-store'
 import type { Convo } from '@/types'
 import type { User } from '@shared/pack'
-import { onMounted, ref } from 'vue'
+import { computed, onMounted, ref, watch } from 'vue'
 
 interface Props {
   convo: Convo
@@ -70,6 +70,10 @@ const props = defineProps<Props>()
 
 const authStore = useAuthStore()
 const conversationStore = useConversationStore()
+
+const unread_messages = computed(() =>
+  props.convo.messages.filter((m) => !m.is_seen && m.sender.id !== authUser.value?.id)
+)
 
 const authUser = ref<User | null>(null)
 

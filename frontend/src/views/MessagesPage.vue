@@ -153,11 +153,6 @@ const onSelectConvo = (id: number) => {
   })
 
   conversationStore.getConvoDisplayById(id)
-
-  // get unread messages and set read to true
-  if (authUser.value) {
-    conversationStore.readMessages(authUser.value?.id)
-  }
 }
 
 let timeout: number
@@ -208,22 +203,4 @@ onMounted(async () => {
     onSelectConvo(Number(route.query.id))
   }
 })
-
-/**********************************************
- * WATCHERS
- **********************************************/
-watch(
-  () => conversationStore.convoDisplay,
-  () => {
-    const convo = { ...conversationStore.convoDisplay }
-    if (conversationStore.convoDisplay) {
-      const unread_msg = convo.messages?.filter(
-        (msg) => !msg.is_seen && msg.sender.id !== authUser.value?.id
-      )
-
-      conversationStore.convoDisplay.unread_messages = unread_msg as Message<Object, User>[]
-      conversationStore.convoDisplay.unread_messages_number = unread_msg?.length || 0
-    }
-  }
-)
 </script>
