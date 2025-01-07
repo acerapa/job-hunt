@@ -86,16 +86,24 @@
           :message="message"
         />
       </div>
-      <div class="px-4 -mx-4 border-t-2 border-green-theme py-3 flex gap-2 items-start">
-        <InputComponent
-          class="flex-1"
-          type="textarea"
-          v-model="message"
-          name="message-box"
-          @input="onInputMessage"
-          input-class="!rounded-md"
-          placeholder="Type a message..."
-        />
+      <div class="px-4 -mx-4 relative border-t-2 border-green-theme py-3 flex gap-2 items-start">
+        <div class="flex-1">
+          <p
+            v-if="memberTyping.length"
+            class="absolute -top-5 left-1/2 -translate-x-1/2 text-nowrap text-sm bg-gray-100 text-gray-500 px-2 rounded"
+          >
+            {{ memberTyping.map((m) => m.user?.first_name).join(', ') }} typing...
+          </p>
+          <InputComponent
+            class="flex-1"
+            type="textarea"
+            v-model="message"
+            name="message-box"
+            @input="onInputMessage"
+            input-class="!rounded-md"
+            placeholder="Type a message..."
+          />
+        </div>
         <button class="btn" @click="onSendMessage">send</button>
       </div>
     </div>
@@ -117,19 +125,26 @@ import MessageComponent from '@/components/messages/MessageComponent.vue'
 import InputComponent from '@/components/shared/InputComponent.vue'
 import { useSocket } from '@/composable/useSocket'
 import { useConversationStore } from '@/stores/conversation-store'
-import { onMounted, provide, ref } from 'vue'
+import { computed, onMounted, provide, ref, watch } from 'vue'
 import { useAuthStore } from '@/stores/auth-store'
 import type { Message, User } from '@shared/pack'
 import { useRoute, useRouter } from 'vue-router'
+import type { ConvoMember } from '@/types'
 
 const route = useRoute()
 const router = useRouter()
 const authStore = useAuthStore()
-const { sendMessage, connect } = useSocket()
+const { sendMessage, connect, sendTyping } = useSocket()
 const conversationStore = useConversationStore()
 
 const message = ref<string>()
 const authUser = ref<User | null>()
+
+const memberTyping = computed(() => {
+  return (conversationStore.convoDisplay?.receviers as ConvoMember[]).filter(
+    (member) => member.is_typing
+  )
+})
 
 const onSelectConvo = (id: number) => {
   router.push({
@@ -148,10 +163,17 @@ const onSelectConvo = (id: number) => {
 let timeout: number
 const onInputMessage = () => {
   // send typing event to socket server
+  const data = {
+    convo_id: conversationStore.convoDisplay?.id || 0,
+    sender_id: authUser.value?.id || 0
+  }
+
+  sendTyping(data, true)
 
   clearTimeout(timeout)
   timeout = setTimeout(() => {
     // send typing event to socket server
+    sendTyping(data, false)
   }, 1000)
 }
 
@@ -186,4 +208,22 @@ onMounted(async () => {
     onSelectConvo(Number(route.query.id))
   }
 })
+
+/**********************************************
+ * WATCHERS
+ **********************************************/
+watch(
+  () => conversationStore.convoDisplay,
+  () => {
+    const convo = { ...conversationStore.convoDisplay }
+    if (conversationStore.convoDisplay) {
+      const unread_msg = convo.messages?.filter(
+        (msg) => !msg.is_seen && msg.sender.id !== authUser.value?.id
+      )
+
+      conversationStore.convoDisplay.unread_messages = unread_msg as Message<Object, User>[]
+      conversationStore.convoDisplay.unread_messages_number = unread_msg?.length || 0
+    }
+  }
+)
 </script>
