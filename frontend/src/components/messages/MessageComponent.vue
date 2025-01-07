@@ -71,7 +71,7 @@ onMounted(async () => {
               msg.conversation = { id: conversationStore.convoDisplay?.id || 0 }
             }
 
-            sendSeen(props.message)
+            sendSeen(msg)
           }
         })
       }
