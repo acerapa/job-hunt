@@ -22,9 +22,15 @@
           <RouterLink
             :to="{ name: 'messages' }"
             exact-active-class="!font-bold text-green-bright underline"
-            class="text-base font-semibold"
+            class="text-base font-semibold flex gap-1 items-center"
           >
             Messages
+            <span
+              v-if="convo_unread_count.length"
+              class="text-xs px-1.5 py-0.5 mt-1 !no-underline font-bold rounded-md text-white bg-main"
+            >
+              {{ convo_unread_count.length }}
+            </span>
           </RouterLink>
           <RouterLink
             :to="{ name: 'applications' }"
@@ -51,10 +57,16 @@
           </RouterLink>
           <RouterLink
             :to="{ name: 'messages' }"
-            class="text-base font-semibold"
+            class="text-base font-semibold flex gap-1 items-center"
             exact-active-class="!font-bold text-green-bright underline"
           >
             Messages
+            <span
+              v-if="convo_unread_count.length"
+              class="text-xs px-1.5 py-0.5 mt-1 !no-underline font-bold rounded-md text-white bg-main"
+            >
+              {{ convo_unread_count.length }}
+            </span>
           </RouterLink>
         </div>
       </div>
@@ -127,8 +139,9 @@
 
 <script setup lang="ts">
 import { useAuthStore } from '@/stores/auth-store'
+import { useConversationStore } from '@/stores/conversation-store'
 import { UserType, UserTypeMap, type User } from '@shared/pack'
-import { onMounted, ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { RouterLink, useRouter } from 'vue-router'
 
 const router = useRouter()
@@ -138,6 +151,15 @@ const authUser = ref<User | null>()
 const isLoading = ref<boolean>(false)
 const overHeader = ref<boolean>(false)
 const showDroppdown = ref<boolean>(false)
+
+const conversationStore = useConversationStore()
+
+const convo_unread_count = computed(() => {
+  return conversationStore.convoDisplays.filter((convo) => {
+    return convo.messages.some((m) => !m.is_seen && m.sender.id != authUser.value?.id)
+  })
+})
+
 onMounted(async () => {
   authUser.value = await authStore.getAuthUser()
   if (authUser.value) {

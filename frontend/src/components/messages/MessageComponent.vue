@@ -65,6 +65,12 @@ onMounted(async () => {
         startObserver(messagesCont.value, msg.value, async (is_seen: boolean) => {
           if (is_seen && !props.message.is_seen) {
             await conversationStore.updateMessage(props.message.id, { is_seen: true })
+            const msg = { ...props.message }
+
+            if (!msg.conversation) {
+              msg.conversation = { id: conversationStore.convoDisplay?.id || 0 }
+            }
+
             sendSeen(props.message)
           }
         })

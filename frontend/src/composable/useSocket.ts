@@ -18,7 +18,7 @@ export function useSocket() {
 
     // remove listener and add new one
     socket.value.off('message')
-    socket.value.on('message', (msg: Message<Conversation, User>) => {
+    socket.value.on('message', async (msg: Message<Conversation, User>) => {
       const convoIndex = conversationStore.convoDisplays.findIndex(
         (c) => c.id == msg.conversation?.id
       )
