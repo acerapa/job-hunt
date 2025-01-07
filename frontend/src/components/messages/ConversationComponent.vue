@@ -23,7 +23,7 @@
         <p class="text-sm font-bold text-ellipsis overflow-hidden text-nowrap">
           {{ props.convo.receviers[0].full_name }}
         </p>
-        <span class="text-gray-strong font-bold text-xs">12 min ago</span>
+        <!-- <span class="text-gray-strong font-bold text-xs">12 min ago</span> -->
       </div>
       <div class="flex justify-between items-center">
         <span
@@ -60,7 +60,7 @@ import { useAuthStore } from '@/stores/auth-store'
 import { useConversationStore } from '@/stores/conversation-store'
 import type { Convo } from '@/types'
 import type { User } from '@shared/pack'
-import { computed, onMounted, ref, watch } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 
 interface Props {
   convo: Convo
