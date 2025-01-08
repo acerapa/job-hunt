@@ -8,7 +8,7 @@ export const startSocket = (app: Application) => {
   const server = createServer(app)
   const io = new Server(server, {
     cors: {
-      origin: ['http://localhost:5173', 'https://admin.socket.io'],
+      origin: ['http://localhost:5173', 'https://admin.socket.io', 'http://192.168.1.4:5173'],
       credentials: true
     },
     cookie: true

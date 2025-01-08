@@ -87,7 +87,7 @@
         />
       </div>
       <div class="px-4 -mx-4 relative border-t-2 border-green-theme py-3 flex gap-2 items-start">
-        <div class="flex-1">
+        <div class="flex-1 relative">
           <p
             v-if="memberTyping.length"
             class="absolute -top-5 left-1/2 -translate-x-1/2 text-nowrap text-sm bg-gray-100 text-gray-500 px-2 rounded"
@@ -103,6 +103,36 @@
             input-class="!rounded-md"
             placeholder="Type a message..."
           />
+          <div
+            v-if="showEmojis"
+            @click.stop
+            class="wrap !pt-0 absolute max-w-96 max-h-60 shadow bottom-6 right-8 overflow-auto no-scrollbar"
+          >
+            <div class="sticky top-0 bg-white pb-3 pt-4">
+              <InputComponent
+                type="search"
+                name="emoji_search"
+                v-model="searchEmojiText"
+                placeholder="Search emoji"
+                input-class="!rounded-full text-sm"
+              />
+            </div>
+            <div class="flex gap-1 flex-wrap text-center justify-between">
+              <button
+                class="text-2xl"
+                :key="emoji.name"
+                v-html="emoji.htmlCode[0]"
+                v-for="emoji in emojisFiltered"
+                @click.stop="onEmojiClick(emoji)"
+              ></button>
+            </div>
+          </div>
+          <button class="absolute bottom-0 right-0 text-2xl group" @click.stop="onShowEmojis">
+            <div class="relative">
+              <span class="group-hover:hidden">&#128578;</span>
+              <span class="hidden group-hover:block">&#128522;</span>
+            </div>
+          </button>
         </div>
         <button class="btn" @click="onSendMessage">send</button>
       </div>
@@ -125,20 +155,25 @@ import MessageComponent from '@/components/messages/MessageComponent.vue'
 import InputComponent from '@/components/shared/InputComponent.vue'
 import { useSocket } from '@/composable/useSocket'
 import { useConversationStore } from '@/stores/conversation-store'
-import { computed, onMounted, provide, ref, watch } from 'vue'
+import { computed, onMounted, provide, ref } from 'vue'
 import { useAuthStore } from '@/stores/auth-store'
 import type { Message, User } from '@shared/pack'
 import { useRoute, useRouter } from 'vue-router'
-import type { ConvoMember } from '@/types'
+import type { ConvoMember, Emoji } from '@/types'
+import { useEmoji } from '@/composable/useEmoji'
 
 const route = useRoute()
 const router = useRouter()
 const authStore = useAuthStore()
-const { sendMessage, connect, sendTyping } = useSocket()
+const { fetchEmojis, emojis } = useEmoji()
 const conversationStore = useConversationStore()
+const { sendMessage, connect, sendTyping } = useSocket()
 
 const message = ref<string>()
 const authUser = ref<User | null>()
+
+const searchEmojiText = ref('')
+const showEmojis = ref<boolean>(false)
 
 const memberTyping = computed(() => {
   return (conversationStore.convoDisplay?.receviers as ConvoMember[]).filter(
@@ -154,6 +189,20 @@ const onSelectConvo = (id: number) => {
 
   conversationStore.getConvoDisplayById(id)
 }
+
+const emojisFiltered = computed(() => {
+  return emojis.value.filter((emoji) => {
+    const searchCondition = `${emoji.name} ${emoji.category} ${emoji.group}`.toLowerCase()
+
+    return searchEmojiText.value
+      ? searchCondition.includes(searchEmojiText.value.toLowerCase())
+      : emoji
+  })
+})
+
+/** **************************
+ * METHODS
+ *****************************/
 
 let timeout: number
 const onInputMessage = () => {
@@ -172,6 +221,21 @@ const onInputMessage = () => {
   }, 1000)
 }
 
+const onShowEmojis = () => {
+  showEmojis.value = !showEmojis.value
+  if (showEmojis.value) {
+    window.addEventListener('click', () => onShowEmojis(), { once: true })
+  }
+}
+
+const onEmojiClick = (emoji: Emoji) => {
+  if (!message.value) {
+    message.value = ''
+  }
+  message.value =
+    message.value + String.fromCodePoint(parseInt(emoji.unicode[0].replace('U+', ''), 16))
+}
+
 const onSendMessage = async () => {
   let data: Partial<Message<Object, User>> = {
     is_seen: false,
@@ -188,11 +252,16 @@ const onSendMessage = async () => {
   message.value = ''
 }
 
+/** **************************
+ * LIFE CYCLE HOOKS
+ *****************************/
 const messagesCont = ref<HTMLElement>()
 provide('messagesCont', messagesCont)
 onMounted(async () => {
   await conversationStore.fetchConversations()
   authUser.value = await authStore.getAuthUser()
+
+  await fetchEmojis()
 
   if (authUser.value) {
     connect(authUser.value.id)

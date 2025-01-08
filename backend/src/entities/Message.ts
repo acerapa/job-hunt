@@ -25,7 +25,9 @@ export class Message extends BaseEntity implements IMessage<Conversation, User> 
   @JoinColumn({ name: 'sender_id' })
   sender: User
 
-  @Column()
+  @Column({
+    type: 'text'
+  })
   message: string
 
   @Column({

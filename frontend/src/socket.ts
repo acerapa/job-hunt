@@ -6,7 +6,7 @@ export class SocketService {
 
   constructor(user_id: number) {
     if (!SocketService.instance) {
-      this.socket = io('http://localhost:3000', {
+      this.socket = io(`http://${window.location.hostname}:3000`, {
         autoConnect: true,
         auth: {
           user_id: user_id
