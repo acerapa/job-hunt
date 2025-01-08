@@ -59,8 +59,6 @@ onMounted(async () => {
   authUser.value = await authStore.getAuthUser()
   if (authUser.value) {
     await conversationStore.getConvoDisplays(authUser.value.id)
-
-    console.log(conversationStore.convoDisplays)
   }
 })
 </script>

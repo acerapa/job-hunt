@@ -132,6 +132,16 @@ input[type='password'] {
   box-shadow: 0 0 10px #000;
 }
 
+/* utilities */
+.no-scrollbar {
+  -ms-overflow-style: none; /* For Internet Explorer */
+  scrollbar-width: none; /* For Firefox */
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none; /* For Chrome, Safari, and Opera */
+}
+
 /* Keyframes */
 @keyframes slide-in-from-right {
   100% {

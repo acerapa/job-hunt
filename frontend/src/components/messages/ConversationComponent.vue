@@ -23,11 +23,11 @@
         <p class="text-sm font-bold text-ellipsis overflow-hidden text-nowrap">
           {{ props.convo.receviers[0].full_name }}
         </p>
-        <!-- <span class="text-gray-strong font-bold text-xs">12 min ago</span> -->
+        <span class="text-gray-strong font-bold text-xs">{{ lastUpdate }}</span>
       </div>
       <div class="flex justify-between items-center">
         <span
-          class="text-sm italic text-gray-strong line-clamp-2"
+          class="text-sm text-gray-strong line-clamp-2"
           :class="
             !props.convo.last_message.is_seen &&
             authUser?.id !== props.convo?.last_message.sender.id
@@ -60,7 +60,7 @@ import { useAuthStore } from '@/stores/auth-store'
 import { useConversationStore } from '@/stores/conversation-store'
 import type { Convo } from '@/types'
 import type { User } from '@shared/pack'
-import { computed, onMounted, ref } from 'vue'
+import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 
 interface Props {
   convo: Convo
@@ -70,6 +70,8 @@ const props = defineProps<Props>()
 
 const authStore = useAuthStore()
 const conversationStore = useConversationStore()
+const lastUpdate = ref<string>()
+const interval = ref<number>()
 
 const unread_messages = computed(() =>
   props.convo.messages.filter((m) => !m.is_seen && m.sender.id !== authUser.value?.id)
@@ -77,9 +79,64 @@ const unread_messages = computed(() =>
 
 const authUser = ref<User | null>(null)
 
+const calculateLastMessageUpdate = () => {
+  if (props.convo.last_message) {
+    lastUpdate.value = ''
+    const now = new Date()
+    const last_message_date = new Date(props.convo.last_message.created_at || new Date())
+    const diff = now.getTime() - last_message_date.getTime()
+
+    const toSeconds = Math.floor(diff / 1000)
+
+    if (toSeconds < 60 && toSeconds > 0) {
+      lastUpdate.value = `${toSeconds}s ago`
+    } else if (toSeconds < 3600 && toSeconds > 61) {
+      const minutes = Math.floor(toSeconds / 60)
+      lastUpdate.value = `${minutes}m ago`
+    } else if (toSeconds < 86400 && toSeconds > 3601) {
+      const hours = Math.floor(toSeconds / 3600)
+      lastUpdate.value = `${hours}h ago`
+    } else if (toSeconds < 604800 && toSeconds > 86401) {
+      const days = Math.floor(toSeconds / 86400)
+      lastUpdate.value = `${days}d ago`
+    } else if (toSeconds < 2419200 && toSeconds > 604801) {
+      const weeks = Math.floor(toSeconds / 604800)
+      lastUpdate.value = `${weeks}w ago`
+    } else if (toSeconds < 28224000 && toSeconds > 2419201) {
+      const months = Math.floor(toSeconds / 2822400)
+      lastUpdate.value = `${months}m ago`
+    } else {
+      const years = Math.floor(toSeconds / 28224000)
+      if (years > 0) {
+        lastUpdate.value = `${years}y ago`
+      }
+    }
+  }
+}
+
 onMounted(async () => {
   authUser.value = await authStore.getAuthUser()
+
+  // run every 1 sencond to update time
+  if (props.convo.last_message) {
+    interval.value = setInterval(() => {
+      calculateLastMessageUpdate()
+    }, 5000)
+  }
 })
+
+onBeforeUnmount(() => {
+  clearInterval(interval.value)
+})
+
+watch(
+  () => props.convo.last_message,
+  () => {
+    setTimeout(() => {
+      calculateLastMessageUpdate()
+    }, 200)
+  }
+)
 </script>
 
 <style scoped>

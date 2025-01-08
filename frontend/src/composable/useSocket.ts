@@ -67,7 +67,6 @@ export function useSocket() {
 
       if (convoIndex > -1) {
         if (conversationStore.convoDisplays[convoIndex].sender.user_id == payload.data.sender_id) {
-          console.log('the typing user is the sender')
           return
         }
 
