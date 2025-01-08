@@ -117,6 +117,7 @@ import { ref } from 'vue'
 import InputComponent from '@/components/shared/InputComponent.vue'
 import { useRouter } from 'vue-router'
 import { useSocket } from '@/composable/useSocket'
+import { useConversationStore } from '@/stores/conversation-store'
 
 const showPassword = ref(false)
 const invalidCredential = ref(false)
@@ -126,6 +127,7 @@ const router = useRouter()
 
 const socket = useSocket()
 const authStore = useAuthStore()
+const conversationStore = useConversationStore()
 
 const onSignin = async () => {
   const { valid, errors } = validate(UserAuthSchema, model.value)
@@ -139,6 +141,8 @@ const onSignin = async () => {
   if (authUser) {
     // connect to socket and initialize socket service
     socket.connect(authUser.id)
+    await conversationStore.getConversations()
+    await conversationStore.getConvoDisplays(authUser.id)
 
     if (authUser.type == UserType.HUNTER) {
       router.push({
