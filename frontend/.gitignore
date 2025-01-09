@@ -33,3 +33,6 @@ test-results/
 playwright-report/
 
 .npmrc
+
+# Files I created
+file-types.json

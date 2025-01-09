@@ -1,4 +1,5 @@
 import { z } from 'zod'
+import { FileSchema } from './file'
 
 export const ConversationSchema = z.object({
   is_pinned: z.boolean().optional(),
@@ -9,5 +10,6 @@ export const MessageSchema = z.object({
   message: z.string().min(1, 'Message is required!'),
   sender_id: z.number().min(1, 'Sender is required!'),
   is_seen: z.boolean().optional(),
+  files: z.array(FileSchema).optional(),
   conversation_id: z.number().min(1, 'Conversation is required!')
 })

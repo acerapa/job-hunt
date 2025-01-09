@@ -1,5 +1,5 @@
 <template>
-  <ModelComponent
+  <ModalComponent
     :title="props.title"
     v-model="showModal"
     close-btn-text="No"
@@ -7,11 +7,11 @@
     @save="emit('confirm')"
   >
     <p class="text-lg">{{ props.confirmationText }}</p>
-  </ModelComponent>
+  </ModalComponent>
 </template>
 
 <script setup lang="ts">
-import ModelComponent from './ModelComponent.vue'
+import ModalComponent from './ModalComponent.vue'
 
 const emit = defineEmits(['confirm'])
 

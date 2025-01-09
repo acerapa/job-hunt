@@ -46,7 +46,7 @@
 </template>
 
 <script setup lang="ts">
-import ModelComponent from '@/components/shared/ModelComponent.vue'
+import ModalComponent from '@/components/shared/ModalComponent.vue'
 import InputComponent from '@/components/shared/InputComponent.vue'
 import JobComponent from '@/components/shared/JobComponent-v1.vue'
 import { useJobStore } from '@/stores/job-store'

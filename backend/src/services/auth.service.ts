@@ -51,7 +51,7 @@ export const getUserConversation = async (
           user_conversations: {
             user: true
           },
-          messages: isIncludeMessages ? { sender: true } : isIncludeMessages
+          messages: isIncludeMessages ? { sender: true, files: true } : isIncludeMessages
         }
       }
     },

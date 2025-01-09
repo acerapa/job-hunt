@@ -1,5 +1,5 @@
 <template>
-  <ModelComponent
+  <ModalComponent
     :title="title"
     v-model="showModal"
     @save="onSave"
@@ -37,13 +37,13 @@
         />
       </div>
     </div>
-  </ModelComponent>
+  </ModalComponent>
 </template>
 
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue'
 import InputComponent from '../shared/InputComponent.vue'
-import ModelComponent from '@/components/shared/ModelComponent.vue'
+import ModalComponent from '@/components/shared/ModalComponent.vue'
 import type { Company, Shift } from '@shared/pack'
 import { useCompanyStore } from '@/stores/company-store'
 import { useAuthStore } from '@/stores/auth-store'

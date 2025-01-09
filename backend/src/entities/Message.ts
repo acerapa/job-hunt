@@ -5,15 +5,17 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn
 } from 'typeorm'
 import type { Message as IMessage } from '@shared/pack/dist'
 import { Conversation } from './Conversation'
 import { User } from './User'
+import { File } from './File'
 
 @Entity('messages')
-export class Message extends BaseEntity implements IMessage<Conversation, User> {
+export class Message extends BaseEntity implements IMessage<Conversation, User, File> {
   @PrimaryGeneratedColumn()
   id: number
 
@@ -34,6 +36,9 @@ export class Message extends BaseEntity implements IMessage<Conversation, User> 
     default: false
   })
   is_seen: boolean
+
+  @OneToMany(() => File, (file) => file.message)
+  files: File[]
 
   @CreateDateColumn()
   created_at: Date

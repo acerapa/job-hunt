@@ -24,6 +24,8 @@
 </template>
 
 <script setup lang="ts">
+import { onMounted } from 'vue'
+
 interface Props {
   title: string
   hasSaveBtn?: boolean
@@ -31,7 +33,7 @@ interface Props {
   saveBtnText?: string
 }
 
-const emit = defineEmits(['save'])
+const emit = defineEmits(['save', 'cancel'])
 
 const props = withDefaults(defineProps<Props>(), {
   hasSaveBtn: true,
@@ -40,4 +42,18 @@ const props = withDefaults(defineProps<Props>(), {
 })
 
 const show = defineModel()
+
+onMounted(() => {
+  window.addEventListener(
+    'keydown',
+    (e) => {
+      if (e.key === 'Escape') {
+        show.value = false
+      }
+    },
+    {
+      once: true
+    }
+  )
+})
 </script>
