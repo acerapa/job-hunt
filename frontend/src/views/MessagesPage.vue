@@ -1,4 +1,5 @@
 <template>
+  <GrabMessageFileComponent v-model="showGrabMessageFileModal" v-if="showGrabMessageFileModal" />
   <div class="flex gap-2">
     <div
       class="wrap !p-0 w-full flex-1 flex flex-col max-w-[350px] h-[calc(100vh_-_134px)] max-[600px]:hidden"
@@ -121,18 +122,27 @@
               <button
                 class="text-2xl"
                 :key="emoji.name"
+                :title="emoji.name"
                 v-html="emoji.htmlCode[0]"
                 v-for="emoji in emojisFiltered"
                 @click.stop="onEmojiClick(emoji)"
               ></button>
             </div>
           </div>
-          <button class="absolute bottom-0 right-0 text-2xl group" @click.stop="onShowEmojis">
-            <div class="relative">
-              <span class="group-hover:hidden">&#128578;</span>
-              <span class="hidden group-hover:block">&#128522;</span>
-            </div>
-          </button>
+          <div class="bg-transparent absolute bottom-0 right-0">
+            <button class="text-2xl group" @click.stop="showGrabMessageFileModal = true">
+              <div class="relative">
+                <span class="group-hover:hidden">📁</span>
+                <span class="hidden group-hover:block">📂</span>
+              </div>
+            </button>
+            <button class="text-2xl group" @click.stop="onShowEmojis">
+              <div class="relative">
+                <span class="group-hover:hidden">&#128578;</span>
+                <span class="hidden group-hover:block">&#128522;</span>
+              </div>
+            </button>
+          </div>
         </div>
         <button class="btn" @click="onSendMessage">send</button>
       </div>
@@ -150,14 +160,16 @@
 </template>
 
 <script setup lang="ts">
-import ConversationComponent from '@/components/messages/ConversationComponent.vue'
-import MessageComponent from '@/components/messages/MessageComponent.vue'
 import InputComponent from '@/components/shared/InputComponent.vue'
+import MessageComponent from '@/components/messages/MessageComponent.vue'
+import ConversationComponent from '@/components/messages/ConversationComponent.vue'
+import GrabMessageFileComponent from '@/components/messages/GrabMessageFileComponent.vue'
+
 import { useSocket } from '@/composable/useSocket'
 import { useConversationStore } from '@/stores/conversation-store'
 import { computed, onMounted, provide, ref } from 'vue'
 import { useAuthStore } from '@/stores/auth-store'
-import type { Message, User } from '@shared/pack'
+import type { File, Message, User } from '@shared/pack'
 import { useRoute, useRouter } from 'vue-router'
 import type { ConvoMember, Emoji } from '@/types'
 import { useEmoji } from '@/composable/useEmoji'
@@ -174,6 +186,7 @@ const authUser = ref<User | null>()
 
 const searchEmojiText = ref('')
 const showEmojis = ref<boolean>(false)
+const showGrabMessageFileModal = ref<boolean>(false)
 
 const memberTyping = computed(() => {
   return (conversationStore.convoDisplay?.receviers as ConvoMember[]).filter(
@@ -237,7 +250,7 @@ const onEmojiClick = (emoji: Emoji) => {
 }
 
 const onSendMessage = async () => {
-  let data: Partial<Message<Object, User>> = {
+  let data: Partial<Message<Object, User, File>> = {
     is_seen: false,
     message: message.value,
     sender_id: authUser.value?.id,

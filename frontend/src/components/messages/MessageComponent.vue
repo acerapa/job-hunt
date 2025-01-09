@@ -31,11 +31,11 @@ import { useCheckVisibility } from '@/composable/useCheckVisibility'
 import { useSocket } from '@/composable/useSocket'
 import { useAuthStore } from '@/stores/auth-store'
 import { useConversationStore } from '@/stores/conversation-store'
-import type { Message, User } from '@shared/pack'
+import type { File, Message, User } from '@shared/pack'
 import { computed, inject, onMounted, ref, type Ref } from 'vue'
 
 interface Props {
-  message: Message<Object, User>
+  message: Message<Object, User, File>
 }
 
 const authStore = useAuthStore()

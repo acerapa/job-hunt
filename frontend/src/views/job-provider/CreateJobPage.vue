@@ -1,5 +1,5 @@
 <template>
-  <ModelComponent
+  <ModalComponent
     title="Add Question"
     v-model="showQuestionModal"
     v-if="showQuestionModal"
@@ -32,7 +32,7 @@
         class="flex !flex-row-reverse gap-3 justify-end"
       />
     </div>
-  </ModelComponent>
+  </ModalComponent>
 
   <div class="flex gap-4">
     <div class="w-full h-full flex flex-col gap-4">
@@ -97,7 +97,7 @@
 
 <script setup lang="ts">
 import InputComponent from '@/components/shared/InputComponent.vue'
-import ModelComponent from '@/components/shared/ModelComponent.vue'
+import ModalComponent from '@/components/shared/ModalComponent.vue'
 import FormStep1 from '@/components/job-creation/FormStep1.vue'
 import FormStep2 from '@/components/job-creation/FormStep2.vue'
 import { computed, onMounted, ref } from 'vue'

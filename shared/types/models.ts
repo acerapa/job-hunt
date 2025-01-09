@@ -206,21 +206,25 @@ export interface Conversation<User = Object, Message = Object> {
   updated_at: Date
 }
 
-export interface Message<Conversation = Object, User = Object> {
+export interface Message<Conversation = Object, User = Object, File = Object> {
   id: number
   conversation_id?: number
   conversation?: Conversation
   sender_id?: number
   sender: User
   message: string
+  files?: File[]
   is_seen: boolean
   created_at?: Date
   updated_at?: Date
 }
 
-export interface Files {
+export interface File {
   id: number
-  file: string
+  file: Buffer
+  type: string
+  name: string
+  size: number
   created_at: Date
   updated_at: Date
 }

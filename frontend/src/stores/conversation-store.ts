@@ -1,11 +1,11 @@
 import { api, Method } from '@/api'
 import type { Convo, ConvoMember } from '@/types'
-import type { ApiResponse, Conversation, Message, User } from '@shared/pack'
+import type { ApiResponse, Conversation, File, Message, User } from '@shared/pack'
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 
 export const useConversationStore = defineStore('conversation', () => {
-  const messages = ref<Partial<Message<Object, User>[]>>([])
+  const messages = ref<Partial<Message<Object, User, File>[]>>([])
   const conversations = ref<Conversation<User, Message>[]>([])
   const conversation = ref<Conversation<User, Message> | null>()
 
@@ -65,10 +65,10 @@ export const useConversationStore = defineStore('conversation', () => {
         receviers: receivers,
         is_pinned: convo.is_pinned,
         sender: sender as ConvoMember,
-        messages: convo.messages as Message<Object, User>[],
+        messages: convo.messages as Message<Object, User, File>[],
         last_message:
           convo.messages && convo.messages.length
-            ? (convo.messages[0] as Message<Object, User>)
+            ? (convo.messages[0] as Message<Object, User, File>)
             : undefined
       }
     })
@@ -118,7 +118,7 @@ export const useConversationStore = defineStore('conversation', () => {
   }
 
   const fetchMessages = async (conversation_id: number) => {
-    const res: ApiResponse<Message<Object, User>[]> = await api(
+    const res: ApiResponse<Message<Object, User, File>[]> = await api(
       `conversations/${conversation_id}/messages`
     )
 
@@ -132,13 +132,13 @@ export const useConversationStore = defineStore('conversation', () => {
   }
 
   const saveMessage = async (message: Partial<Message>) => {
-    const res: ApiResponse<Message<Object, User>> = await api(
+    const res: ApiResponse<Message<Object, User, File>> = await api(
       `conversations/messages/create`,
       Method.POST,
       message
     )
 
-    let msg: Message<Object, User> | null = null
+    let msg: Message<Object, User, File> | null = null
 
     if (res.status < 400) {
       msg = res.data
@@ -148,7 +148,7 @@ export const useConversationStore = defineStore('conversation', () => {
   }
 
   const updateMessage = async (message_id: number, message: Partial<Message>) => {
-    const res: ApiResponse<Message<Object, User>> = await api(
+    const res: ApiResponse<Message<Object, User, File>> = await api(
       `conversations/messages/${message_id}/update`,
       Method.POST,
       message

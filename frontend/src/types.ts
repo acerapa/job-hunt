@@ -1,4 +1,4 @@
-import type { Message, User } from '@shared/pack'
+import type { File, Message, User } from '@shared/pack'
 
 export interface Activity {
   type: string
@@ -23,8 +23,8 @@ export interface Convo {
   is_pinned: boolean
   sender: ConvoMember
   receviers: ConvoMember[]
-  last_message?: Message<Object, User>
-  messages: Message<Object, User>[]
+  last_message?: Message<Object, User, File>
+  messages: Message<Object, User, File>[]
 }
 
 export interface ConvoMember {
