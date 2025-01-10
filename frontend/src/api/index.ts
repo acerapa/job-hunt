@@ -40,7 +40,7 @@ export const api = async <PayloadData, ResponseData>(
   hdrs: DynamicKeyObj = {}
 ): Promise<ApiResponse<ResponseData>> => {
   const headers: Headers = new Headers()
-  const requestInit: RequestInit = { method, headers }
+  const requestInit: RequestInit = { method }
   setHeaders(apiConfig.defaultHeaders, headers)
 
   if (Object.keys(hdrs).length) {
@@ -49,7 +49,12 @@ export const api = async <PayloadData, ResponseData>(
 
   // if method is GET no need for body
   if (method != Method.GET && payload) {
-    requestInit.body = JSON.stringify(payload)
+    if (payload instanceof FormData) {
+      requestInit.body = payload
+    } else {
+      requestInit.body = JSON.stringify(payload)
+      requestInit.headers = headers
+    }
   }
 
   const request: Request = new Request(`${window.location.origin}/api/${url}`, requestInit)

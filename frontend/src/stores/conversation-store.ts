@@ -132,10 +132,34 @@ export const useConversationStore = defineStore('conversation', () => {
   }
 
   const saveMessage = async (message: Partial<Message>) => {
+    const payload = new FormData()
+    Object.keys(message).forEach((key, ndx) => {
+      const values = Object.values(message)
+      if (typeof values[ndx] == 'object') {
+        if (Array.isArray(values[ndx])) {
+          values[ndx].forEach((item) => {
+            if (typeof item == 'object') {
+              if (item instanceof File) {
+                payload.append(`${key}`, item)
+              } else {
+                payload.append(`${key}`, JSON.stringify(item))
+              }
+            } else {
+              payload.append(`${key}`, item)
+            }
+          })
+        } else {
+          payload.append(key, JSON.stringify(values[ndx]))
+        }
+      } else {
+        payload.append(key, values[ndx] as string)
+      }
+    })
+
     const res: ApiResponse<Message<Object, User, File>> = await api(
       `conversations/messages/create`,
       Method.POST,
-      message
+      payload
     )
 
     let msg: Message<Object, User, File> | null = null
