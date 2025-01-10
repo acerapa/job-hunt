@@ -5,6 +5,7 @@ import { UserToConversation } from '../entities/junctions/UserToConversation'
 import { In } from 'typeorm'
 import { Message } from '../entities/Message'
 import { getUserConversation } from '../services/auth.service'
+import { File } from '../entities/File'
 
 export const createConversation = async (req: Request, res: Response) => {
   try {
@@ -80,6 +81,12 @@ export const createMessage = async (req: Request, res: Response) => {
     message.sender = sender
 
     message.message = req.validated.message
+
+    if (req.validated.files) {
+      message.files = req.validated.files.map((fileId: number) => {
+        return File.create({ id: fileId })
+      })
+    }
 
     await message.save()
 

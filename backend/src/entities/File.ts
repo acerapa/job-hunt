@@ -17,7 +17,7 @@ export class File extends BaseEntity implements IFile {
   id: number
 
   @Column({
-    type: 'mediumblob'
+    type: 'longblob'
   })
   file: Buffer
 

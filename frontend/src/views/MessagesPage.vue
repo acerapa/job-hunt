@@ -1,5 +1,9 @@
 <template>
-  <GrabMessageFileComponent v-model="showGrabMessageFileModal" v-if="showGrabMessageFileModal" />
+  <GrabMessageFileComponent
+    v-model="showGrabMessageFileModal"
+    v-model:files="files"
+    v-if="showGrabMessageFileModal"
+  />
   <div class="flex gap-2">
     <div
       class="wrap !p-0 w-full flex-1 flex flex-col max-w-[350px] h-[calc(100vh_-_134px)] max-[600px]:hidden"
@@ -134,6 +138,11 @@
               <div class="relative">
                 <span class="group-hover:hidden">📁</span>
                 <span class="hidden group-hover:block">📂</span>
+                <span
+                  class="bg-red-500 !text-sm text-white rounded font-bold absolute -top-1 right-0 px-1"
+                  v-if="files.length"
+                  >{{ files.length }}</span
+                >
               </div>
             </button>
             <button class="text-2xl group" @click.stop="onShowEmojis">
@@ -182,6 +191,7 @@ const conversationStore = useConversationStore()
 const { sendMessage, connect, sendTyping } = useSocket()
 
 const message = ref<string>()
+const files = ref<File[]>([])
 const authUser = ref<User | null>()
 
 const searchEmojiText = ref('')
@@ -256,6 +266,11 @@ const onSendMessage = async () => {
     sender_id: authUser.value?.id,
     conversation_id: conversationStore.convoDisplay ? conversationStore.convoDisplay.id : 0
   }
+
+  if (files.value.length) {
+    data.files = files.value
+  }
+
   const msg = await conversationStore.saveMessage(data)
 
   if (msg) {
@@ -263,6 +278,7 @@ const onSendMessage = async () => {
   }
 
   message.value = ''
+  files.value = []
 }
 
 /** **************************
