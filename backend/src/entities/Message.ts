@@ -28,7 +28,8 @@ export class Message extends BaseEntity implements IMessage<Conversation, User, 
   sender: User
 
   @Column({
-    type: 'text'
+    type: 'text',
+    nullable: true
   })
   message: string
 

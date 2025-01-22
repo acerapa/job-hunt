@@ -7,7 +7,7 @@ export const ConversationSchema = z.object({
 })
 
 export const MessageSchema = z.object({
-  message: z.string().min(1, 'Message is required!'),
+  message: z.string(),
   sender_id: z.number().min(1, 'Sender is required!'),
   is_seen: z.boolean().optional(),
   files: z.array(z.number()).min(0).optional(),

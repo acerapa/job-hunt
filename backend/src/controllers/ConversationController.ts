@@ -82,10 +82,17 @@ export const createMessage = async (req: Request, res: Response) => {
 
     message.message = req.validated.message
 
-    if (req.validated.files) {
-      message.files = req.validated.files.map((fileId: number) => {
-        return File.create({ id: fileId })
-      })
+    if (req.files?.length) {
+      message.files = await Promise.all(
+        (req.files as Express.Multer.File[]).map((file) => {
+          const fileObj = File.create()
+          fileObj.name = file.originalname
+          fileObj.type = file.mimetype
+          fileObj.size = file.size
+          fileObj.file = file.buffer
+          return fileObj.save()
+        })
+      )
     }
 
     await message.save()
