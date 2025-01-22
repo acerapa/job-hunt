@@ -14,6 +14,15 @@
       class="wrap !pb-8 min-w-[100px] max-w-[70%] relative"
       :class="isCurrent ? '!bg-pale-green' : '!bg-pale-blue'"
     >
+      <div class="flex flex-wrap gap-3 mb-2" v-if="props.message.files">
+        <img
+          :key="file.id"
+          :alt="file.name"
+          v-for="file in props.message.files"
+          class="w-40 h-40 object-cover rounded"
+          :src="`http://localhost:3000/api/files/${file.id}`"
+        />
+      </div>
       <p class="tracking-wide">{{ props.message.message }}</p>
       <small class="text-[10px] flex font-semibold absolute bottom-2 right-2 text-gray-strong">
         {{ new Date(props.message.created_at ?? '').toLocaleTimeString() }} &nbsp;&nbsp;

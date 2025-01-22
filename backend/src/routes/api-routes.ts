@@ -11,8 +11,10 @@ import settingRoutes from './setting-routes'
 import conversationRoutes from './conversation-routes'
 import { getAllJobs } from '../controllers/JobController'
 import skillsRoutes from './skill-routes'
+import fileRoutes from './file-routes'
 
 router.use('/auth', authRoute)
+router.use('/files', fileRoutes)
 router.use('/users', validateAccessRefreshToken, userRoutes)
 router.use('/skills', validateAccessRefreshToken, skillsRoutes)
 router.use('/profile', validateAccessRefreshToken, profileRoutes)
