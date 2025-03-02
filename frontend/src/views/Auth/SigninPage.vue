@@ -1,40 +1,6 @@
 <template>
   <div class="bg-sub h-screen flex">
-    <div class="w-full h-full bg-green-100 flex items-center max-[700px]:hidden">
-      <div class="relative w-[80%] aspect-square max-w-[1175px] max-h-[80%] mx-auto">
-        <img
-          src="@/assets/images/good-job.png"
-          class="absolute left-1/2 top-10 -translate-x-1/2 w-1/4"
-          alt="good-job"
-        />
-        <img
-          src="@/assets/images/cloud.png"
-          class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-1/2"
-          alt="cloud"
-        />
-        <img
-          src="@/assets/images/looking-for-job.png"
-          class="absolute bottom-5 w-1/4"
-          alt="looking-for-job"
-        />
-        <img
-          src="@/assets/images/already-working.png"
-          class="absolute right-5 bottom-0 w-1/4"
-          alt="already-working"
-        />
-        <img
-          src="@/assets/images/trial-paper-plane.png"
-          class="absolute left-[19%] top-[28%] w-1/6"
-          alt="trial-paper-plane"
-        />
-        <img
-          src="@/assets/images/trial-paper-plane.png"
-          class="absolute bottom-0 w-1/6 rotate-[127deg] top-[24%] right-[17%]"
-          alt="trial-paper-plane"
-        />
-      </div>
-    </div>
-    <div class="min-w-[150px] w-full min-[700px]:max-w-[450px] bg-white h-full flex items-center">
+    <div class="sign-in-wrapper">
       <div class="w-[70%] mx-auto">
         <div class="flex flex-col items-center">
           <p class="text-main text-base">Sign in to</p>
@@ -99,6 +65,13 @@
           </p>
         </div>
       </div>
+    </div>
+    <div class="w-full h-full bg-green-100 flex items-center max-[700px]:hidden">
+      <img
+        class="w-full h-full object-cover"
+        src="@/assets/images/sign-in-cover-photo.png"
+        alt="sign-in-cover-photo"
+      />
     </div>
   </div>
 </template>
@@ -170,3 +143,20 @@ const setupErrors = (field: string, schema: ZodSchema, value: any) => {
   modelErrors.value = fieldErrors as Partial<UserCred>
 }
 </script>
+
+<style scoped>
+.sign-in-wrapper {
+  @apply min-w-[150px] w-full min-[700px]:max-w-[450px] bg-white h-full flex items-center overflow-y-auto;
+}
+
+@media screen and (max-height: 550px) {
+  .sign-in-wrapper > div {
+    max-height: 550px;
+  }
+
+  .sign-in-wrapper {
+    align-items: start;
+    padding: 3.9375rem 0;
+  }
+}
+</style>
