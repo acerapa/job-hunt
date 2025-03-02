@@ -1,4 +1,5 @@
 <template>
+  <FileInputModal title="Profile Picture" v-model="showFileInputModal" v-if="showFileInputModal" />
   <div class="wrap flex justify-between mb-4">
     <p class="text-lg font-semibold">Profile Page</p>
     <button class="btn-outline" @click="router.back()">&longleftarrow; Back</button>
@@ -7,11 +8,16 @@
     <div class="max-w-[350px] w-full h-fit sticky top-[70px] flex flex-col gap-4">
       <div class="wrap !px-8 !py-6 !bg-green-bright text-white">
         <div class="flex gap-3 items-center">
-          <img
-            src="@/assets/images/default.png"
-            alt="default.png"
-            class="w-20 h-20 rounded-full ring ring-white"
-          />
+          <div class="relative w-20 h-20 rounded-full ring ring-white">
+            <img
+              src="@/assets/images/default.png"
+              alt="default.png"
+              class="w-full h-full object-cover"
+            />
+            <button class="absolute bottom-0 right-0 bg-white p-1.5 rounded-full">
+              <img src="@/assets/icons/edit.png" alt="edit.png" class="w-4 h-4" />
+            </button>
+          </div>
           <div>
             <p class="font-semibold">
               {{ `${authUser.first_name || ''} ${authUser.last_name || ''}` }}
@@ -427,6 +433,7 @@
 <script setup lang="ts">
 import TagComponent from '@/components/shared/TagComponent.vue'
 import InputComponent from '@/components/shared/InputComponent.vue'
+import FileInputModal from '@/components/files/FileInputModal.vue'
 import { computed, onMounted, reactive, ref } from 'vue'
 import { useAuthStore } from '@/stores/auth-store'
 import { Gender, SkillType, type Address, type Profile, type Skill, type User } from '@shared/pack'
@@ -440,6 +447,7 @@ const authUser = ref<User<Profile> | null>()
 const authStore = useAuthStore()
 const userStore = useUserStore()
 const skillStore = useSkillStore()
+const showFileInputModal = ref(false)
 const profileStore = useProfileStore()
 
 const sectionFormState = reactive<{

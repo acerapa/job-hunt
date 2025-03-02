@@ -28,13 +28,13 @@ export interface User<Profile = Object, Company = Object, Conversation = Object>
   conversations?: Conversation[]
 }
 
-export interface Profile<User = Object, Skill = Object, Application = Object> {
+export interface Profile<User = Object, Skill = Object, Application = Object, Files = Object> {
   id: number
   user: User
   user_id?: number
   cover_letter: string
   resume: string
-  profile_pic: string
+  profile_pic: File
   expected_salary_range: string
   applications: Application[]
   website: string

@@ -17,9 +17,10 @@ import { ProfileToSkill } from './junctions/ProfileToSkill'
 import { Address } from './Address'
 import { Skill } from './Skill'
 import { Application } from './Application'
+import { File } from './File'
 
 @Entity('profiles')
-export class Profile extends BaseEntity implements IProfile<User, Skill, Application> {
+export class Profile extends BaseEntity implements IProfile<User, Skill, Application, File> {
   @PrimaryGeneratedColumn()
   id: number
 
@@ -32,11 +33,6 @@ export class Profile extends BaseEntity implements IProfile<User, Skill, Applica
     nullable: true
   })
   resume: string
-
-  @Column({
-    nullable: true
-  })
-  profile_pic: string
 
   @Column({
     nullable: true
@@ -57,6 +53,10 @@ export class Profile extends BaseEntity implements IProfile<User, Skill, Applica
     nullable: true
   })
   github: string
+
+  @OneToOne(() => File)
+  @JoinColumn({ name: 'profile_pic' })
+  profile_pic: File
 
   @ManyToOne(() => Address)
   @JoinColumn({ name: 'address_id' })
