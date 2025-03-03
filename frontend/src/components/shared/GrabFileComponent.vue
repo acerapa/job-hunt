@@ -1,44 +1,34 @@
 <template>
   <ModalComponent
-    title="Files"
     v-model="showModal"
     @save="onSave"
     @cancel="onCancel"
     :save-btn-text="'Done'"
+    :title="props.title"
   >
     <div
-      @drop.prevent="onDropFiles"
-      @dragleave.prevent="dragAreaClass = ''"
-      @dragover.prevent="dragAreaClass = 'border-blue-500'"
-      class="w-96 max-w-96 h-52 max-h-52 flex border-2 p-2 overflow-auto"
+      class="drag-area"
+      @drop.prevent="props.isSingleFile && files.length > 0 ? '' : onDropFiles"
+      @dragleave.prevent="props.isSingleFile && files.length > 0 ? '' : (dragAreaClass = '')"
+      @dragover.prevent="
+        props.isSingleFile && files.length > 0 ? '' : (dragAreaClass = 'border-blue-500')
+      "
       :class="[files.length ? '' : 'border-dashed items-center justify-center', dragAreaClass]"
     >
-      <div class="text-center" v-if="!files.length">
-        <p class="text-gray-500">Drag your files here</p>
-        <p class="text-gray-500">or</p>
-        <div>
-          <label class="btn-outline cursor-pointer" for="msg-files">Choose files</label>
-          <input
-            id="msg-files"
-            type="file"
-            class="invisible"
-            multiple
-            @input="onChange"
-            accept=".jpg,.jpeg,.png,.gif"
-          />
-        </div>
-      </div>
-
       <div class="flex flex-col gap-3 w-full" v-if="files.length">
+        <button
+          class="btn-outline cursor-pointer"
+          v-if="!props.isSingleFile"
+          @click="triggerChooseFiles"
+        >
+          &plus; Add more
+        </button>
         <div
           class="flex gap-3 w-full relative border rounded p-2"
           v-for="(prev, ndx) in filePreviews"
           :key="prev.url"
         >
-          <button
-            @click="removeFile(ndx)"
-            class="w-fit h-fit px-2 -top-2 -right-2 z-10 absolute rounded-full text-white bg-red-500 flex items-center justify-between text-center"
-          >
+          <button @click="removeFile(ndx)" class="remove-uploaded-file">
             <span> &times; </span>
           </button>
           <img
@@ -50,6 +40,24 @@
           <p class="flex-1 overflow-hidden text-ellipsis">{{ prev.name }}</p>
         </div>
       </div>
+
+      <div class="text-center" v-show="!files.length">
+        <p class="text-gray-500">Drag your files here</p>
+        <p class="text-gray-500">or</p>
+        <div>
+          <label class="btn-outline cursor-pointer" for="msg-files" ref="chooseFiles"
+            >Choose files</label
+          >
+          <input
+            id="msg-files"
+            type="file"
+            class="invisible"
+            @input="onChange"
+            accept=".jpg,.jpeg,.png,.gif"
+            :multiple="props.isSingleFile ? false : true"
+          />
+        </div>
+      </div>
     </div>
   </ModalComponent>
 </template>
@@ -58,7 +66,18 @@
 import { onMounted, ref, watch } from 'vue'
 import ModalComponent from '../shared/ModalComponent.vue'
 
+interface Props {
+  title?: string
+  isSingleFile?: boolean
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  isSingleFile: false,
+  title: 'Upload Files'
+})
+
 const showModal = defineModel<boolean>()
+const singleFile = defineModel<Partial<File>>('file')
 const cleanedFiles = defineModel<Partial<File>[]>('files')
 
 const files = ref<File[]>([])
@@ -97,6 +116,13 @@ const removeFile = (index: number) => {
   files.value.splice(index, 1)
 }
 
+const triggerChooseFiles = () => {
+  if (chooseFiles.value) {
+    chooseFiles.value.click()
+  }
+}
+
+const chooseFiles = ref<HTMLInputElement>()
 onMounted(() => {
   if (cleanedFiles.value && cleanedFiles.value.length) {
     files.value = cleanedFiles.value as File[]
@@ -113,8 +139,22 @@ watch(
           url: URL.createObjectURL(file)
         }
       })
+
+      if (props.isSingleFile) {
+        singleFile.value = files.value[0]
+      }
     }
   },
   { deep: true }
 )
 </script>
+
+<style scoped>
+.drag-area {
+  @apply w-96 max-w-96 h-52 max-h-52 flex border-2 p-2 overflow-auto;
+}
+
+.remove-uploaded-file {
+  @apply w-fit h-fit px-2 -top-2 -right-2 z-10 absolute rounded-full text-white bg-red-500 flex items-center justify-between text-center;
+}
+</style>

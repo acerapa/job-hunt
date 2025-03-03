@@ -1,5 +1,5 @@
 <template>
-  <GrabMessageFileComponent
+  <GrabFileComponent
     v-model="showGrabMessageFileModal"
     v-model:files="files"
     v-if="showGrabMessageFileModal"
@@ -172,7 +172,7 @@
 import InputComponent from '@/components/shared/InputComponent.vue'
 import MessageComponent from '@/components/messages/MessageComponent.vue'
 import ConversationComponent from '@/components/messages/ConversationComponent.vue'
-import GrabMessageFileComponent from '@/components/messages/GrabMessageFileComponent.vue'
+import GrabFileComponent from '@/components/shared/GrabFileComponent.vue'
 
 import { useSocket } from '@/composable/useSocket'
 import { useConversationStore } from '@/stores/conversation-store'

@@ -1,9 +1,17 @@
 <template>
-  <FileInputModal title="Profile Picture" v-model="showFileInputModal" v-if="showFileInputModal" />
+  <GrabFileComponent
+    :is-single-file="true"
+    v-if="showFileInputModal"
+    v-model="showFileInputModal"
+    title="Upload Profile Picture"
+    v-model:file="profileModel.profile_pic"
+  />
+
   <div class="wrap flex justify-between mb-4">
     <p class="text-lg font-semibold">Profile Page</p>
     <button class="btn-outline" @click="router.back()">&longleftarrow; Back</button>
   </div>
+
   <div class="flex gap-4" v-if="authUser">
     <div class="max-w-[350px] w-full h-fit sticky top-[70px] flex flex-col gap-4">
       <div class="wrap !px-8 !py-6 !bg-green-bright text-white">
@@ -14,7 +22,10 @@
               alt="default.png"
               class="w-full h-full object-cover"
             />
-            <button class="absolute bottom-0 right-0 bg-white p-1.5 rounded-full">
+            <button
+              class="absolute bottom-0 right-0 bg-white p-1.5 rounded-full"
+              @click="showFileInputModal = true"
+            >
               <img src="@/assets/icons/edit.png" alt="edit.png" class="w-4 h-4" />
             </button>
           </div>
@@ -432,9 +443,9 @@
 
 <script setup lang="ts">
 import TagComponent from '@/components/shared/TagComponent.vue'
+import GrabFileComponent from '@/components/shared/GrabFileComponent.vue'
 import InputComponent from '@/components/shared/InputComponent.vue'
-import FileInputModal from '@/components/files/FileInputModal.vue'
-import { computed, onMounted, reactive, ref } from 'vue'
+import { computed, onMounted, reactive, ref, watch } from 'vue'
 import { useAuthStore } from '@/stores/auth-store'
 import { Gender, SkillType, type Address, type Profile, type Skill, type User } from '@shared/pack'
 import { useUserStore } from '@/stores/user-store'
@@ -442,12 +453,13 @@ import { useRouter } from 'vue-router'
 import { useSkillStore } from '@/stores/skill-store'
 import { useProfileStore } from '@/stores/profile-store'
 
-const router = useRouter()
+const showFileInputModal = ref(false)
 const authUser = ref<User<Profile> | null>()
+
+const router = useRouter()
 const authStore = useAuthStore()
 const userStore = useUserStore()
 const skillStore = useSkillStore()
-const showFileInputModal = ref(false)
 const profileStore = useProfileStore()
 
 const sectionFormState = reactive<{
@@ -577,9 +589,9 @@ onMounted(async () => {
   await skillStore.getSkills()
 
   if (authUser.value) {
-    userModel.value = authUser.value
+    userModel.value = { ...authUser.value }
     if (authUser.value.profile) {
-      profileModel.value = authUser.value.profile
+      profileModel.value = { ...authUser.value.profile }
       skills.value = authUser.value.profile.skills as Skill[]
 
       if (authUser.value.profile.address) {
